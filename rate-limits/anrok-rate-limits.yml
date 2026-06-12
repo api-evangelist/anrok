@@ -1,0 +1,27 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+provider: Anrok
+providerId: anrok
+created: '2026-06-12'
+modified: '2026-06-12'
+url: https://apidocs.anrok.com/
+notes: >
+  Rate limit information sourced from the Anrok API documentation at apidocs.anrok.com.
+  The default rate limit applies to seller accounts. Exceeding limits returns HTTP 429.
+  Premium features (Tax ID validation, filings list, transaction list) require account
+  enablement via hello@anrok.com.
+retryAfter:
+  header: Retry-After
+  description: Standard HTTP Retry-After header returned on 429 responses indicating when to retry.
+throttled:
+  statusCode: 429
+  message: Too Many Requests
+limits:
+  - scope: account
+    metric: requests
+    limit: 10
+    timeFrame: second
+    description: >
+      Default rate limit for a seller account is 10 API requests per second.
+      All endpoint types share this account-level limit.
+    applies_to: all endpoints

@@ -1,0 +1,94 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+provider: Anrok
+providerId: anrok
+created: '2026-06-12'
+modified: '2026-06-12'
+url: https://www.anrok.com/pricing
+description: >
+  FinOps profile for Anrok's sales tax compliance API. Billing is usage-based at the
+  per-market and per-transaction level, with flat monthly platform fees and optional
+  add-on packages. Cost scales with the number of markets where compliance is enabled
+  and transaction volume on the Custom plan.
+billingModel:
+  type: hybrid
+  description: >
+    Hybrid billing model combining a flat per-market monthly platform fee (Starter: $100/market,
+    Custom: $400/market) with a 0.25% per-transaction charge on the Custom plan where
+    compliance is enabled. Add-on packages are billed as flat monthly fees (billed annually).
+  components:
+    - name: Platform Fee
+      type: flat
+      unit: per market per month
+      tiers:
+        - name: Starter
+          price: 100.00
+          currency: USD
+        - name: Custom
+          price: 400.00
+          currency: USD
+    - name: Transaction Fee
+      type: metered
+      unit: per transaction (Custom plan only, where compliance enabled)
+      rate: 0.0025
+      rateDescription: 0.25% per transaction
+
+focusColumns:
+  - column: BilledCost
+    description: Monthly platform fee per market plus transaction-based charges.
+  - column: UsageQuantity
+    description: Number of markets with compliance enabled; number of transactions processed.
+  - column: UsageUnit
+    description: markets; transactions
+  - column: ServiceName
+    description: Anrok Sales Tax API
+  - column: ServiceCategory
+    description: Business Applications / Tax Compliance
+  - column: ProviderName
+    description: Anrok
+  - column: PublisherName
+    description: Anrok
+  - column: ChargeType
+    description: Usage
+  - column: ChargeCategory
+    description: Recurring (platform fee) + Usage (transaction fee)
+
+meters:
+  - name: markets_active
+    description: Number of markets (jurisdictions) where Anrok compliance is enabled.
+    unit: market
+    billingImpact: $100–$400 per market per month depending on plan
+  - name: transactions_processed
+    description: >
+      Number of taxable transactions processed through the Anrok API on the Custom plan.
+      Applies a 0.25% fee per transaction where compliance is enabled.
+    unit: transaction
+    billingImpact: 0.25% of transaction value (Custom plan only)
+  - name: api_requests
+    description: >
+      API calls made to the Anrok REST API. Rate-limited at 10 requests per second
+      per seller account. No direct per-call billing; included in platform fee.
+    unit: request
+    billingImpact: included in platform fee; rate limited at 10 req/s
+
+principles:
+  - name: Visibility
+    description: >
+      Monitor costs by tracking the number of active markets (nexus registrations)
+      and transaction volumes through Anrok's audit-ready reporting (Custom plan).
+      Use the reconciliation tool to align transaction data with billing charges.
+    actions:
+      - Enable audit-ready reporting on Custom plan to track per-market and per-transaction costs.
+      - Use Anrok's reconciliation tool to match API transactions to billing line items.
+      - Monitor API request volumes against the 10 req/s rate limit to avoid throttling.
+
+  - name: Optimization
+    description: >
+      Optimize Anrok spend by right-sizing the number of markets with compliance enabled,
+      reviewing nexus exposure before activating new markets, and using ephemeral transactions
+      (calculation-only, unsaved) for cost modeling without incurring transaction fees.
+    actions:
+      - Use ephemeral transaction endpoints for tax calculation testing to avoid transaction count.
+      - Regularly audit active markets and disable compliance in markets below exposure thresholds.
+      - Evaluate plan tier (Starter vs Custom) against actual transaction volume to minimize cost.
+      - Leverage the Physical Nexus Monitoring add-on to proactively manage nexus before obligations arise.

@@ -1,0 +1,72 @@
+aid: anrok
+name: Anrok
+description: >
+  Anrok is a SaaS-focused global sales tax and VAT compliance platform built for modern commerce.
+  It provides a REST API that enables software companies to calculate sales tax in real time,
+  manage nexus registrations across 11,000+ US jurisdictions, handle exemption certificates,
+  and validate customer tax IDs. The platform integrates with billing systems such as Stripe,
+  Chargebee, and Recurly, and automates tax filing and remittance across 100+ countries.
+  Anrok also offers Anrok Atlas, an AI-native agentic tax partner for proactive compliance monitoring.
+type: Index
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+tags:
+  - Sales Tax
+  - VAT
+  - Tax Compliance
+  - SaaS
+  - Fintech
+  - Tax Automation
+  - Nexus
+  - E-Invoicing
+url: https://raw.githubusercontent.com/api-evangelist/anrok/refs/heads/main/apis.yml
+created: '2026-06-12'
+modified: '2026-06-12'
+specificationVersion: '0.19'
+apis:
+  - aid: anrok:anrok-api
+    name: Anrok API
+    description: >
+      The Anrok REST API enables real-time sales tax calculation, transaction management,
+      exemption certificate handling, product tax category mapping, customer tax ID validation,
+      and retrieval of sales tax filing information. All requests are HTTP POST with JSON bodies.
+      Authentication uses Bearer token via the Authorization header. The API is versioned at 1.1
+      and exposes an OpenAPI specification for client generation.
+    humanURL: https://apidocs.anrok.com/
+    baseURL: https://api.anrok.com
+    tags:
+      - Sales Tax
+      - Tax Calculation
+      - Transactions
+      - Exemption Certificates
+      - VAT
+    properties:
+      - type: Documentation
+        url: https://apidocs.anrok.com/
+      - type: OpenAPI
+        url: https://apidocs.anrok.com/
+      - type: Tutorials
+        url: https://apidocs.anrok.com/tutorials
+common:
+  - type: Website
+    url: https://www.anrok.com/
+  - type: Documentation
+    url: https://apidocs.anrok.com/
+  - type: GitHubOrganization
+    url: https://github.com/Anrok
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/anrok
+  - type: X
+    url: https://x.com/Anrok
+  - type: Blog
+    url: https://anrok.com/resources/blog
+  - type: Pricing
+    url: https://www.anrok.com/pricing
+  - type: Plans
+    url: plans/anrok-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/anrok-rate-limits.yml
+  - type: FinOps
+    url: finops/anrok-finops.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

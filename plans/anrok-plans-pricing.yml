@@ -1,0 +1,158 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+provider: Anrok
+providerId: anrok
+created: '2026-06-12'
+modified: '2026-06-12'
+reconciled: true
+type: paid
+url: https://www.anrok.com/pricing
+plans:
+  - name: Starter
+    description: >
+      For founders and small teams needing core sales tax compliance automation.
+      Includes global exposure monitoring, real-time tax calculation, filing and remittance,
+      exemption certificate management, and physical nexus tracking.
+    type: paid
+    price: 100.00
+    currency: USD
+    billingPeriod: monthly
+    unit: per market per month
+    features:
+      - type: boolean
+        name: Global Exposure Monitoring
+        value: true
+      - type: boolean
+        name: Real-Time Tax Calculation
+        value: true
+      - type: boolean
+        name: Filing and Remittance
+        value: true
+      - type: boolean
+        name: Exemption Certificate Management
+        value: true
+      - type: boolean
+        name: Physical Nexus Tracking
+        value: true
+      - type: boolean
+        name: API Technical Consultations
+        value: false
+      - type: boolean
+        name: Multi-Billing System Support
+        value: false
+      - type: boolean
+        name: Single Sign-On (SSO)
+        value: false
+      - type: boolean
+        name: Anrok Atlas AI Assistant
+        value: false
+
+  - name: Custom
+    description: >
+      For teams scaling into 10+ markets or enterprise-scale operations.
+      Includes everything in Starter plus advanced integrations, multi-billing system support,
+      multi-entity management, enhanced exemption certificates, audit-ready reporting,
+      reconciliation tool, priority support, global tax consults, MSA, SSO, and Anrok Atlas AI.
+    type: enterprise
+    price: 400.00
+    currency: USD
+    billingPeriod: monthly
+    unit: per market per month
+    additionalRate: 0.25
+    additionalRateUnit: percent per transaction (where compliance enabled)
+    features:
+      - type: boolean
+        name: Global Exposure Monitoring
+        value: true
+      - type: boolean
+        name: Real-Time Tax Calculation
+        value: true
+      - type: boolean
+        name: Filing and Remittance
+        value: true
+      - type: boolean
+        name: Exemption Certificate Management
+        value: true
+      - type: boolean
+        name: Physical Nexus Tracking
+        value: true
+      - type: boolean
+        name: Advanced Integrations
+        value: true
+      - type: boolean
+        name: Multi-Billing System Support
+        value: true
+      - type: boolean
+        name: Multi-Entity Management
+        value: true
+      - type: boolean
+        name: Audit-Ready Reporting
+        value: true
+      - type: boolean
+        name: Reconciliation Tool
+        value: true
+      - type: boolean
+        name: Priority Support
+        value: true
+      - type: boolean
+        name: Global Tax Consults
+        value: true
+      - type: boolean
+        name: Single Sign-On (SSO)
+        value: true
+      - type: boolean
+        name: Anrok Atlas AI Assistant (Beta)
+        value: true
+
+addons:
+  - name: Physical Nexus Monitoring
+    description: Track remote employee impact on compliance and nexus exposure.
+    price: 300.00
+    currency: USD
+    billingPeriod: monthly
+    billingNote: billed annually
+
+  - name: Pro
+    description: >
+      For companies with $1M-$10M ARR. Includes exposure modeling tool, nexus/exposure review
+      with expert, ongoing support, unlimited historical US sales tax return filings,
+      and API technical consultations.
+    price: 500.00
+    currency: USD
+    billingPeriod: monthly
+    billingNote: billed annually
+    features:
+      - type: boolean
+        name: API Technical Consultations
+        value: true
+      - type: boolean
+        name: Exposure Modeling Tool
+        value: true
+      - type: boolean
+        name: Unlimited Historical US Sales Tax Return Filings
+        value: true
+
+  - name: Enterprise
+    description: >
+      For late-stage private or public companies. Includes custom integrations,
+      dedicated onboarding manager, global tax expert access, SSO, and MSA.
+    price: 1000.00
+    currency: USD
+    billingPeriod: monthly
+    billingNote: billed annually
+    features:
+      - type: boolean
+        name: Custom Integrations
+        value: true
+      - type: boolean
+        name: Dedicated Onboarding Manager
+        value: true
+      - type: boolean
+        name: Global Tax Expert Access
+        value: true
+      - type: boolean
+        name: Single Sign-On (SSO)
+        value: true
+      - type: boolean
+        name: MSA
+        value: true
