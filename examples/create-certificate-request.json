@@ -1,0 +1,13 @@
+{
+  "summary": "Create an exemption certificate",
+  "description": "Example request body for creating a customer exemption certificate",
+  "value": {
+    "customerId": "cust_123",
+    "customerName": "Acme Corp",
+    "jurisdictions": [
+      "CA",
+      "NY"
+    ],
+    "expirationDate": "2025-12-31"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "value": {
+    "type": "accountingTimeZoneNotSetForSeller"
+  },
+  "summary": "Cannot determine accounting date from accountingTime without time zone"
+}

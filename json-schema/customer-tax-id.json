@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/customer-tax-id.json",
+  "title": "CustomerTaxId",
+  "type": "object",
+  "description": "The customer VAT registration number for a non-US country",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "genericVatNumber",
+        "euVrn"
+      ],
+      "description": "This setting is purely metadata and does not affect tax calculation."
+    },
+    "value": {
+      "description": "The customer VAT registration number for a non-US country",
+      "type": "string"
+    }
+  },
+  "required": [
+    "type",
+    "value"
+  ]
+}

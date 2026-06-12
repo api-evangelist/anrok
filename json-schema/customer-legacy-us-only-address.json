@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/customer-legacy-us-only-address.json",
+  "title": "Legacy US only address",
+  "type": "object",
+  "deprecated": true,
+  "properties": {
+    "country": {
+      "type": "string",
+      "enum": [
+        "us"
+      ]
+    },
+    "line1": {
+      "description": "The \"delivery line\" of the address",
+      "type": "string",
+      "nullable": true
+    },
+    "city": {
+      "description": "The standard USPS format",
+      "type": "string",
+      "nullable": true
+    },
+    "state": {
+      "description": "The standard USPS format",
+      "type": "string",
+      "nullable": true
+    },
+    "zipCode": {
+      "description": "The standard USPS format",
+      "type": "string",
+      "nullable": true
+    }
+  },
+  "required": [
+    "country"
+  ],
+  "example": {
+    "country": "us",
+    "line1": "123 Main St",
+    "city": "White Plains",
+    "state": "NY",
+    "zipCode": "10601"
+  }
+}

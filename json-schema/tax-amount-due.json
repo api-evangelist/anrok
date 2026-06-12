@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/tax-amount-due.json",
+  "title": "TaxAmountDue",
+  "description": "The tax amount due in the smallest denomination of the currency (e.g. cents or pennies).",
+  "type": "object",
+  "properties": {
+    "inclusive": {
+      "description": "The inclusive tax amount in the smallest denomination of the currency (e.g. cents or pennies).",
+      "type": "string",
+      "format": "Decimal",
+      "example": "100.00"
+    },
+    "exclusive": {
+      "description": "The exclusive tax amount in the smallest denomination of the currency (e.g. cents or pennies).",
+      "type": "string",
+      "format": "Decimal",
+      "example": "10.00"
+    },
+    "total": {
+      "description": "The total tax amount in the smallest denomination of the currency (e.g. cents or pennies).",
+      "type": "string",
+      "format": "Decimal",
+      "example": "110.00"
+    }
+  }
+}

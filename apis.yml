@@ -43,9 +43,15 @@ apis:
       - type: Documentation
         url: https://apidocs.anrok.com/
       - type: OpenAPI
-        url: https://apidocs.anrok.com/
+        url: https://raw.githubusercontent.com/api-evangelist/anrok/refs/heads/main/openapi/anrok-api-openapi.yml
       - type: Tutorials
         url: https://apidocs.anrok.com/tutorials
+      - type: JSONSchema
+        url: https://raw.githubusercontent.com/api-evangelist/anrok/refs/heads/main/json-schema/
+      - type: Vocabulary
+        url: https://raw.githubusercontent.com/api-evangelist/anrok/refs/heads/main/vocabulary/anrok-vocabulary.yml
+      - type: JSONLd
+        url: https://raw.githubusercontent.com/api-evangelist/anrok/refs/heads/main/json-ld/anrok-context.jsonld
 common:
   - type: Website
     url: https://www.anrok.com/

@@ -1,0 +1,27 @@
+{
+  "summary": "Create or update a transaction with tax calculation",
+  "description": "Example request body for creating/updating a transaction to calculate sales tax",
+  "value": {
+    "id": "txn_2024_001",
+    "currency": "usd",
+    "accountingTime": "2024-01-15T10:00:00Z",
+    "lineItems": [
+      {
+        "id": "line_001",
+        "productExternalId": "prod_saas_monthly",
+        "amount": 10000
+      }
+    ],
+    "customer": {
+      "id": "cust_123",
+      "name": "Acme Corp",
+      "address": {
+        "line1": "123 Main St",
+        "city": "San Francisco",
+        "state": "CA",
+        "zip": "94105",
+        "country": "US"
+      }
+    }
+  }
+}

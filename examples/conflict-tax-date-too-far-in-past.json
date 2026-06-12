@@ -1,0 +1,6 @@
+{
+  "value": {
+    "type": "taxDateTooFarInPast"
+  },
+  "summary": "Anrok only accepts dates on or after Jan 1, 1999."
+}

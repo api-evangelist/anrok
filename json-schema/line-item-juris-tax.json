@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/line-item-juris-tax.json",
+  "title": "LineItemJurisTax",
+  "description": "Taxes for a line item for a jurisdiction or region.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "The ID of the jurisdiction or region.",
+      "type": "string",
+      "example": "4109000"
+    },
+    "name": {
+      "description": "The name of the jurisdiction or region.",
+      "type": "string",
+      "example": "Hill County"
+    },
+    "nonTaxableAmount": {
+      "description": "The non-taxable amount of the line item in the smallest denomination of the currency (e.g. cents or pennies).",
+      "type": "string",
+      "format": "Decimal",
+      "example": "100.00"
+    },
+    "exemptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "description": "The reason for the exemption.",
+            "type": "string",
+            "enum": [
+              "reverseCharge",
+              "customerExempt",
+              "transactionExempt"
+            ]
+          },
+          "amount": {
+            "description": "The amount of the exemption in the smallest denomination of the currency (e.g. cents or pennies).",
+            "type": "string",
+            "format": "Decimal",
+            "example": "100.00"
+          }
+        }
+      }
+    },
+    "taxableAmount": {
+      "description": "The taxable amount of the line item in the smallest denomination of the currency (e.g. cents or pennies).",
+      "type": "string",
+      "format": "Decimal",
+      "example": "100.00"
+    },
+    "rate": {
+      "description": "The tax rate.",
+      "type": "string",
+      "nullable": true,
+      "format": "Decimal",
+      "example": "0.05"
+    },
+    "taxAmount": {
+      "description": "The tax amount of the line item in the smallest denomination of the currency (e.g. cents or pennies).",
+      "type": "object",
+      "properties": {
+        "inclusive": {
+          "description": "The inclusive tax amount in the smallest denomination of the currency (e.g. cents or pennies).",
+          "type": "string",
+          "format": "Decimal",
+          "example": "100.00"
+        },
+        "exclusive": {
+          "description": "The exclusive tax amount in the smallest denomination of the currency (e.g. cents or pennies).",
+          "type": "string",
+          "format": "Decimal",
+          "example": "10.00"
+        }
+      }
+    }
+  }
+}

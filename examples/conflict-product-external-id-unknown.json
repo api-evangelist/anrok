@@ -1,0 +1,7 @@
+{
+  "value": {
+    "type": "productExternalIdUnknown",
+    "productExternalId": "my-new-product-id"
+  },
+  "summary": "Product IDs must have already been configured in Anrok"
+}

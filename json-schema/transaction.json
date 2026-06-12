@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/transaction.json",
+  "title": "Transaction",
+  "type": "object",
+  "properties": {
+    "lineItems": {
+      "description": "The line items in the transaction.",
+      "type": "array",
+      "items": {
+        "$ref": "#/components/schemas/TransactionLineItem"
+      }
+    },
+    "currencyCode": {
+      "description": "Three letter ISO currency code (case insensitive).",
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 3,
+      "examples": [
+        "USD",
+        "GBP",
+        "EUR"
+      ]
+    },
+    "customerAddress": {
+      "description": "The address where the product will be delivered or used. This address determines the taxing jurisdictions and rates for destination-based sourcing. For SaaS companies, this is typically the billing address. All address fields are optional: fields can be omitted or have null value, but empty strings are not allowed. Anrok will return an error if the address does not have enough information to determine the top-level taxing jurisdiction with high confidence.",
+      "anyOf": [
+        {
+          "$ref": "#/components/schemas/CustomerAddress"
+        },
+        {
+          "$ref": "#/components/schemas/CustomerLegacyUsOnlyAddress"
+        }
+      ]
+    },
+    "customerName": {
+      "$ref": "#/components/schemas/CustomerName"
+    },
+    "customerTaxIds": {
+      "description": "Tax IDs for the customer receiving the product",
+      "type": "array",
+      "items": {
+        "$ref": "#/components/schemas/CustomerTaxId"
+      }
+    },
+    "shipFromAddress": {
+      "description": "Optional. The address where the product will be shipped from. Some jurisdictions calculate taxes based on the ship-from address. Defaults to your Anrok business address if omitted.",
+      "anyOf": [
+        {
+          "$ref": "#/components/schemas/CustomerAddress"
+        },
+        {
+          "$ref": "#/components/schemas/CustomerLegacyUsOnlyAddress"
+        }
+      ]
+    },
+    "accountingDate": {
+      "description": "The date that this transaction occurred, for accounting purposes. Accounting date will typically correspond to the invoice date. This is used to determine which tax return the transaction belongs to.",
+      "type": "string",
+      "format": "date",
+      "example": "2017-07-21"
+    },
+    "accountingTime": {
+      "description": "The time that this transaction occurred, for accounting purposes. If `accountingDate` is not provided, `accountingTime` is required to compute an accounting date for the transaction.",
+      "type": "string",
+      "format": "date-time",
+      "example": "2017-07-21T17:32:28Z"
+    },
+    "accountingTimeZone": {
+      "description": "A \u201ctz database\u201d string used to compute an accounting date from the request's `accountingTime`. The request cannot provide both an `accountingDate` and an `accountingTimeZone`. If `accountingTime` is provided without specifying an `accountingTimeZone`, the time zone configured on the seller account will be used.",
+      "type": "string",
+      "enum": [
+        "UTC",
+        "America/New_York",
+        "America/Chicago",
+        "America/Denver",
+        "America/Los_Angeles",
+        "America/Anchorage",
+        "Pacific/Honolulu",
+        "Australia/Perth",
+        "Australia/Adelaide",
+        "Australia/Darwin",
+        "Australia/Brisbane",
+        "Australia/Sydney",
+        "America/Halifax",
+        "America/Toronto",
+        "America/Winnipeg",
+        "America/Regina",
+        "America/Edmonton",
+        "America/Vancouver",
+        "Europe/Berlin",
+        "Europe/Brussels",
+        "Europe/Dublin",
+        "Europe/Helsinki",
+        "Europe/London",
+        "Europe/Paris",
+        "Europe/Rome",
+        "Europe/Stockholm",
+        "Asia/Tokyo",
+        "Asia/Singapore"
+      ]
+    },
+    "taxDate": {
+      "description": "The date to use for tax calculations. If omitted, Anrok will use the accounting date.",
+      "type": "string",
+      "format": "date",
+      "example": "2017-07-21"
+    }
+  },
+  "required": [
+    "lineItems",
+    "currencyCode",
+    "customerAddress"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/not-taxed-reason.json",
+  "title": "NotTaxedReason",
+  "type": "object",
+  "properties": {
+    "type": {
+      "description": "The reason a line item is not taxed.",
+      "type": "string",
+      "enum": [
+        "exempt",
+        "jurisHasNoTax",
+        "notCollecting",
+        "productNotTaxed"
+      ]
+    },
+    "reason": {
+      "description": "The detailed reason for an exemption. Only set when the type is 'exempt'.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "reverseCharge",
+            "customerExempt",
+            "transactionExempt"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/create-or-update-transaction.json",
+  "title": "CreateOrUpdateTransaction",
+  "allOf": [
+    {
+      "$ref": "#/components/schemas/Transaction"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "customerId": {
+          "$ref": "#/components/schemas/CustomerId"
+        },
+        "id": {
+          "description": "The ID of the new transaction. This must be unique across the entire seller account. This is typically the billing system's invoice ID with some prefix to disambiguate different systems.",
+          "type": "string",
+          "examples": [
+            "v1:2706174",
+            "stripe:in_1JSW342eZvKYlo2C"
+          ]
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  ]
+}

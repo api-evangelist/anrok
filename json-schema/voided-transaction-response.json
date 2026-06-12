@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/voided-transaction-response.json",
+  "title": "VoidedTransactionResponse",
+  "description": "Voided transaction",
+  "type": "object",
+  "allOf": [
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "void"
+          ]
+        }
+      }
+    },
+    {
+      "$ref": "#/components/schemas/CommonTransactionProperties"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/customer-address.json",
+  "title": "Address",
+  "type": "object",
+  "properties": {
+    "country": {
+      "description": "The country's full name or 2-letter ISO code",
+      "type": "string",
+      "nullable": true,
+      "examples": [
+        "UK",
+        "United Kingdom"
+      ]
+    },
+    "line1": {
+      "description": "The \"delivery line\" of the address",
+      "type": "string",
+      "nullable": true
+    },
+    "city": {
+      "description": "City or town name",
+      "type": "string",
+      "nullable": true
+    },
+    "region": {
+      "description": "Other principal subdivision (i.e. province, state, county)",
+      "type": "string",
+      "nullable": true
+    },
+    "postalCode": {
+      "description": "Postal code",
+      "type": "string",
+      "nullable": true
+    }
+  },
+  "required": [],
+  "examples": [
+    {
+      "country": "ENGLAND",
+      "line1": "2045 ROYAL ROAD",
+      "city": "LONDON",
+      "postalCode": "WIP 6HQ"
+    },
+    {
+      "country": "AU",
+      "line1": "71 Gaggin Street",
+      "city": "Heddon Greta",
+      "region": "New South Wales",
+      "postalCode": "2321"
+    }
+  ]
+}

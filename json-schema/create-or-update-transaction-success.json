@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/create-or-update-transaction-success.json",
+  "title": "CreateOrUpdateTransactionSuccess",
+  "allOf": [
+    {
+      "type": "object",
+      "properties": {
+        "version": {
+          "description": "The transaction version",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    {
+      "$ref": "#/components/schemas/CreateEphemeralTransactionSuccess"
+    }
+  ]
+}

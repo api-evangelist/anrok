@@ -1,0 +1,228 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/normal-transaction-body.json",
+  "title": "NormalTransactionBody",
+  "type": "object",
+  "properties": {
+    "accountingDate": {
+      "description": "The date that this transaction occurred, for accounting purposes.",
+      "type": "string",
+      "format": "date",
+      "example": "2025-01-01"
+    },
+    "taxDate": {
+      "description": "The date to use for tax calculations.",
+      "type": "string",
+      "format": "date",
+      "example": "2025-01-01"
+    },
+    "currencyCode": {
+      "description": "Three letter ISO currency code (case insensitive).",
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 3,
+      "examples": [
+        "USD",
+        "GBP",
+        "EUR"
+      ]
+    },
+    "customer": {
+      "type": "object",
+      "nullable": true,
+      "properties": {
+        "id": {
+          "description": "The Anrok customer ID.",
+          "type": "string",
+          "example": "cus_1234567890"
+        },
+        "name": {
+          "description": "The name of the customer.",
+          "type": "string",
+          "nullable": true,
+          "example": "John Doe"
+        }
+      }
+    },
+    "addresses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "$ref": "#/components/schemas/CustomerAddress"
+          }
+        },
+        "example": {
+          "address": {
+            "city": null,
+            "line1": null,
+            "region": "TX",
+            "country": "US",
+            "postalCode": "10101"
+          }
+        }
+      }
+    },
+    "inputAmount": {
+      "type": "integer",
+      "format": "int64",
+      "description": "The input amount in the smallest denomination of the currency (e.g. cents or pennies).",
+      "example": 39800
+    },
+    "preTaxAmount": {
+      "type": "string",
+      "format": "Decimal",
+      "description": "The pre-tax amount in the smallest denomination of the currency (e.g. cents or pennies).",
+      "example": "39800"
+    },
+    "taxAmountDue": {
+      "allOf": [
+        {
+          "$ref": "#/components/schemas/TaxAmountDue"
+        },
+        {
+          "example": {
+            "inclusive": "0",
+            "exclusive": "2467.6",
+            "total": "2467.6"
+          }
+        }
+      ]
+    },
+    "taxAmountAdded": {
+      "type": "object",
+      "properties": {
+        "expected": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The expected tax amount to add in the smallest denomination of the currency (e.g. cents or pennies).",
+          "example": 2468
+        },
+        "seen": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The tax amount that Anrok saw was added in the smallest denomination of the currency (e.g. cents or pennies).",
+          "example": 2468
+        }
+      }
+    },
+    "invoiceTotalAmountExpected": {
+      "type": "integer",
+      "format": "int64",
+      "description": "The expected total amount of the invoice in the smallest denomination of the currency (e.g. cents or pennies).",
+      "example": 42268
+    },
+    "jurisSummaries": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/JurisSummary"
+          },
+          {
+            "example": {
+              "id": "us-TX",
+              "name": "Texas",
+              "preTaxAmount": "39800",
+              "taxAmountDue": {
+                "inclusive": "0",
+                "exclusive": "2467.6",
+                "total": "2467.6"
+              },
+              "taxIdValidation": {
+                "processedTaxIds": [
+                  {
+                    "taxId": "1234567890",
+                    "isValid": true
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "lineItems": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/LineItem"
+          },
+          {
+            "example": {
+              "id": "li_1234567890",
+              "product": {
+                "internalId": "sp3hgz76gve3",
+                "externalId": "PLU1",
+                "name": "Product 1",
+                "productTaxCategory": {
+                  "type": "standard",
+                  "id": "saasBusiness",
+                  "name": "SaaS - General, B2B"
+                }
+              },
+              "quantity": null,
+              "unitPrice": null,
+              "inputAmount": 39800,
+              "preTaxAmount": "39800",
+              "taxAmountDue": {
+                "inclusive": "0",
+                "exclusive": "2467.6",
+                "total": "2467.6"
+              },
+              "jurises": [
+                {
+                  "id": "us-TX",
+                  "name": "Texas",
+                  "calc": {
+                    "isRemitting": true,
+                    "taxes": [
+                      {
+                        "id": "",
+                        "name": "Texas",
+                        "nonTaxableAmount": "7960",
+                        "exemptions": [],
+                        "taxableAmount": "31840",
+                        "rate": "0.0625",
+                        "taxAmount": {
+                          "inclusive": "0",
+                          "exclusive": "1990"
+                        }
+                      },
+                      {
+                        "id": "4109000",
+                        "name": "Hill County",
+                        "nonTaxableAmount": "7960",
+                        "exemptions": [],
+                        "taxableAmount": "31840",
+                        "rate": "0.005",
+                        "taxAmount": {
+                          "inclusive": "0",
+                          "exclusive": "159.2"
+                        }
+                      },
+                      {
+                        "id": "2109108",
+                        "name": "Aquilla",
+                        "nonTaxableAmount": "7960",
+                        "exemptions": [],
+                        "taxableAmount": "31840",
+                        "rate": "0.01",
+                        "taxAmount": {
+                          "inclusive": "0",
+                          "exclusive": "318.4"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

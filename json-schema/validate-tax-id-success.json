@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/validate-tax-id-success.json",
+  "title": "ValidateTaxIdSuccess",
+  "type": "object",
+  "properties": {
+    "jurises": {
+      "description": "List of applicable taxable jurisdictions that require tax ID collection/validation based on the customer address.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "A user-friendly name for the jurisdiction.",
+            "type": "string"
+          },
+          "taxIdNames": {
+            "description": "List of applicable tax IDs to collect/validate for the jurisdiction.",
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "A user-friendly tax ID name.",
+                "type": "string"
+              },
+              "abbreviation": {
+                "description": "The tax ID abbreviation (if any).",
+                "type": "string",
+                "nullable": true
+              }
+            }
+          },
+          "validTaxIds": {
+            "description": "A list of tax IDs from the API request that are valid in the jurisdiction.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "description": "The valid tax ID(s) from the request.",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

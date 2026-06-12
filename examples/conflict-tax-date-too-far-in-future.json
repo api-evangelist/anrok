@@ -1,0 +1,6 @@
+{
+  "value": {
+    "type": "taxDateTooFarInFuture"
+  },
+  "summary": "Anrok accepts dates up to 31 days in the future."
+}

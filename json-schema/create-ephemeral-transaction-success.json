@@ -1,0 +1,122 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/create-ephemeral-transaction-success.json",
+  "title": "CreateEphemeralTransactionSuccess",
+  "type": "object",
+  "properties": {
+    "taxAmountToCollect": {
+      "description": "The total tax amount to collect from the customer, in the smallest denomination of the currency (e.g. cents or pennies).",
+      "type": "integer",
+      "format": "int64"
+    },
+    "lineItems": {
+      "description": "The tax amount to collect, pre-tax amount, and taxes by jurisdiction for each line item. Line items are returned in the same order they are received.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "Identifier for the line item that was provided in the request. If no identifier was provided, this is null.",
+            "type": "string",
+            "nullable": true
+          },
+          "taxAmountToCollect": {
+            "description": "The tax amount to collect for the line item, in the smallest denomination of the currency (e.g. cents or pennies).",
+            "type": "integer",
+            "format": "int64"
+          },
+          "preTaxAmount": {
+            "description": "The pre-tax amount for the line item, in the smallest denomination of the currency (e.g. cents or pennies).",
+            "type": "string",
+            "format": "Decimal"
+          },
+          "jurises": {
+            "description": "For each jurisdiction, either a list of taxes for the line item, or a reason that the line item is not taxed.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "description": "The name of the jurisdiction.",
+                  "type": "string"
+                },
+                "notTaxedReason": {
+                  "description": "A reason that the line item is not taxed, or null if it is taxed.",
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/NotTaxedReason"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "taxes": {
+                  "description": "A list of taxes for the line item in the jurisdiction, or null if it is not taxed.",
+                  "type": "array",
+                  "nullable": true,
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "taxName": {
+                        "description": "The name or abbreviation of the tax type (e.g. \"VAT\" or \"Tax\").",
+                        "type": "string"
+                      },
+                      "taxableAmount": {
+                        "description": "The amount on which tax is calculated, in the smallest denomination of the currency (e.g. cents or pennies).",
+                        "type": "string",
+                        "format": "Decimal"
+                      },
+                      "taxAmount": {
+                        "description": "The amount of tax, in the smallest denomination of the currency (e.g. cents or pennies).",
+                        "type": "string",
+                        "format": "Decimal"
+                      },
+                      "taxRate": {
+                        "description": "The tax rate, between 0 and 1. Make sure to include the taxableAmount in your tax rate calculations.",
+                        "type": "string",
+                        "format": "Decimal"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "preTaxAmount": {
+      "description": "The total pre-tax amount for the transaction, in the smallest denomination of the currency (e.g. cents or pennies).",
+      "type": "string",
+      "format": "Decimal"
+    },
+    "jurisSummaries": {
+      "description": "For each jurisdiction, a summary of the reasons that the line items are not taxed, or null if some items are taxed.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name of the jurisdiction.",
+            "type": "string"
+          },
+          "notTaxedReasons": {
+            "description": "A list of the distinct reasons that the line items are not taxed, or null if some items are taxed.",
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/NotTaxedReason"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

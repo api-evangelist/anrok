@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/filing-info-filter.json",
+  "title": "FilingInfoFilter",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "filingInfo"
+      ]
+    },
+    "value": {
+      "type": "object",
+      "description": "Only return transactions that are associated with the specified filing.",
+      "properties": {
+        "filingAssociationStatus": {
+          "type": "string",
+          "enum": [
+            "associated"
+          ]
+        },
+        "jurisId": {
+          "type": "string",
+          "examples": [
+            "us-MA"
+          ]
+        },
+        "jurisFilingId": {
+          "type": "string",
+          "examples": [
+            "2025-01"
+          ]
+        }
+      }
+    }
+  }
+}

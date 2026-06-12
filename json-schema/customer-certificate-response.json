@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/customer-certificate-response.json",
+  "title": "CustomerCertificateResponse",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "The Anrok-assigned ID of the certificate.",
+      "type": "string",
+      "examples": [
+        "ctec6vx7gtrmxq"
+      ]
+    },
+    "status": {
+      "description": "The current status of the certificate.\n\n- `active`: the certificate is valid.\n- `expiringSoon`: the certificate is valid but expires within 60 days in at least one jurisdiction.\n- `expired`: the certificate has expired in every jurisdiction it covers.\n- `archived`: the certificate has been archived.\n",
+      "type": "string",
+      "enum": [
+        "active",
+        "expiringSoon",
+        "expired",
+        "archived"
+      ],
+      "examples": [
+        "active"
+      ]
+    },
+    "customerId": {
+      "description": "The Anrok customer ID of the customer the certificate belongs to.",
+      "type": "string",
+      "examples": [
+        "v1:1292",
+        "stripe:cus_K39sWBu92Lo"
+      ]
+    },
+    "customerName": {
+      "description": "The name of the customer.",
+      "type": "string",
+      "examples": [
+        "Acme Inc"
+      ]
+    },
+    "createdTime": {
+      "description": "The time at which the certificate was created in Anrok.",
+      "type": "string",
+      "format": "date-time",
+      "examples": [
+        "2025-01-15T18:23:45.000Z"
+      ]
+    },
+    "effectiveDateBegin": {
+      "description": "Effective date of the certificate.",
+      "type": "string",
+      "format": "date",
+      "examples": [
+        "2022-01-01"
+      ]
+    },
+    "expiryDate": {
+      "description": "The earliest expiration date across all jurisdictions covered by the certificate. Null if no jurisdiction has an expiration date set.",
+      "type": "string",
+      "nullable": true,
+      "format": "date",
+      "examples": [
+        "2023-01-01"
+      ]
+    },
+    "exemptionNumber": {
+      "description": "Certificate exemption number.",
+      "type": "string",
+      "examples": [
+        "cert-105"
+      ]
+    },
+    "notes": {
+      "description": "Optional internal notes.",
+      "type": "string",
+      "examples": [
+        "customer notes"
+      ]
+    },
+    "jurises": {
+      "description": "The jurisdictions to which the certificate applies.",
+      "type": "array",
+      "items": {
+        "$ref": "#/components/schemas/CustomerCertificateJurisResponse"
+      }
+    }
+  },
+  "required": [
+    "id",
+    "status",
+    "customerId",
+    "customerName",
+    "createdTime",
+    "effectiveDateBegin",
+    "expiryDate",
+    "exemptionNumber",
+    "notes",
+    "jurises"
+  ]
+}

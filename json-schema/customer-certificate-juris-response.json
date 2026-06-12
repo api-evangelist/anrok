@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/customer-certificate-juris-response.json",
+  "title": "CustomerCertificateJurisResponse",
+  "type": "object",
+  "properties": {
+    "jurisId": {
+      "description": "Jurisdiction ID for which this exemption applies.",
+      "type": "string",
+      "examples": [
+        "us-MA"
+      ]
+    },
+    "registrationId": {
+      "description": "Registration ID for the jurisdiction. This is used for display purposes only.",
+      "type": "string",
+      "examples": [
+        "reg-1234"
+      ]
+    },
+    "effectiveDateEndi": {
+      "description": "Expiration date of the certificate in this jurisdiction. Null if the certificate has no expiration date in this jurisdiction.",
+      "type": "string",
+      "nullable": true,
+      "format": "date",
+      "examples": [
+        "2023-01-01"
+      ]
+    },
+    "notes": {
+      "description": "Optional internal notes. This is used for display purposes only.",
+      "type": "string",
+      "examples": [
+        "Optional internal notes"
+      ]
+    }
+  },
+  "required": [
+    "jurisId",
+    "registrationId",
+    "effectiveDateEndi",
+    "notes"
+  ]
+}

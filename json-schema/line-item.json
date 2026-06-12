@@ -1,0 +1,150 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/line-item.json",
+  "title": "LineItem",
+  "description": "Line item details",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "The ID of the line item in the source billing system, if available.",
+      "type": "string",
+      "nullable": true,
+      "example": "li_1234567890"
+    },
+    "product": {
+      "type": "object",
+      "properties": {
+        "internalId": {
+          "description": "The internal ID of the product.",
+          "type": "string",
+          "example": "saas-product-1"
+        },
+        "externalId": {
+          "description": "The external ID of the product.",
+          "type": "string",
+          "example": "product-1234567890"
+        },
+        "name": {
+          "description": "The name of the product.",
+          "type": "string",
+          "example": "Product 1"
+        },
+        "productTaxCategory": {
+          "description": "The tax category of the product.",
+          "type": "object",
+          "properties": {
+            "type": {
+              "description": "The type of the product tax category.",
+              "type": "string",
+              "enum": [
+                "standard",
+                "custom"
+              ]
+            },
+            "id": {
+              "description": "The ID of the product tax category.",
+              "type": "string",
+              "example": "saasBusiness"
+            },
+            "name": {
+              "description": "The name of the product tax category.",
+              "type": "string",
+              "example": "SaaS - General, B2B"
+            }
+          }
+        }
+      }
+    },
+    "quantity": {
+      "description": "The quantity of the line item.",
+      "type": "string",
+      "nullable": true,
+      "format": "Decimal",
+      "example": "1"
+    },
+    "unitPrice": {
+      "description": "The unit price of the line item in the smallest denomination of the currency (e.g. cents or pennies).",
+      "type": "string",
+      "nullable": true,
+      "format": "Decimal",
+      "example": "100.00"
+    },
+    "inputAmount": {
+      "description": "The input amount of the line item in the smallest denomination of the currency (e.g. cents or pennies).",
+      "type": "integer",
+      "format": "int64",
+      "example": 10000
+    },
+    "preTaxAmount": {
+      "description": "The pre-tax amount of the line item in the smallest denomination of the currency (e.g. cents or pennies).",
+      "type": "string",
+      "format": "Decimal",
+      "example": "100.00"
+    },
+    "taxAmountDue": {
+      "$ref": "#/components/schemas/TaxAmountDue"
+    },
+    "jurises": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "The name of the jurisdiction.",
+            "type": "string",
+            "example": "Texas"
+          },
+          "id": {
+            "description": "The ID of the jurisdiction.",
+            "type": "string",
+            "example": "us-TX"
+          },
+          "calc": {
+            "oneOf": [
+              {
+                "title": "TaxCalcRemitting",
+                "type": "object",
+                "properties": {
+                  "isRemitting": {
+                    "description": "Whether the seller is remitting tax to the jurisdiction.",
+                    "type": "boolean",
+                    "enum": [
+                      true
+                    ]
+                  },
+                  "taxes": {
+                    "description": "The taxes for each line item for the jurisdiction.",
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/LineItemJurisTax"
+                    }
+                  }
+                }
+              },
+              {
+                "title": "TaxCalcIfWereRemitting",
+                "type": "object",
+                "properties": {
+                  "isRemitting": {
+                    "description": "Whether the seller is remitting tax to the jurisdiction.",
+                    "type": "boolean",
+                    "enum": [
+                      false
+                    ]
+                  },
+                  "taxesIfWereRemitting": {
+                    "description": "The taxes for each line item for the jurisdiction if the seller were remitting tax.",
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/LineItemJurisTax"
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

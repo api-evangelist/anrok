@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/customer-certificate-juris.json",
+  "title": "CustomerCertificateJuris",
+  "type": "object",
+  "properties": {
+    "jurisId": {
+      "description": "Jurisdiction ID for which this exemption should apply (US only).",
+      "type": "string",
+      "enum": [
+        "us-AK",
+        "us-AL",
+        "us-AR",
+        "us-AS",
+        "us-AZ",
+        "us-CA",
+        "us-CO",
+        "us-CT",
+        "us-DC",
+        "us-DE",
+        "us-FL",
+        "us-GA",
+        "us-GU",
+        "us-HI",
+        "us-IA",
+        "us-ID",
+        "us-IL",
+        "us-IN",
+        "us-KS",
+        "us-KY",
+        "us-LA",
+        "us-MA",
+        "us-MD",
+        "us-ME",
+        "us-MI",
+        "us-MN",
+        "us-MO",
+        "us-MP",
+        "us-MS",
+        "us-MT",
+        "us-NC",
+        "us-ND",
+        "us-NE",
+        "us-NH",
+        "us-NJ",
+        "us-NM",
+        "us-NV",
+        "us-NY",
+        "us-OH",
+        "us-OK",
+        "us-OR",
+        "us-PA",
+        "us-PR",
+        "us-RI",
+        "us-SC",
+        "us-SD",
+        "us-TN",
+        "us-TX",
+        "us-UT",
+        "us-VA",
+        "us-VI",
+        "us-VT",
+        "us-WA",
+        "us-WI",
+        "us-WV",
+        "us-WY"
+      ],
+      "examples": [
+        "us-MA"
+      ]
+    },
+    "registrationId": {
+      "description": "Registration ID for jurisdiction. This is used for display purposes only.",
+      "type": "string",
+      "examples": [
+        "reg-1234"
+      ]
+    },
+    "effectiveDateEndi": {
+      "description": "Expiration date of certificate in this jurisdiction",
+      "type": "string",
+      "format": "date",
+      "examples": [
+        "2023-01-01"
+      ]
+    },
+    "notes": {
+      "description": "Optional internal notes. This is used for display purposes only.",
+      "type": "string",
+      "examples": [
+        "Optional internal notes"
+      ]
+    }
+  },
+  "required": [
+    "jurisId"
+  ]
+}

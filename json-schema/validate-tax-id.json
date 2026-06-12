@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/validate-tax-id.json",
+  "title": "ValidateTaxId",
+  "type": "object",
+  "properties": {
+    "customerAddress": {
+      "description": "The customer address. This address determines the applicable taxable jurisdictions for the customer. If the provided address cannot be resolved to a taxable jurisdiction with high confidence Anrok will return customerAddressCouldNotResolve.",
+      "$ref": "#/components/schemas/CustomerAddress"
+    },
+    "customerTaxIds": {
+      "description": "The tax IDs to validate.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "description": "The tax ID to validate.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value"
+        ]
+      }
+    }
+  },
+  "required": [
+    "customerAddress",
+    "customerTaxIds"
+  ]
+}

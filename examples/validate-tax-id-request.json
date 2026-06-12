@@ -1,0 +1,8 @@
+{
+  "summary": "Validate a customer tax ID",
+  "description": "Example request body for validating a VAT or tax identification number",
+  "value": {
+    "taxId": "DE123456789",
+    "country": "DE"
+  }
+}

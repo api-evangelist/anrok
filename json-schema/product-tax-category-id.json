@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/product-tax-category-id.json",
+  "title": "ProductTaxCategoryId",
+  "description": "Identifier for a product tax category (PTC), consisting of a `type` and `id`. A PTC may be one of the standard PTCs that Anrok provides or a custom PTC that has been created on your seller account.",
+  "type": "object",
+  "properties": {
+    "type": {
+      "description": "Whether this PTC is one of Anrok's standard PTCs or a custom PTC defined on your seller account.",
+      "type": "string",
+      "enum": [
+        "standard",
+        "custom"
+      ]
+    },
+    "id": {
+      "description": "The ID of the PTC. For a standard PTC, this is an Anrok internal identifier (for example, `saasBusiness`). For a custom PTC, this is the ID assigned when the PTC was created on the seller account.",
+      "type": "string",
+      "examples": [
+        "saasBusiness",
+        "sptc95hf85bdcd"
+      ]
+    }
+  },
+  "required": [
+    "type",
+    "id"
+  ]
+}

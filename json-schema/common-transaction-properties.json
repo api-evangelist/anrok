@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/common-transaction-properties.json",
+  "title": "CommonTransactionProperties",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "The ID of the transaction.",
+      "type": "string",
+      "example": "stripe:in_1JSW342eZvKYlo2C"
+    },
+    "anrokCreatedTime": {
+      "description": "The timestamp when the transaction was created in Anrok.",
+      "type": "string",
+      "format": "date-time",
+      "example": "2025-01-01T00:00:00Z"
+    },
+    "anrokModifiedTime": {
+      "description": "The timesstamp when the transaction was last modified in Anrok.",
+      "type": "string",
+      "format": "date-time",
+      "example": "2025-01-02T18:00:00Z"
+    },
+    "sourceBillingSystem": {
+      "description": "The billing system that the transaction originated from, if any.",
+      "type": "object",
+      "nullable": true,
+      "properties": {
+        "name": {
+          "type": "string",
+          "examples": [
+            "stripe",
+            "netsuite",
+            "quickbooks"
+          ]
+        },
+        "integrationId": {
+          "type": "string",
+          "example": "si5kec86tpyt"
+        },
+        "invoiceId": {
+          "type": "string",
+          "example": "in_1JSW342eZvKYlo2C"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/transaction-line-item.json",
+  "title": "TransactionLineItem",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Optional identifier for the line item. This is saved by Anrok and returned in the response, but not used for anything by Anrok.",
+      "type": "string"
+    },
+    "productExternalId": {
+      "description": "A product ID that has already been defined in the Anrok UI (under \"Product IDs\"). This is used to determine whether the line item is taxable.",
+      "type": "string"
+    },
+    "amount": {
+      "description": "The sale price in the smallest denomination of the currency (e.g. cents or pennies).",
+      "type": "integer",
+      "minimum": -100000000000,
+      "maximum": 100000000000
+    },
+    "isTaxIncludedInAmount": {
+      "description": "Whether the line item already includes tax in the amount.",
+      "type": "boolean"
+    },
+    "quantity": {
+      "description": "The quantity of the line item, as a string (e.g. `3` or `0.5`).",
+      "type": "string"
+    }
+  },
+  "required": [
+    "productExternalId",
+    "amount"
+  ]
+}

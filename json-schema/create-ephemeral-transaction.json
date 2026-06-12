@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/create-ephemeral-transaction.json",
+  "title": "CreateEphemeralTransaction",
+  "allOf": [
+    {
+      "$ref": "#/components/schemas/Transaction"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "customerId": {
+          "description": "The Anrok customer ID used to link transactions for the same customer and to look up tax exemption certificates for a customer. This is typically the billing system's customer ID with a prefix to disambiguate.\n- If customerId is provided without customerName, that customer object must\n  already exist in Anrok.\n- Customer IDs are unique across the entire seller account.\n",
+          "type": "string",
+          "examples": [
+            "v1:1292",
+            "stripe:cus_K39sWBu92Lo"
+          ]
+        }
+      }
+    }
+  ]
+}

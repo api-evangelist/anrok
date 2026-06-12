@@ -1,0 +1,100 @@
+vocabulary:
+  - term: seller
+    definition: >
+      The Anrok account holder (software company) that uses the API to calculate
+      and remit sales tax on behalf of their customers.
+
+  - term: transaction
+    definition: >
+      A sales event representing a charge to a customer. Transactions can be
+      created, updated, negated, voided, or queried. Anrok calculates the
+      applicable tax for each transaction at creation time.
+
+  - term: ephemeral transaction
+    definition: >
+      A temporary tax calculation that is not persisted in Anrok. Used to
+      preview tax amounts before committing a transaction.
+
+  - term: negation
+    definition: >
+      A transaction that reverses or credits a prior transaction, used for
+      refunds or corrections. Created via the createNegation endpoint.
+
+  - term: certificate
+    definition: >
+      An exemption certificate issued by a customer claiming exemption from
+      sales tax in one or more jurisdictions. Also called an exemption certificate.
+
+  - term: certificate request
+    definition: >
+      An automated email sent to a customer requesting they upload an exemption
+      certificate. Triggered via the certificateRequests/create endpoint.
+
+  - term: nexus
+    definition: >
+      A legal presence or economic connection in a US state or foreign country
+      that obligates a seller to collect and remit sales tax. Anrok manages nexus
+      registrations across 11,000+ US jurisdictions and 100+ countries.
+
+  - term: jurisdiction
+    definition: >
+      A taxing authority (state, county, city, or special district) whose tax
+      rules apply to a transaction based on the customer address and seller nexus.
+
+  - term: product tax category
+    definition: >
+      A standardized classification assigned to a product that determines how
+      it is taxed across jurisdictions. Anrok provides a catalog of product tax
+      categories.
+
+  - term: product mapping
+    definition: >
+      An association between a billing system's product ID and an Anrok product
+      and its product tax category, used for automatic tax classification.
+
+  - term: tax ID
+    definition: >
+      A government-issued identifier such as a VAT number (EU), GST number, or
+      EIN used to identify a taxable entity. Anrok validates these via the
+      taxId/validate endpoint.
+
+  - term: filing
+    definition: >
+      A tax return submitted to a jurisdiction on behalf of a seller summarizing
+      collected and remitted sales tax for a reporting period.
+
+  - term: line item
+    definition: >
+      A single chargeable component of a transaction, representing one product
+      or service sold. Each line item contributes to the total taxable amount.
+
+  - term: currency
+    definition: >
+      The ISO 4217 currency code for transaction amounts (e.g., "usd", "eur").
+      All monetary amounts in the API are expressed in the smallest currency unit
+      (e.g., cents for USD).
+
+  - term: accountingTime
+    definition: >
+      The ISO 8601 timestamp representing when a transaction is recorded for
+      accounting purposes, used to determine applicable tax rules for that date.
+
+  - term: Bearer token
+    definition: >
+      The API authentication credential passed in the Authorization header as
+      "Bearer {apiKey}". Obtained from the Anrok dashboard.
+
+  - term: rate limit
+    definition: >
+      The maximum request throughput allowed per seller account. The default
+      limit is 10 API requests per second.
+
+  - term: Anrok Atlas
+    definition: >
+      An AI-native agentic tax partner offered by Anrok for proactive compliance
+      monitoring, alerting sellers to nexus obligations and regulatory changes.
+
+  - term: integration
+    definition: >
+      A connection between Anrok and a billing system (e.g., Stripe, Chargebee,
+      Recurly) that enables product ID mapping and automated tax synchronization.

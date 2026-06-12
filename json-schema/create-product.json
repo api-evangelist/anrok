@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/anrok/main/json-schema/create-product.json",
+  "title": "CreateProduct",
+  "type": "object",
+  "properties": {
+    "externalId": {
+      "description": "Your unique identifier for this product. The external ID may contain only alphanumeric characters, spaces, and `.-_:`. It must not contain leading or trailing spaces or consecutive spaces.",
+      "type": "string",
+      "examples": [
+        "sku-1001"
+      ]
+    },
+    "taxCategoryId": {
+      "description": "Identifier for the product tax category (PTC), consisting of a `type` and `id`, to assign to this product. A PTC may be one of the standard PTCs that Anrok provides or a custom PTC that has been created on your seller account. Use the [List product tax categories endpoint](#tag/Products/operation/productTaxCategoriesList) to list the PTCs that are available on your seller account.",
+      "$ref": "#/components/schemas/ProductTaxCategoryId"
+    },
+    "name": {
+      "description": "The product's display name.",
+      "type": "string",
+      "examples": [
+        "Pro plan"
+      ]
+    },
+    "description": {
+      "description": "Optional description of the product.",
+      "type": "string",
+      "nullable": true,
+      "examples": [
+        "Monthly subscription to the Pro plan."
+      ]
+    }
+  },
+  "required": [
+    "externalId",
+    "taxCategoryId",
+    "name"
+  ]
+}
