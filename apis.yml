@@ -50,7 +50,7 @@ apis:
         url: https://raw.githubusercontent.com/api-evangelist/anrok/refs/heads/main/json-schema/
       - type: Vocabulary
         url: https://raw.githubusercontent.com/api-evangelist/anrok/refs/heads/main/vocabulary/anrok-vocabulary.yml
-      - type: JSONLd
+      - type: JSONLD
         url: https://raw.githubusercontent.com/api-evangelist/anrok/refs/heads/main/json-ld/anrok-context.jsonld
 common:
   - type: Website
