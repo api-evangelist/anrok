@@ -1,0 +1,15 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/anrok-api-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: http
+  type: http
+  scheme: Bearer
+  description: The Anrok API uses API keys to authenticate requests. You can view and manage
+    your API keys in [Anrok](https://app.anrok.com/-/api-keys). Use an Authorization header
+    in the format `Bearer {apiKey}` to authenticate Anrok API requests.
+  sources:
+  - openapi/anrok-api-openapi.yml

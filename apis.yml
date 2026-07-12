@@ -53,6 +53,14 @@ apis:
       - type: JSONLD
         url: https://raw.githubusercontent.com/api-evangelist/anrok/refs/heads/main/json-ld/anrok-context.jsonld
 common:
+  - type: TrustCenter
+    url: security/anrok-trust-center.yml
+  - type: VulnerabilityDisclosure
+    url: security/anrok-vulnerability-disclosure.yml
+  - type: DomainSecurity
+    url: security/anrok-domain-security.yml
+  - type: Authentication
+    url: authentication/anrok-authentication.yml
   - type: Website
     url: https://www.anrok.com/
   - type: Documentation
