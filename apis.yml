@@ -53,6 +53,8 @@ apis:
       - type: JSONLD
         url: https://raw.githubusercontent.com/api-evangelist/anrok/refs/heads/main/json-ld/anrok-context.jsonld
 common:
+  - type: AgenticAccess
+    url: agentic-access/anrok-agentic-access.yml
   - type: TrustCenter
     url: security/anrok-trust-center.yml
   - type: VulnerabilityDisclosure
