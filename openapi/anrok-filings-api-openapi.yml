@@ -1,0 +1,247 @@
+openapi: 3.0.3
+info:
+  title: Anrok Customer certificates Filings API
+  version: '1.1'
+  termsOfService: https://www.anrok.com/privacy-terms
+  contact:
+    email: support@anrok.com
+  license:
+    name: All rights reserved
+    url: https://www.anrok.com
+  x-logo:
+    url: https://global-uploads.webflow.com/632add85afcd1ac30aa74675/6357842d130e1f3e0e23d1fe_anrok_logo.svg
+  description: '# API reference
+
+
+    The Anrok API server is accessible at `https://api.anrok.com`.
+
+
+    All requests are HTTP POSTs with JSON in the body.
+
+
+    Authentication is via an HTTP header `Authorization: Bearer {apiKey}`.
+
+
+    The default rate limit for a seller account is 10 API requests per second.
+
+    '
+servers:
+- url: https://api.anrok.com
+security:
+- http: []
+tags:
+- name: Filings
+  description: '**The Filings endpoint is a premium feature. Please contact hello@anrok.com for more information to enable this on your seller account.**
+
+
+    This endpoint can be used to fetch filings from Anrok.
+
+    '
+paths:
+  /v1/seller/filings/list:
+    post:
+      tags:
+      - Filings
+      summary: List filings
+      description: 'Lists filings in Anrok. These can be filtered by the jurisdiction ID and the filing period end date.
+
+        This endpoint is a premium feature. Please contact hello@anrok.com for more information to enable this on your seller account.
+
+        '
+      operationId: filingsList
+      requestBody:
+        $ref: '#/components/requestBodies/ListFilings'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListFilingsSuccess'
+        '400':
+          $ref: '#/components/responses/ListFilingsBadRequest'
+        '409':
+          $ref: '#/components/responses/ListFilingsConflict'
+        '429':
+          $ref: '#/components/responses/RateLimit'
+      x-codeSamples:
+      - lang: cURL
+        source: "apiToken='sxxx/saxxx/secret.xxx'\n\ncurl -X POST https://api.anrok.com/v1/seller/filings/list \\\n  -H 'Content-Type: application/json' \\\n  -H \"Authorization: Bearer $apiToken\" \\\n  -d '{\n    \"filter\": {\n        \"jurisId\": \"us-MA\",\n        \"periodEndDateRangeInclusive\": \"2025-01..2025-03\"\n    }\n  }'\n"
+components:
+  requestBodies:
+    ListFilings:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              filter:
+                description: The filter to apply to the returned filings.
+                type: object
+                properties:
+                  jurisId:
+                    description: The jurisdiction to filter by.
+                    type: string
+                    examples:
+                    - eu-oss
+                    - us-MA
+                  periodEndDateRangeInclusive:
+                    description: The filing period end date range to filter by.
+                    type: string
+                    examples:
+                    - '2025'
+                    - 2025-01
+                    - 2025-01..2025-03
+                    - 2025-01-01..2025-03-31
+              limit:
+                description: The maximum number of filings to return.
+                type: integer
+                format: int32
+                minimum: 1
+                maximum: 100
+                default: 10
+              cursor:
+                description: The cursor to use for pagination. This is the value of the `nextCursor` field returned from the previous page.
+                type: string
+          examples:
+            jurisIdFilter:
+              summary: Filter filings by juris
+              value:
+                jurisId: us-MA
+            periodEndDateRangeInclusiveFilter:
+              summary: Filter filings by filing period end date range
+              value:
+                periodEndDateRangeInclusive: 2025-01..2025-03
+            jurisIdAndPeriodEndDateRangeInclusiveFilter:
+              summary: Filter filings by jurisdiction ID and filing period end date range
+              value:
+                jurisId: us-MA
+                periodEndDateRangeInclusive: 2025-01..2025-03
+            cursor:
+              summary: Cursor-based pagination
+              value:
+                cursor: eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
+                limit: 5
+      required: true
+  responses:
+    RateLimit:
+      description: Too Many Requests
+      headers:
+        Retry-After:
+          description: Number of seconds to wait for rate limit to reset.
+          schema:
+            type: integer
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: You've exceeded your API limit of 10 per second
+    ListFilingsSuccess:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              filings:
+                description: The list of filings.
+                type: array
+                items:
+                  type: object
+                  properties:
+                    jurisId:
+                      description: The ID of the jurisdiction.
+                      type: string
+                      examples:
+                      - eu-oss
+                      - us-MA
+                    jurisFilingId:
+                      description: The ID of the filing. This is a unique identifier for the filing within the jurisdiction.
+                      type: string
+                      examples:
+                      - 2025-01
+                    name:
+                      description: The name of the filing.
+                      type: string
+                      examples:
+                      - January 2025
+                    isAutomaticallyUpdatedForTransactionChanges:
+                      description: Whether the filing is automatically updated based on transaction changes. This is determined based on the status of the filing. For example, a transaction may be automatically added to or removed from a filing if the transaction's accounting date changes while the filing is "open". However, the filing is not automatically updated if the filing is locked for seller review. The filing may still be updated manually if this field is true.
+                      type: boolean
+                      examples:
+                      - true
+                    isFiled:
+                      description: Whether the filing has been filed.
+                      type: boolean
+                      examples:
+                      - false
+                    period:
+                      description: The period of the filing.
+                      type: object
+                      properties:
+                        begin:
+                          description: The beginning date of the filing period.
+                          type: string
+                          format: date
+                          examples:
+                          - '2025-01-01'
+                        endInclusive:
+                          description: The end date of the filing period (inclusive).
+                          type: string
+                          format: date
+                          examples:
+                          - '2025-01-31'
+              nextCursor:
+                description: The cursor to use for pagination.
+                type: string
+                examples:
+                - eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
+              hasMore:
+                description: Whether there are more filings to fetch.
+                type: boolean
+    ListFilingsBadRequest:
+      description: Bad Request
+      content:
+        text/plain:
+          schema:
+            type: string
+          examples:
+            invalidJurisIdProvided:
+              value: 'Request body: "filter": "jurisId": Invalid juris ID: "fake-juris-id"'
+              summary: Invalid juris ID
+            invalidPeriodEndDateRangeInclusiveProvided:
+              value: 'Request body: "filter": "periodEndDateRangeInclusive": Invalid period end date range: begin date comes after end date.'
+              summary: Invalid period end date range
+            invalidLimitProvided:
+              value: 'Request body: "limit": Number must be less than or equal to 100.'
+              summary: Invalid limit
+            cursorAndFilterBothProvided:
+              value: 'Request body: cursor and filter cannot both be provided.'
+              summary: Cursor and filter cannot both be provided
+    ListFilingsConflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                - invalidCursor
+                - listFilingsApiNotEnabled
+          examples:
+            invalidCursor:
+              value:
+                type: invalidCursor
+              summary: Invalid cursor
+            listFilingsApiNotEnabled:
+              value:
+                type: listFilingsApiNotEnabled
+              summary: List filings API not enabled
+  securitySchemes:
+    http:
+      type: http
+      description: 'The Anrok API uses API keys to authenticate requests. You can view and manage your API keys in [Anrok](https://app.anrok.com/-/api-keys). Use an Authorization header in the format `Bearer {apiKey}` to authenticate Anrok API requests.
+
+        '
+      scheme: Bearer
+externalDocs:
+  description: API Tutorials
+  url: https://apidocs.anrok.com/tutorials

@@ -1,0 +1,189 @@
+openapi: 3.0.3
+info:
+  title: Anrok Customer certificates Product mappings API
+  version: '1.1'
+  termsOfService: https://www.anrok.com/privacy-terms
+  contact:
+    email: support@anrok.com
+  license:
+    name: All rights reserved
+    url: https://www.anrok.com
+  x-logo:
+    url: https://global-uploads.webflow.com/632add85afcd1ac30aa74675/6357842d130e1f3e0e23d1fe_anrok_logo.svg
+  description: '# API reference
+
+
+    The Anrok API server is accessible at `https://api.anrok.com`.
+
+
+    All requests are HTTP POSTs with JSON in the body.
+
+
+    Authentication is via an HTTP header `Authorization: Bearer {apiKey}`.
+
+
+    The default rate limit for a seller account is 10 API requests per second.
+
+    '
+servers:
+- url: https://api.anrok.com
+security:
+- http: []
+tags:
+- name: Product mappings
+  description: 'The Anrok Product Mappings API endpoint allows you to dynamically map product IDs
+
+    for [Anrok-built billing system integrations](https://help-center.anrok.com/hc/en-us/articles/41966628275219-Anrok-integration-types#:~:text=Anrok%20API%20integration-,Anrok%2Dbuilt%20integrations,-These%20integrations%20are).
+
+    Note that this API endpoint is only used alongside an existing Anrok-built integration
+
+    and is not used for standalone product mappings. When using an Anrok-built billing
+
+    system integration, you can use this API endpoint to create many-to-1 mappings to
+
+    associate various products in your billing system with equivalent products that have
+
+    already been created in Anrok.
+
+    '
+paths:
+  /v1/seller/integrations/id:{integrationId}/productIdMapping/list:
+    parameters:
+    - $ref: '#/components/parameters/IntegrationId'
+    post:
+      tags:
+      - Product mappings
+      summary: List product mappings
+      description: Lists all Product ID mappings for this integration.
+      operationId: productIdMappingsList
+      requestBody:
+        $ref: '#/components/requestBodies/Empty'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties:
+                    type: string
+              example:
+              - billing_system_id_1: anrok_id_1
+              - billing_system_id_2: anrok_id_2
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                    - integrationIdNotFound
+              example:
+                type: integrationIdNotFound
+        '429':
+          $ref: '#/components/responses/RateLimit'
+  /v1/seller/integrations/id:{integrationId}/productIdMapping/add:
+    parameters:
+    - $ref: '#/components/parameters/IntegrationId'
+    post:
+      tags:
+      - Product mappings
+      summary: Add product mapping
+      description: Adds a product ID mapping for this integration.
+      operationId: productIdMappingsAdd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sourceId:
+                  description: Source product ID from billing system.
+                  type: string
+                targetId:
+                  description: Target product ID on Anrok. This product must already exist in Anrok.
+                  type: string
+                shouldOverwrite:
+                  description: Whether this request should override an existing `sourceId` mapping.
+                  type: boolean
+                  default: false
+              required:
+              - sourceId
+              - targetId
+            example:
+              sourceId: billing system ID
+              targetId: anrok ID
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+              example: {}
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                    - integrationIdNotFound
+                    - sourceIdAlreadyMapped
+                    - targetIdNotFound
+              example:
+                type: targetIdNotFound
+        '429':
+          $ref: '#/components/responses/RateLimit'
+components:
+  requestBodies:
+    Empty:
+      content:
+        application/json:
+          schema:
+            type: object
+          examples:
+            emptyExample:
+              value: {}
+              summary: Empty request body
+      required: true
+  parameters:
+    IntegrationId:
+      name: integrationId
+      in: path
+      description: Your unique integration ID.
+      required: true
+      schema:
+        type: string
+  responses:
+    RateLimit:
+      description: Too Many Requests
+      headers:
+        Retry-After:
+          description: Number of seconds to wait for rate limit to reset.
+          schema:
+            type: integer
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: You've exceeded your API limit of 10 per second
+  securitySchemes:
+    http:
+      type: http
+      description: 'The Anrok API uses API keys to authenticate requests. You can view and manage your API keys in [Anrok](https://app.anrok.com/-/api-keys). Use an Authorization header in the format `Bearer {apiKey}` to authenticate Anrok API requests.
+
+        '
+      scheme: Bearer
+externalDocs:
+  description: API Tutorials
+  url: https://apidocs.anrok.com/tutorials

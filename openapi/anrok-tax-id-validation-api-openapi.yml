@@ -1,0 +1,225 @@
+openapi: 3.0.3
+info:
+  title: Anrok Customer certificates Tax ID validation API
+  version: '1.1'
+  termsOfService: https://www.anrok.com/privacy-terms
+  contact:
+    email: support@anrok.com
+  license:
+    name: All rights reserved
+    url: https://www.anrok.com
+  x-logo:
+    url: https://global-uploads.webflow.com/632add85afcd1ac30aa74675/6357842d130e1f3e0e23d1fe_anrok_logo.svg
+  description: '# API reference
+
+
+    The Anrok API server is accessible at `https://api.anrok.com`.
+
+
+    All requests are HTTP POSTs with JSON in the body.
+
+
+    Authentication is via an HTTP header `Authorization: Bearer {apiKey}`.
+
+
+    The default rate limit for a seller account is 10 API requests per second.
+
+    '
+servers:
+- url: https://api.anrok.com
+security:
+- http: []
+tags:
+- name: Tax ID validation
+  description: "**The Anrok Tax ID Validation endpoint is a premium feature. Please contact hello@anrok.com for more information to enable this on your Anrok seller account.**\n\n\n1. Pass a customer address and an empty array of customerTaxIds:\n\t- Anrok verifies the customer address is valid for tax calculation.\n\t- Anrok responds with the list of customer tax IDs to collect.\n1. Collect the customer tax IDs and call the API endpoint again to validate them:\n\t- Anrok provides a list of valid tax IDs for each applicable jurisdiction.\n"
+paths:
+  /v1/seller/taxId/validate:
+    post:
+      tags:
+      - Tax ID validation
+      summary: Validate tax IDs
+      description: This endpoint is used to assist in the collection and validation of customer tax IDs.
+      operationId: taxIdsValidate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateTaxId'
+            example:
+              customerAddress:
+                country: CA
+                line1: 123 Main St
+                city: Quebec City
+                region: Quebec
+                postalCode: G1P 2J6
+              customerTaxIds:
+              - value: '123456789'
+              - value: '987654321'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidateTaxIdSuccess'
+              example:
+                jurises:
+                - name: Canada (federal)
+                  taxIdNames:
+                    name: GST/HST account number
+                    abbreviation: null
+                  validTaxIds:
+                  - value: '123456789'
+                - name: Quebec
+                  taxIdNames:
+                    name: QST registration number
+                    abbreviation: null
+                  validTaxIds:
+                  - value: '987654321'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                missingRequiredProperty:
+                  value: 'Request body: "customerAddress": Required.'
+                  summary: Missing required property
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                    - customerAddressCouldNotResolve
+                    - externalServiceError
+                    - validationNotEnabled
+                    - validationNotSupportedForCountry
+              example:
+                type: customerAddressCouldNotResolve
+        '429':
+          $ref: '#/components/responses/RateLimit'
+      x-codeSamples:
+      - lang: cURL
+        source: "apiToken='sxxx/saxxx/secret.xxx'\n\ncurl -X POST https://api.anrok.com/v1/seller/taxId/validate \\\n  -H 'Content-Type: application/json' \\\n  -H \"Authorization: Bearer $apiToken\" \\\n  -d '{\n    \"customerAddress\": {\n      \"country\": \"CA\",\n      \"line1\": \"123 Main St\",\n      \"city\": \"Quebec City\",\n      \"region\": \"Quebec\",\n      \"postalCode\": \"G1P 2J6\"\n    },\n    \"customerTaxIds\": [{\n      \"value\": \"123456789\"\n    }]\n  }'"
+components:
+  schemas:
+    CustomerAddress:
+      type: object
+      title: Address
+      properties:
+        country:
+          description: The country's full name or 2-letter ISO code
+          type: string
+          nullable: true
+          examples:
+          - UK
+          - United Kingdom
+        line1:
+          description: The "delivery line" of the address
+          type: string
+          nullable: true
+        city:
+          description: City or town name
+          type: string
+          nullable: true
+        region:
+          description: Other principal subdivision (i.e. province, state, county)
+          type: string
+          nullable: true
+        postalCode:
+          description: Postal code
+          type: string
+          nullable: true
+      required: []
+      examples:
+      - country: ENGLAND
+        line1: 2045 ROYAL ROAD
+        city: LONDON
+        postalCode: WIP 6HQ
+      - country: AU
+        line1: 71 Gaggin Street
+        city: Heddon Greta
+        region: New South Wales
+        postalCode: '2321'
+    ValidateTaxIdSuccess:
+      type: object
+      properties:
+        jurises:
+          description: List of applicable taxable jurisdictions that require tax ID collection/validation based on the customer address.
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                description: A user-friendly name for the jurisdiction.
+                type: string
+              taxIdNames:
+                description: List of applicable tax IDs to collect/validate for the jurisdiction.
+                type: object
+                properties:
+                  name:
+                    description: A user-friendly tax ID name.
+                    type: string
+                  abbreviation:
+                    description: The tax ID abbreviation (if any).
+                    type: string
+                    nullable: true
+              validTaxIds:
+                description: A list of tax IDs from the API request that are valid in the jurisdiction.
+                type: array
+                items:
+                  type: object
+                  properties:
+                    value:
+                      description: The valid tax ID(s) from the request.
+                      type: string
+    ValidateTaxId:
+      type: object
+      properties:
+        customerAddress:
+          description: The customer address. This address determines the applicable taxable jurisdictions for the customer. If the provided address cannot be resolved to a taxable jurisdiction with high confidence Anrok will return customerAddressCouldNotResolve.
+          $ref: '#/components/schemas/CustomerAddress'
+        customerTaxIds:
+          description: The tax IDs to validate.
+          type: array
+          items:
+            type: object
+            properties:
+              value:
+                description: The tax ID to validate.
+                type: string
+            required:
+            - value
+      required:
+      - customerAddress
+      - customerTaxIds
+  responses:
+    RateLimit:
+      description: Too Many Requests
+      headers:
+        Retry-After:
+          description: Number of seconds to wait for rate limit to reset.
+          schema:
+            type: integer
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: You've exceeded your API limit of 10 per second
+  securitySchemes:
+    http:
+      type: http
+      description: 'The Anrok API uses API keys to authenticate requests. You can view and manage your API keys in [Anrok](https://app.anrok.com/-/api-keys). Use an Authorization header in the format `Bearer {apiKey}` to authenticate Anrok API requests.
+
+        '
+      scheme: Bearer
+externalDocs:
+  description: API Tutorials
+  url: https://apidocs.anrok.com/tutorials

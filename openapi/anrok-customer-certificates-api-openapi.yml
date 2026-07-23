@@ -1,0 +1,739 @@
+openapi: 3.0.3
+info:
+  title: Anrok Customer certificates API
+  version: '1.1'
+  termsOfService: https://www.anrok.com/privacy-terms
+  contact:
+    email: support@anrok.com
+  license:
+    name: All rights reserved
+    url: https://www.anrok.com
+  x-logo:
+    url: https://global-uploads.webflow.com/632add85afcd1ac30aa74675/6357842d130e1f3e0e23d1fe_anrok_logo.svg
+  description: '# API reference
+
+
+    The Anrok API server is accessible at `https://api.anrok.com`.
+
+
+    All requests are HTTP POSTs with JSON in the body.
+
+
+    Authentication is via an HTTP header `Authorization: Bearer {apiKey}`.
+
+
+    The default rate limit for a seller account is 10 API requests per second.
+
+    '
+servers:
+- url: https://api.anrok.com
+security:
+- http: []
+tags:
+- name: Customer certificates
+  description: 'A sales tax exemption certificate documents the exemption claimed by a purchaser
+
+    to legally make a tax-free purchase.
+
+    Certificates can be uploaded to Anrok via the Anrok UI as well as via the API.
+
+    See our
+
+    <a href="https://help-center.anrok.com/hc/en-us/articles/24861687025299-Upload-an-exemption-certificate">Help Center article</a>
+
+    for more information.
+
+    '
+paths:
+  /v1/seller/certificates/create:
+    post:
+      tags:
+      - Customer certificates
+      summary: Create customer certificate
+      description: This endpoint is used to create a new customer certificate in Anrok.
+      operationId: certificatesCreate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerCertificate'
+            example:
+              customerId: cus_123
+              customerName: Acme Inc
+              effectiveDateBegin: '2022-01-01'
+              exemptionNumber: cert-100
+              certificateFile:
+                name: cert.png
+                contentsBase64: Y2VydC5wbmc=
+              jurises:
+              - jurisId: us-MA
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Certificate ID
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                missingRequiredProperty:
+                  value: 'Request body: "customerId": Required.'
+                  summary: Missing required property
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                    - duplicateJurisIds
+                    - customerIdNotFound
+                    - fileTypeNotSupported
+                    - jurisNotFound
+              example:
+                type: duplicateJurisIds
+        '429':
+          $ref: '#/components/responses/RateLimit'
+      x-codeSamples:
+      - lang: cURL
+        source: "apiToken=\"sxxx/saxxx/secret.xxx\"\ncertName=\"cert.png\"\ncertContentsBase64=$(base64 -i \"$certName\")\n\ncurl -X POST https://api.anrok.com/v1/seller/certificates/create \\\n  -H 'Content-Type: application/json' \\\n  -H \"Authorization: Bearer $apiToken\" \\\n  -d \"{\n    \\\"customerId\\\": \\\"customer-id-0\\\",\n    \\\"effectiveDateBegin\\\": \\\"2022-12-13\\\",\n    \\\"exemptionNumber\\\": \\\"cert-100\\\",\n    \\\"certificateFile\\\": {\n        \\\"name\\\": \\\"$certName\\\",\n        \\\"contentsBase64\\\": \\\"$certContentsBase64\\\"\n    },\n    \\\"jurises\\\": [{\n        \\\"jurisId\\\": \\\"us-MA\\\"\n    }]\n  }\""
+  /v1/seller/certificates/id:{certificateId}/archive:
+    parameters:
+    - $ref: '#/components/parameters/CertificateId'
+    post:
+      tags:
+      - Customer certificates
+      summary: Archive customer certificate
+      description: This endpoint is used to archive/invalidate a customer certificate.
+      operationId: certificatesArchive
+      requestBody:
+        $ref: '#/components/requestBodies/Empty'
+      responses:
+        '200':
+          $ref: '#/components/responses/EmptyResponse'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                    - certificateIdNotFound
+              example:
+                type: certificateIdNotFound
+        '429':
+          $ref: '#/components/responses/RateLimit'
+      x-codeSamples:
+      - lang: cURL
+        source: "apiToken=\"sxxx/saxxx/secret.xxx\"\ncertificateId=\"ctec6vx7gtrmxq\"\n\ncurl -X POST \"https://api.anrok.com/v1/seller/certificates/id:$certificateId/archive\" \\\n  -H 'Content-Type: application/json' \\\n  -H \"Authorization: Bearer $apiToken\" \\\n  -d \"{}\""
+  /v1/seller/certificates/id:{certificateId}/get:
+    parameters:
+    - $ref: '#/components/parameters/CertificateId'
+    post:
+      tags:
+      - Customer certificates
+      summary: Get customer certificate
+      description: Retrieves a customer certificate by its Anrok-assigned ID.
+      operationId: certificatesGet
+      requestBody:
+        $ref: '#/components/requestBodies/Empty'
+      responses:
+        '200':
+          $ref: '#/components/responses/GetCertificateSuccess'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                    - certificateIdNotFound
+              example:
+                type: certificateIdNotFound
+        '429':
+          $ref: '#/components/responses/RateLimit'
+      x-codeSamples:
+      - lang: cURL
+        source: "apiToken=\"sxxx/saxxx/secret.xxx\"\ncertificateId=\"ctec6vx7gtrmxq\"\n\ncurl -X POST \"https://api.anrok.com/v1/seller/certificates/id:$certificateId/get\" \\\n  -H 'Content-Type: application/json' \\\n  -H \"Authorization: Bearer $apiToken\" \\\n  -d \"{}\"\n"
+  /v1/seller/certificates/list:
+    post:
+      tags:
+      - Customer certificates
+      summary: List customer certificates
+      description: 'Lists customer certificates in Anrok. Results can be filtered by customer ID or status, and are returned in pages using cursor-based pagination.
+
+        '
+      operationId: certificatesList
+      requestBody:
+        $ref: '#/components/requestBodies/ListCertificates'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListCertificatesSuccess'
+        '400':
+          $ref: '#/components/responses/ListCertificatesBadRequest'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                    - invalidCursor
+                    - customerIdNotFound
+              examples:
+                invalidCursor:
+                  value:
+                    type: invalidCursor
+                  summary: Invalid cursor
+                customerIdNotFound:
+                  value:
+                    type: customerIdNotFound
+                  summary: Customer ID in filter does not exist
+        '429':
+          $ref: '#/components/responses/RateLimit'
+      x-codeSamples:
+      - lang: cURL
+        source: "apiToken='sxxx/saxxx/secret.xxx'\n\ncurl -X POST https://api.anrok.com/v1/seller/certificates/list \\\n  -H 'Content-Type: application/json' \\\n  -H \"Authorization: Bearer $apiToken\" \\\n  -d '{\n    \"filter\": {\n        \"status\": \"active\"\n    },\n    \"limit\": 25\n  }'\n"
+  /v1/seller/certificateRequests/create:
+    post:
+      tags:
+      - Customer certificates
+      summary: Create customer certificate request
+      description: 'Creates a customer certificate request and (by default) emails it to the customer contact. The recipient can upload their certificate via the returned `requestLink`.
+
+
+        This endpoint is a premium feature. Please contact hello@anrok.com to enable the exemption certificate portal on your seller account.
+
+        '
+      operationId: certificateRequestsCreate
+      requestBody:
+        $ref: '#/components/requestBodies/CreateCertificateRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  requestId:
+                    description: The Anrok-assigned ID of the certificate request.
+                    type: string
+                    examples:
+                    - cre_3xT8sLpz4q
+                  requestLink:
+                    description: The URL the customer can use to upload their certificate.
+                    type: string
+                    format: uri
+                    examples:
+                    - https://app.anrok.com/certificate-request/cre_3xT8sLpz4q
+                required:
+                - requestId
+                - requestLink
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                missingRequiredProperty:
+                  value: 'Request body: "customerId": Required.'
+                  summary: Missing required property
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                    - customerIdNotFound
+                    - featureNotEnabled
+                    - invalidEmailAddress
+              examples:
+                customerIdNotFound:
+                  value:
+                    type: customerIdNotFound
+                  summary: Customer ID does not exist
+                featureNotEnabled:
+                  value:
+                    type: featureNotEnabled
+                  summary: Exemption certificate portal not enabled for this seller
+                invalidEmailAddress:
+                  value:
+                    type: invalidEmailAddress
+                  summary: Email address is not valid
+        '429':
+          $ref: '#/components/responses/RateLimit'
+      x-codeSamples:
+      - lang: cURL
+        source: "apiToken='sxxx/saxxx/secret.xxx'\n\ncurl -X POST https://api.anrok.com/v1/seller/certificateRequests/create \\\n  -H 'Content-Type: application/json' \\\n  -H \"Authorization: Bearer $apiToken\" \\\n  -d '{\n    \"customerId\": \"v1:1292\",\n    \"customerName\": \"Acme Inc\",\n    \"emailAddress\": \"contact@acme.com\"\n  }'\n"
+components:
+  responses:
+    EmptyResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+          example: {}
+    GetCertificateSuccess:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CustomerCertificateResponse'
+    RateLimit:
+      description: Too Many Requests
+      headers:
+        Retry-After:
+          description: Number of seconds to wait for rate limit to reset.
+          schema:
+            type: integer
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: You've exceeded your API limit of 10 per second
+    ListCertificatesBadRequest:
+      description: Bad Request
+      content:
+        text/plain:
+          schema:
+            type: string
+          examples:
+            invalidStatusProvided:
+              value: 'Request body: "filter": "status": Invalid enum value.'
+              summary: Invalid status filter value
+            invalidLimitProvided:
+              value: 'Request body: "limit": Number must be less than or equal to 100.'
+              summary: Invalid limit
+            cursorAndFilterBothProvided:
+              value: 'Request body: cursor and filter cannot both be provided.'
+              summary: Cursor and filter cannot both be provided
+    ListCertificatesSuccess:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              certificates:
+                description: The list of certificates.
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerCertificateResponse'
+              nextCursor:
+                description: The cursor to use to fetch the next page of results. Null if there are no more pages.
+                type: string
+                nullable: true
+                examples:
+                - eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
+              hasMore:
+                description: Whether there are more certificates available beyond this page.
+                type: boolean
+            required:
+            - certificates
+            - nextCursor
+            - hasMore
+  schemas:
+    CustomerCertificateJuris:
+      type: object
+      properties:
+        jurisId:
+          description: Jurisdiction ID for which this exemption should apply (US only).
+          type: string
+          enum:
+          - us-AK
+          - us-AL
+          - us-AR
+          - us-AS
+          - us-AZ
+          - us-CA
+          - us-CO
+          - us-CT
+          - us-DC
+          - us-DE
+          - us-FL
+          - us-GA
+          - us-GU
+          - us-HI
+          - us-IA
+          - us-ID
+          - us-IL
+          - us-IN
+          - us-KS
+          - us-KY
+          - us-LA
+          - us-MA
+          - us-MD
+          - us-ME
+          - us-MI
+          - us-MN
+          - us-MO
+          - us-MP
+          - us-MS
+          - us-MT
+          - us-NC
+          - us-ND
+          - us-NE
+          - us-NH
+          - us-NJ
+          - us-NM
+          - us-NV
+          - us-NY
+          - us-OH
+          - us-OK
+          - us-OR
+          - us-PA
+          - us-PR
+          - us-RI
+          - us-SC
+          - us-SD
+          - us-TN
+          - us-TX
+          - us-UT
+          - us-VA
+          - us-VI
+          - us-VT
+          - us-WA
+          - us-WI
+          - us-WV
+          - us-WY
+          examples:
+          - us-MA
+        registrationId:
+          description: Registration ID for jurisdiction. This is used for display purposes only.
+          type: string
+          examples:
+          - reg-1234
+        effectiveDateEndi:
+          description: Expiration date of certificate in this jurisdiction
+          type: string
+          format: date
+          examples:
+          - '2023-01-01'
+        notes:
+          description: Optional internal notes. This is used for display purposes only.
+          type: string
+          examples:
+          - Optional internal notes
+      required:
+      - jurisId
+    CustomerCertificateJurisResponse:
+      type: object
+      properties:
+        jurisId:
+          description: Jurisdiction ID for which this exemption applies.
+          type: string
+          examples:
+          - us-MA
+        registrationId:
+          description: Registration ID for the jurisdiction. This is used for display purposes only.
+          type: string
+          examples:
+          - reg-1234
+        effectiveDateEndi:
+          description: Expiration date of the certificate in this jurisdiction. Null if the certificate has no expiration date in this jurisdiction.
+          type: string
+          nullable: true
+          format: date
+          examples:
+          - '2023-01-01'
+        notes:
+          description: Optional internal notes. This is used for display purposes only.
+          type: string
+          examples:
+          - Optional internal notes
+      required:
+      - jurisId
+      - registrationId
+      - effectiveDateEndi
+      - notes
+    CustomerId:
+      description: "The Anrok customer ID used to link transactions for the same customer and to look up tax exemption certificates for a customer. This is typically the billing system's customer ID with a prefix to disambiguate.\n- If customerId is provided without customerName, that customer object must\n  already exist in Anrok.\n- If both customerId and customerName are provided, the customer object will\n  be created if it is not already present.\n- Customer IDs are unique across the entire seller account.\n"
+      type: string
+      examples:
+      - v1:1292
+      - stripe:cus_K39sWBu92Lo
+    CustomerCertificateResponse:
+      type: object
+      properties:
+        id:
+          description: The Anrok-assigned ID of the certificate.
+          type: string
+          examples:
+          - ctec6vx7gtrmxq
+        status:
+          description: 'The current status of the certificate.
+
+
+            - `active`: the certificate is valid.
+
+            - `expiringSoon`: the certificate is valid but expires within 60 days in at least one jurisdiction.
+
+            - `expired`: the certificate has expired in every jurisdiction it covers.
+
+            - `archived`: the certificate has been archived.
+
+            '
+          type: string
+          enum:
+          - active
+          - expiringSoon
+          - expired
+          - archived
+          examples:
+          - active
+        customerId:
+          description: The Anrok customer ID of the customer the certificate belongs to.
+          type: string
+          examples:
+          - v1:1292
+          - stripe:cus_K39sWBu92Lo
+        customerName:
+          description: The name of the customer.
+          type: string
+          examples:
+          - Acme Inc
+        createdTime:
+          description: The time at which the certificate was created in Anrok.
+          type: string
+          format: date-time
+          examples:
+          - '2025-01-15T18:23:45.000Z'
+        effectiveDateBegin:
+          description: Effective date of the certificate.
+          type: string
+          format: date
+          examples:
+          - '2022-01-01'
+        expiryDate:
+          description: The earliest expiration date across all jurisdictions covered by the certificate. Null if no jurisdiction has an expiration date set.
+          type: string
+          nullable: true
+          format: date
+          examples:
+          - '2023-01-01'
+        exemptionNumber:
+          description: Certificate exemption number.
+          type: string
+          examples:
+          - cert-105
+        notes:
+          description: Optional internal notes.
+          type: string
+          examples:
+          - customer notes
+        jurises:
+          description: The jurisdictions to which the certificate applies.
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerCertificateJurisResponse'
+      required:
+      - id
+      - status
+      - customerId
+      - customerName
+      - createdTime
+      - effectiveDateBegin
+      - expiryDate
+      - exemptionNumber
+      - notes
+      - jurises
+    CustomerName:
+      description: The name of the customer. This is used for display purposes only.
+      type: string
+      examples:
+      - Acme Inc
+    CustomerCertificate:
+      type: object
+      properties:
+        customerId:
+          $ref: '#/components/schemas/CustomerId'
+        customerName:
+          $ref: '#/components/schemas/CustomerName'
+        effectiveDateBegin:
+          description: Effective date of certificate
+          type: string
+          format: date
+          examples:
+          - '2022-01-01'
+        exemptionNumber:
+          description: Certificate exemption number. This is used for display purposes only.
+          type: string
+          examples:
+          - cert-105
+        notes:
+          description: Optional internal notes.
+          type: string
+          examples:
+          - customer notes
+        certificateFile:
+          $ref: '#/components/schemas/CustomerCertificateFile'
+        jurises:
+          description: Jurisdictions for which certificate applies
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerCertificateJuris'
+      required:
+      - customerId
+      - effectiveDateBegin
+      - certificateFile
+      - jurises
+    CustomerCertificateFile:
+      type: object
+      properties:
+        name:
+          description: File name
+          type: string
+          examples:
+          - cert.png
+        contentsBase64:
+          description: Base64 encoded certificate image contents
+          type: string
+          examples:
+          - Y2VydC5wbmc=
+      required:
+      - name
+      - contentsBase64
+  parameters:
+    CertificateId:
+      name: certificateId
+      in: path
+      description: ID of the certificate.
+      required: true
+      schema:
+        type: string
+  requestBodies:
+    Empty:
+      content:
+        application/json:
+          schema:
+            type: object
+          examples:
+            emptyExample:
+              value: {}
+              summary: Empty request body
+      required: true
+    CreateCertificateRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              customerId:
+                $ref: '#/components/schemas/CustomerId'
+              customerName:
+                $ref: '#/components/schemas/CustomerName'
+              emailAddress:
+                description: The email address of the customer contact to send the certificate request to.
+                type: string
+                format: email
+                examples:
+                - contact@acme.com
+              sendEmail:
+                description: Whether to email the certificate request to the recipient. If `false`, the request is created but no email is sent — you can share the resulting `requestLink` directly.
+                type: boolean
+                default: true
+            required:
+            - customerId
+            - emailAddress
+          example:
+            customerId: v1:1292
+            customerName: Acme Inc
+            emailAddress: contact@acme.com
+      required: true
+    ListCertificates:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              filter:
+                description: The filter to apply to the returned certificates. Cannot be provided together with `cursor`.
+                type: object
+                properties:
+                  customerId:
+                    description: Only return certificates belonging to this customer.
+                    type: string
+                    examples:
+                    - v1:1292
+                  status:
+                    description: 'Only return certificates with this status. If omitted, certificates of all statuses are returned.
+
+                      '
+                    type: string
+                    enum:
+                    - active
+                    - expiringSoon
+                    - expired
+                    - archived
+                    examples:
+                    - active
+              limit:
+                description: The maximum number of certificates to return.
+                type: integer
+                format: int32
+                minimum: 1
+                maximum: 100
+                default: 25
+              cursor:
+                description: The cursor to use for pagination. This is the value of the `nextCursor` field returned from the previous page. Cannot be provided together with `filter`.
+                type: string
+                example: eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
+          examples:
+            noFilter:
+              summary: List all certificates
+              value: {}
+            customerIdFilter:
+              summary: Filter certificates by customer ID
+              value:
+                filter:
+                  customerId: v1:1292
+            statusFilter:
+              summary: Filter certificates by status
+              value:
+                filter:
+                  status: expiringSoon
+            cursor:
+              summary: Cursor-based pagination
+              value:
+                cursor: eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
+                limit: 5
+      required: true
+  securitySchemes:
+    http:
+      type: http
+      description: 'The Anrok API uses API keys to authenticate requests. You can view and manage your API keys in [Anrok](https://app.anrok.com/-/api-keys). Use an Authorization header in the format `Bearer {apiKey}` to authenticate Anrok API requests.
+
+        '
+      scheme: Bearer
+externalDocs:
+  description: API Tutorials
+  url: https://apidocs.anrok.com/tutorials
