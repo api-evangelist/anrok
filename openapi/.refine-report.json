@@ -1,0 +1,24 @@
+{
+  "provider": "anrok",
+  "sources": [
+    "anrok-customer-certificates-api-openapi.yml",
+    "anrok-filings-api-openapi.yml",
+    "anrok-product-mappings-api-openapi.yml",
+    "anrok-products-api-openapi.yml",
+    "anrok-tax-id-validation-api-openapi.yml",
+    "anrok-transactions-api-openapi.yml"
+  ],
+  "outputs": [
+    "anrok-customer-certificates-api-openapi.yml",
+    "anrok-filings-api-openapi.yml",
+    "anrok-product-mappings-api-openapi.yml",
+    "anrok-products-api-openapi.yml",
+    "anrok-tax-id-validation-api-openapi.yml",
+    "anrok-transactions-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
