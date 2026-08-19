@@ -1,0 +1,71 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anrok Customer certificates Products API",
+    "version": "1.1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Products",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create product",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anrok.com/v1/seller/products/create",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new product in Anrok, given a unique external ID and a product tax category (PTC) which determines the product's taxability in each jurisdiction."
+        },
+        {
+          "info": {
+            "name": "Get product",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anrok.com/v1/seller/products/externalId::externalId/get",
+            "params": [
+              {
+                "name": "externalId",
+                "value": "",
+                "type": "path",
+                "description": "The external ID of the product."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Looks up a product in Anrok by its external ID. Returns the product's external ID, tax category, name, and description."
+        },
+        {
+          "info": {
+            "name": "List product tax categories",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anrok.com/v1/seller/productTaxCategories/list",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Lists all product tax categories (PTCs) that are available on the seller account. This includes the standard PTCs that Anrok has enabled for the seller as well as any custom PTCs that have been created on the seller account. The returned IDs may be used as the `taxCategoryId` when creating a product."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,1302 @@
+{
+  "item": [
+    {
+      "id": "73e799d1-6c97-4d67-8d3c-dd8145a0c2e1",
+      "name": "Transactions",
+      "description": {
+        "content": "This documentation describes how to use Anrok's Transactions API to synchronize transactions between Anrok and your billing system, as well as calculate sales tax for new invoices. Use of this API is generally recommended for sellers with custom billing systems or workflows that prevent you from using one of our pre-built platform integrations. Sellers utilizing Stripe Subscriptions or Checkout may also use this API to calculate and add tax on initial invoices, while continuing to use Anrok's Stripe integration to manage tax for subsequent billing cycles.\n\n# Invoice lifecycle\n1. When an invoice is created: the billing system should call the `createEphemeral` endpoint to calculate the sales tax amount.\n1. When an invoice is updated: same as above.\n1. When an invoice is finalized and ready to send to the customer: the billing system should call the `createOrUpdate` endpoint so that the transaction is recorded in Anrok.\n1. When an invoice is paid: Anrok does not need to be notified. Sellers are required to remit sales tax to a state upon invoice, not receipt of payment.\n\nWhile the above covers a standard invoice lifecycle, the Transactions API also includes endpoints for exceptional states like voiding and negating invoices, which are described below.\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "21072e3a-3d97-4423-a193-7b37f0933542",
+          "name": "Create or update transaction",
+          "request": {
+            "name": "Create or update transaction",
+            "description": {
+              "content": "Given the details of an invoice, calculate sales tax and save it as a transaction in Anrok. Saved transactions are used by Anrok to file sales tax returns and monitor sales thresholds.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "seller",
+                "transactions",
+                "createOrUpdate"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currencyCode\": \"<string>\",\n  \"customerAddress\": {\n    \"country\": \"<string>\",\n    \"line1\": \"<string>\",\n    \"city\": \"<string>\",\n    \"region\": \"<string>\",\n    \"postalCode\": \"<string>\"\n  },\n  \"id\": \"<string>\",\n  \"lineItems\": [\n    {\n      \"productExternalId\": \"<string>\",\n      \"amount\": \"<integer>\",\n      \"id\": \"<string>\",\n      \"isTaxIncludedInAmount\": \"<boolean>\",\n      \"quantity\": \"<string>\"\n    },\n    {\n      \"productExternalId\": \"<string>\",\n      \"amount\": \"<integer>\",\n      \"id\": \"<string>\",\n      \"isTaxIncludedInAmount\": \"<boolean>\",\n      \"quantity\": \"<string>\"\n    }\n  ],\n  \"customerName\": \"<string>\",\n  \"customerTaxIds\": [\n    {\n      \"type\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"shipFromAddress\": {\n    \"country\": \"<string>\",\n    \"line1\": \"<string>\",\n    \"city\": \"<string>\",\n    \"region\": \"<string>\",\n    \"postalCode\": \"<string>\"\n  },\n  \"accountingDate\": \"<date>\",\n  \"accountingTime\": \"<dateTime>\",\n  \"accountingTimeZone\": \"<string>\",\n  \"taxDate\": \"<date>\",\n  \"customerId\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "fd4e2ed5-d2a6-4738-aa4f-707870d791db",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "transactions",
+                    "createOrUpdate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"stripe:in_1JSW342eZvKYlo2C\",\n  \"currencyCode\": \"usd\",\n  \"accountingTime\": \"2022-01-02T03:30:00Z\",\n  \"accountingTimeZone\": \"UTC\",\n  \"lineItems\": [\n    {\n      \"id\": \"item-1\",\n      \"productExternalId\": \"saas-product-1\",\n      \"amount\": 15000,\n      \"isTaxIncludedInAmount\": false,\n      \"quantity\": \"1\"\n    },\n    {\n      \"id\": \"item-2\",\n      \"productExternalId\": \"saas-product-2\",\n      \"amount\": 31000,\n      \"isTaxIncludedInAmount\": true,\n      \"quantity\": \"12.3\"\n    },\n    {\n      \"id\": \"item-3\",\n      \"productExternalId\": \"not-taxable-3\",\n      \"amount\": 24000\n    }\n  ],\n  \"customerAddress\": {\n    \"country\": \"us\",\n    \"line1\": \"1450 Cherokee St\",\n    \"city\": \"Denver\",\n    \"region\": \"CO\",\n    \"postalCode\": \"80204\"\n  },\n  \"shipFromAddress\": {\n    \"country\": \"us\",\n    \"line1\": \"230 S LaSalle St\",\n    \"city\": \"Chicago\",\n    \"region\": \"IL\",\n    \"postalCode\": \"60604\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"version\": 1,\n  \"taxAmountToCollect\": 722,\n  \"lineItems\": [\n    {\n      \"id\": \"item-1\",\n      \"taxAmountToCollect\": 722,\n      \"preTaxAmount\": \"15000\",\n      \"jurises\": [\n        {\n          \"name\": \"Colorado\",\n          \"taxes\": null,\n          \"notTaxedReason\": {\n            \"type\": \"productNotTaxed\"\n          }\n        },\n        {\n          \"name\": \"Denver (local)\",\n          \"taxes\": [\n            {\n              \"taxName\": \"Tax\",\n              \"taxableAmount\": \"15000\",\n              \"taxAmount\": \"721.5\",\n              \"taxRate\": \"0.0481\"\n            }\n          ],\n          \"notTaxedReason\": null\n        }\n      ]\n    },\n    {\n      \"id\": \"item-2\",\n      \"taxAmountToCollect\": 0,\n      \"preTaxAmount\": \"29577.3304\",\n      \"jurises\": [\n        {\n          \"name\": \"Colorado\",\n          \"taxes\": null,\n          \"notTaxedReason\": {\n            \"type\": \"productNotTaxed\"\n          }\n        },\n        {\n          \"name\": \"Denver (local)\",\n          \"taxes\": [\n            {\n              \"taxName\": \"Tax\",\n              \"taxableAmount\": \"29577.3304\",\n              \"taxAmount\": \"1422.6696\",\n              \"taxRate\": \"0.0481\"\n            }\n          ],\n          \"notTaxedReason\": null\n        }\n      ]\n    },\n    {\n      \"id\": \"item-3\",\n      \"taxAmountToCollect\": 0,\n      \"preTaxAmount\": \"24000\",\n      \"jurises\": [\n        {\n          \"name\": \"Colorado\",\n          \"taxes\": null,\n          \"notTaxedReason\": {\n            \"type\": \"productNotTaxed\"\n          }\n        }\n      ]\n    }\n  ],\n  \"preTaxAmount\": \"68577.3304\",\n  \"jurisSummaries\": [\n    {\n      \"name\": \"Colorado\",\n      \"notTaxedReasons\": [\n        {\n          \"type\": \"productNotTaxed\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Denver (local)\",\n      \"notTaxedReasons\": null\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "32ad26ee-8150-4ea0-b8d0-36a33c46622b",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "transactions",
+                    "createOrUpdate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"stripe:in_1JSW342eZvKYlo2C\",\n  \"currencyCode\": \"usd\",\n  \"accountingTime\": \"2022-01-02T03:30:00Z\",\n  \"accountingTimeZone\": \"UTC\",\n  \"lineItems\": [\n    {\n      \"id\": \"item-1\",\n      \"productExternalId\": \"saas-product-1\",\n      \"amount\": 15000,\n      \"isTaxIncludedInAmount\": false,\n      \"quantity\": \"1\"\n    },\n    {\n      \"id\": \"item-2\",\n      \"productExternalId\": \"saas-product-2\",\n      \"amount\": 31000,\n      \"isTaxIncludedInAmount\": true,\n      \"quantity\": \"12.3\"\n    },\n    {\n      \"id\": \"item-3\",\n      \"productExternalId\": \"not-taxable-3\",\n      \"amount\": 24000\n    }\n  ],\n  \"customerAddress\": {\n    \"country\": \"us\",\n    \"line1\": \"1450 Cherokee St\",\n    \"city\": \"Denver\",\n    \"region\": \"CO\",\n    \"postalCode\": \"80204\"\n  },\n  \"shipFromAddress\": {\n    \"country\": \"us\",\n    \"line1\": \"230 S LaSalle St\",\n    \"city\": \"Chicago\",\n    \"region\": \"IL\",\n    \"postalCode\": \"60604\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "\"Request body: \\\"lineItems\\\": Required.\"",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7df329a6-c2dc-4712-9a7a-f516108573e9",
+              "name": "Conflict",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "transactions",
+                    "createOrUpdate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"stripe:in_1JSW342eZvKYlo2C\",\n  \"currencyCode\": \"usd\",\n  \"accountingTime\": \"2022-01-02T03:30:00Z\",\n  \"accountingTimeZone\": \"UTC\",\n  \"lineItems\": [\n    {\n      \"id\": \"item-1\",\n      \"productExternalId\": \"saas-product-1\",\n      \"amount\": 15000,\n      \"isTaxIncludedInAmount\": false,\n      \"quantity\": \"1\"\n    },\n    {\n      \"id\": \"item-2\",\n      \"productExternalId\": \"saas-product-2\",\n      \"amount\": 31000,\n      \"isTaxIncludedInAmount\": true,\n      \"quantity\": \"12.3\"\n    },\n    {\n      \"id\": \"item-3\",\n      \"productExternalId\": \"not-taxable-3\",\n      \"amount\": 24000\n    }\n  ],\n  \"customerAddress\": {\n    \"country\": \"us\",\n    \"line1\": \"1450 Cherokee St\",\n    \"city\": \"Denver\",\n    \"region\": \"CO\",\n    \"postalCode\": \"80204\"\n  },\n  \"shipFromAddress\": {\n    \"country\": \"us\",\n    \"line1\": \"230 S LaSalle St\",\n    \"city\": \"Chicago\",\n    \"region\": \"IL\",\n    \"postalCode\": \"60604\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"taxDateTooFarInFuture\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9457bb32-f28d-44a5-b033-21720ffe8958",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "transactions",
+                    "createOrUpdate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"id\": \"stripe:in_1JSW342eZvKYlo2C\",\n  \"currencyCode\": \"usd\",\n  \"accountingTime\": \"2022-01-02T03:30:00Z\",\n  \"accountingTimeZone\": \"UTC\",\n  \"lineItems\": [\n    {\n      \"id\": \"item-1\",\n      \"productExternalId\": \"saas-product-1\",\n      \"amount\": 15000,\n      \"isTaxIncludedInAmount\": false,\n      \"quantity\": \"1\"\n    },\n    {\n      \"id\": \"item-2\",\n      \"productExternalId\": \"saas-product-2\",\n      \"amount\": 31000,\n      \"isTaxIncludedInAmount\": true,\n      \"quantity\": \"12.3\"\n    },\n    {\n      \"id\": \"item-3\",\n      \"productExternalId\": \"not-taxable-3\",\n      \"amount\": 24000\n    }\n  ],\n  \"customerAddress\": {\n    \"country\": \"us\",\n    \"line1\": \"1450 Cherokee St\",\n    \"city\": \"Denver\",\n    \"region\": \"CO\",\n    \"postalCode\": \"80204\"\n  },\n  \"shipFromAddress\": {\n    \"country\": \"us\",\n    \"line1\": \"230 S LaSalle St\",\n    \"city\": \"Chicago\",\n    \"region\": \"IL\",\n    \"postalCode\": \"60604\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait for rate limit to reset.",
+                  "key": "Retry-After",
+                  "value": "5149"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "You've exceeded your API limit of 10 per second",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "52a9350b-1df4-40c5-8523-55061e194413",
+          "name": "Create ephemeral transaction",
+          "request": {
+            "name": "Create ephemeral transaction",
+            "description": {
+              "content": "Given the details of an invoice, calculate sales tax without saving the transaction in Anrok. Ephemeral transactions are not used by Anrok to file sales tax returns or monitor sales thresholds.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "seller",
+                "transactions",
+                "createEphemeral"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"lineItems\": [\n    {\n      \"productExternalId\": \"<string>\",\n      \"amount\": \"<integer>\",\n      \"id\": \"<string>\",\n      \"isTaxIncludedInAmount\": \"<boolean>\",\n      \"quantity\": \"<string>\"\n    },\n    {\n      \"productExternalId\": \"<string>\",\n      \"amount\": \"<integer>\",\n      \"id\": \"<string>\",\n      \"isTaxIncludedInAmount\": \"<boolean>\",\n      \"quantity\": \"<string>\"\n    }\n  ],\n  \"currencyCode\": \"<string>\",\n  \"customerAddress\": {\n    \"country\": \"<string>\",\n    \"line1\": \"<string>\",\n    \"city\": \"<string>\",\n    \"region\": \"<string>\",\n    \"postalCode\": \"<string>\"\n  },\n  \"customerName\": \"<string>\",\n  \"customerTaxIds\": [\n    {\n      \"type\": \"<string>\",\n      \"value\": \"<string>\"\n    },\n    {\n      \"type\": \"<string>\",\n      \"value\": \"<string>\"\n    }\n  ],\n  \"shipFromAddress\": {\n    \"country\": \"<string>\",\n    \"line1\": \"<string>\",\n    \"city\": \"<string>\",\n    \"region\": \"<string>\",\n    \"postalCode\": \"<string>\"\n  },\n  \"accountingDate\": \"<date>\",\n  \"accountingTime\": \"<dateTime>\",\n  \"accountingTimeZone\": \"<string>\",\n  \"taxDate\": \"<date>\",\n  \"customerId\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "bb8a3c88-5628-4dd0-88e0-8241f5719d45",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "transactions",
+                    "createEphemeral"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"currencyCode\": \"usd\",\n  \"accountingTime\": \"2022-01-02T03:30:00Z\",\n  \"accountingTimeZone\": \"UTC\",\n  \"lineItems\": [\n    {\n      \"id\": \"item-1\",\n      \"productExternalId\": \"saas-product-1\",\n      \"amount\": 15000,\n      \"isTaxIncludedInAmount\": false,\n      \"quantity\": \"1\"\n    },\n    {\n      \"id\": \"item-2\",\n      \"productExternalId\": \"saas-product-2\",\n      \"amount\": 31000,\n      \"isTaxIncludedInAmount\": true,\n      \"quantity\": \"12.3\"\n    },\n    {\n      \"id\": \"item-3\",\n      \"productExternalId\": \"not-taxable-3\",\n      \"amount\": 24000\n    }\n  ],\n  \"customerAddress\": {\n    \"country\": \"us\",\n    \"line1\": \"1450 Cherokee St\",\n    \"city\": \"Denver\",\n    \"region\": \"CO\",\n    \"postalCode\": \"80204\"\n  },\n  \"shipFromAddress\": {\n    \"country\": \"us\",\n    \"line1\": \"230 S LaSalle St\",\n    \"city\": \"Chicago\",\n    \"region\": \"IL\",\n    \"postalCode\": \"60604\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"taxAmountToCollect\": 722,\n  \"lineItems\": [\n    {\n      \"id\": \"item-1\",\n      \"taxAmountToCollect\": 722,\n      \"preTaxAmount\": \"15000\",\n      \"jurises\": [\n        {\n          \"name\": \"Colorado\",\n          \"taxes\": null,\n          \"notTaxedReason\": {\n            \"type\": \"productNotTaxed\"\n          }\n        },\n        {\n          \"name\": \"Denver (local)\",\n          \"taxes\": [\n            {\n              \"taxName\": \"Tax\",\n              \"taxableAmount\": \"15000\",\n              \"taxAmount\": \"721.5\",\n              \"taxRate\": \"0.0481\"\n            }\n          ],\n          \"notTaxedReason\": null\n        }\n      ]\n    },\n    {\n      \"id\": \"item-2\",\n      \"taxAmountToCollect\": 0,\n      \"preTaxAmount\": \"29577.3304\",\n      \"jurises\": [\n        {\n          \"name\": \"Colorado\",\n          \"taxes\": null,\n          \"notTaxedReason\": {\n            \"type\": \"productNotTaxed\"\n          }\n        },\n        {\n          \"name\": \"Denver (local)\",\n          \"taxes\": [\n            {\n              \"taxName\": \"Tax\",\n              \"taxableAmount\": \"29577.3304\",\n              \"taxAmount\": \"1422.6696\",\n              \"taxRate\": \"0.0481\"\n            }\n          ],\n          \"notTaxedReason\": null\n        }\n      ]\n    },\n    {\n      \"id\": \"item-3\",\n      \"taxAmountToCollect\": 0,\n      \"preTaxAmount\": \"24000\",\n      \"jurises\": [\n        {\n          \"name\": \"Colorado\",\n          \"taxes\": null,\n          \"notTaxedReason\": {\n            \"type\": \"productNotTaxed\"\n          }\n        }\n      ]\n    }\n  ],\n  \"preTaxAmount\": \"68577.3304\",\n  \"jurisSummaries\": [\n    {\n      \"name\": \"Colorado\",\n      \"notTaxedReasons\": [\n        {\n          \"type\": \"productNotTaxed\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Denver (local)\",\n      \"notTaxedReasons\": null\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1353997d-775f-45a2-aee0-6cdee13987a5",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "transactions",
+                    "createEphemeral"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"currencyCode\": \"usd\",\n  \"accountingTime\": \"2022-01-02T03:30:00Z\",\n  \"accountingTimeZone\": \"UTC\",\n  \"lineItems\": [\n    {\n      \"id\": \"item-1\",\n      \"productExternalId\": \"saas-product-1\",\n      \"amount\": 15000,\n      \"isTaxIncludedInAmount\": false,\n      \"quantity\": \"1\"\n    },\n    {\n      \"id\": \"item-2\",\n      \"productExternalId\": \"saas-product-2\",\n      \"amount\": 31000,\n      \"isTaxIncludedInAmount\": true,\n      \"quantity\": \"12.3\"\n    },\n    {\n      \"id\": \"item-3\",\n      \"productExternalId\": \"not-taxable-3\",\n      \"amount\": 24000\n    }\n  ],\n  \"customerAddress\": {\n    \"country\": \"us\",\n    \"line1\": \"1450 Cherokee St\",\n    \"city\": \"Denver\",\n    \"region\": \"CO\",\n    \"postalCode\": \"80204\"\n  },\n  \"shipFromAddress\": {\n    \"country\": \"us\",\n    \"line1\": \"230 S LaSalle St\",\n    \"city\": \"Chicago\",\n    \"region\": \"IL\",\n    \"postalCode\": \"60604\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "\"Request body: \\\"lineItems\\\": Required.\"",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fd889c98-def3-4b54-9a32-7b89d0a089a4",
+              "name": "Conflict",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "transactions",
+                    "createEphemeral"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"currencyCode\": \"usd\",\n  \"accountingTime\": \"2022-01-02T03:30:00Z\",\n  \"accountingTimeZone\": \"UTC\",\n  \"lineItems\": [\n    {\n      \"id\": \"item-1\",\n      \"productExternalId\": \"saas-product-1\",\n      \"amount\": 15000,\n      \"isTaxIncludedInAmount\": false,\n      \"quantity\": \"1\"\n    },\n    {\n      \"id\": \"item-2\",\n      \"productExternalId\": \"saas-product-2\",\n      \"amount\": 31000,\n      \"isTaxIncludedInAmount\": true,\n      \"quantity\": \"12.3\"\n    },\n    {\n      \"id\": \"item-3\",\n      \"productExternalId\": \"not-taxable-3\",\n      \"amount\": 24000\n    }\n  ],\n  \"customerAddress\": {\n    \"country\": \"us\",\n    \"line1\": \"1450 Cherokee St\",\n    \"city\": \"Denver\",\n    \"region\": \"CO\",\n    \"postalCode\": \"80204\"\n  },\n  \"shipFromAddress\": {\n    \"country\": \"us\",\n    \"line1\": \"230 S LaSalle St\",\n    \"city\": \"Chicago\",\n    \"region\": \"IL\",\n    \"postalCode\": \"60604\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"taxDateTooFarInFuture\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3ab3a1c2-cd23-4c09-9672-a685328f6249",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "transactions",
+                    "createEphemeral"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"currencyCode\": \"usd\",\n  \"accountingTime\": \"2022-01-02T03:30:00Z\",\n  \"accountingTimeZone\": \"UTC\",\n  \"lineItems\": [\n    {\n      \"id\": \"item-1\",\n      \"productExternalId\": \"saas-product-1\",\n      \"amount\": 15000,\n      \"isTaxIncludedInAmount\": false,\n      \"quantity\": \"1\"\n    },\n    {\n      \"id\": \"item-2\",\n      \"productExternalId\": \"saas-product-2\",\n      \"amount\": 31000,\n      \"isTaxIncludedInAmount\": true,\n      \"quantity\": \"12.3\"\n    },\n    {\n      \"id\": \"item-3\",\n      \"productExternalId\": \"not-taxable-3\",\n      \"amount\": 24000\n    }\n  ],\n  \"customerAddress\": {\n    \"country\": \"us\",\n    \"line1\": \"1450 Cherokee St\",\n    \"city\": \"Denver\",\n    \"region\": \"CO\",\n    \"postalCode\": \"80204\"\n  },\n  \"shipFromAddress\": {\n    \"country\": \"us\",\n    \"line1\": \"230 S LaSalle St\",\n    \"city\": \"Chicago\",\n    \"region\": \"IL\",\n    \"postalCode\": \"60604\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait for rate limit to reset.",
+                  "key": "Retry-After",
+                  "value": "5149"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "You've exceeded your API limit of 10 per second",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "28f2604c-a55c-4d21-b425-6a4b51d13338",
+          "name": "Create negation",
+          "request": {
+            "name": "Create negation",
+            "description": {
+              "content": "Creates a new transaction that is the exact inverse of the given transaction. The sale prices and tax amounts will add up to zero.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "seller",
+                "transactions",
+                "createNegation"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"originalTransactionId\": \"<string>\",\n  \"newTransactionId\": \"<string>\",\n  \"originalTransactionExpectedVersion\": \"<integer>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "0776637f-6f8d-4795-80c6-897d768051d0",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "transactions",
+                    "createNegation"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a8e36f28-9c21-4f40-9ed7-936a866e4147",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "transactions",
+                    "createNegation"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "\"Request body: \\\"newTransactionId\\\": Required.\"",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4e6c39ec-3790-4ec3-8006-a4204ae7002a",
+              "name": "Conflict",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "transactions",
+                    "createNegation"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"transactionExpectedVersionMismatch\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "562181e1-0fe5-4e9c-bfa7-09ab01069aef",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "transactions",
+                    "createNegation"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait for rate limit to reset.",
+                  "key": "Retry-After",
+                  "value": "5149"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "You've exceeded your API limit of 10 per second",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ebcd6320-110b-4c13-9b0f-89c0937651e2",
+          "name": "Void transaction",
+          "request": {
+            "name": "Void transaction",
+            "description": {
+              "content": "Mark a previously-created transaction as void. It will no longer be included in returns or sales totals.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "seller",
+                "transactions",
+                "id:{{transactionId}}",
+                "void"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactionExpectedVersion\": \"<integer>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8686daa2-92b7-4014-86d4-349c70523ac9",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "transactions",
+                    "id:{{transactionId}}",
+                    "void"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "70fd19d3-bc73-4fc0-907b-c791378541c4",
+              "name": "Conflict",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "transactions",
+                    "id:{{transactionId}}",
+                    "void"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"transactionIdNotFound\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8754bd78-d19c-4b89-b841-a37f908d5926",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "transactions",
+                    "id:{{transactionId}}",
+                    "void"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait for rate limit to reset.",
+                  "key": "Retry-After",
+                  "value": "5149"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "You've exceeded your API limit of 10 per second",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e5268230-548e-4537-9918-fd514aed2b43",
+          "name": "List transactions",
+          "request": {
+            "name": "List transactions",
+            "description": {
+              "content": "Lists transactions in Anrok. These can be filtered by the time they were last modified or by the filing they are associated with.\nThis endpoint is a premium feature. Please contact hello@anrok.com for more information to enable this on your seller account.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "seller",
+                "transactions",
+                "list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filter\": {\n    \"type\": \"<string>\",\n    \"value\": \"<dateTime>\"\n  },\n  \"limit\": 10,\n  \"cursor\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "dbd4fd70-d9d6-4170-9ed4-bc4c28efe81e",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "transactions",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"transactions\": [\n    {\n      \"type\": \"normal\",\n      \"id\": \"stripe:in_1JSW342eZvKYlo2C\",\n      \"anrokCreatedTime\": \"2025-01-01T00:00:00Z\",\n      \"anrokModifiedTime\": \"2025-01-02T18:00:00Z\",\n      \"sourceBillingSystem\": {\n        \"name\": \"string\",\n        \"integrationId\": \"si5kec86tpyt\",\n        \"invoiceId\": \"in_1JSW342eZvKYlo2C\"\n      },\n      \"body\": {\n        \"accountingDate\": \"2025-01-01\",\n        \"taxDate\": \"2025-01-01\",\n        \"currencyCode\": \"str\",\n        \"customer\": {\n          \"id\": \"cus_1234567890\",\n          \"name\": \"John Doe\"\n        },\n        \"addresses\": [\n          {\n            \"address\": {\n              \"city\": null,\n              \"line1\": null,\n              \"region\": \"TX\",\n              \"country\": \"US\",\n              \"postalCode\": \"10101\"\n            }\n          },\n          {\n            \"address\": {\n              \"city\": null,\n              \"line1\": null,\n              \"region\": \"TX\",\n              \"country\": \"US\",\n              \"postalCode\": \"10101\"\n            }\n          }\n        ],\n        \"inputAmount\": 39800,\n        \"preTaxAmount\": \"39800\",\n        \"taxAmountDue\": {\n          \"inclusive\": \"0\",\n          \"exclusive\": \"2467.6\",\n          \"total\": \"2467.6\"\n        },\n        \"taxAmountAdded\": {\n          \"expected\": 2468,\n          \"seen\": 2468\n        },\n        \"invoiceTotalAmountExpected\": 42268,\n        \"jurisSummaries\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"lineItems\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ]\n      }\n    },\n    {\n      \"type\": \"normal\",\n      \"id\": \"stripe:in_1JSW342eZvKYlo2C\",\n      \"anrokCreatedTime\": \"2025-01-01T00:00:00Z\",\n      \"anrokModifiedTime\": \"2025-01-02T18:00:00Z\",\n      \"sourceBillingSystem\": {\n        \"name\": \"string\",\n        \"integrationId\": \"si5kec86tpyt\",\n        \"invoiceId\": \"in_1JSW342eZvKYlo2C\"\n      },\n      \"body\": {\n        \"accountingDate\": \"2025-01-01\",\n        \"taxDate\": \"2025-01-01\",\n        \"currencyCode\": \"str\",\n        \"customer\": {\n          \"id\": \"cus_1234567890\",\n          \"name\": \"John Doe\"\n        },\n        \"addresses\": [\n          {\n            \"address\": {\n              \"city\": null,\n              \"line1\": null,\n              \"region\": \"TX\",\n              \"country\": \"US\",\n              \"postalCode\": \"10101\"\n            }\n          },\n          {\n            \"address\": {\n              \"city\": null,\n              \"line1\": null,\n              \"region\": \"TX\",\n              \"country\": \"US\",\n              \"postalCode\": \"10101\"\n            }\n          }\n        ],\n        \"inputAmount\": 39800,\n        \"preTaxAmount\": \"39800\",\n        \"taxAmountDue\": {\n          \"inclusive\": \"0\",\n          \"exclusive\": \"2467.6\",\n          \"total\": \"2467.6\"\n        },\n        \"taxAmountAdded\": {\n          \"expected\": 2468,\n          \"seen\": 2468\n        },\n        \"invoiceTotalAmountExpected\": 42268,\n        \"jurisSummaries\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ],\n        \"lineItems\": [\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        ]\n      }\n    }\n  ],\n  \"nextCursor\": \"string\",\n  \"hasMore\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ea41b877-1f2f-4238-aa38-b4bf02221ccc",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "transactions",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "Request body: \"filter\": Invalid input.",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "2a53dd66-271d-4fb8-a38a-8f3fafb9364b",
+              "name": "Conflict",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "transactions",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"invalidCursor\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6eed9049-5d20-4067-bdd9-e2e7dcb00b78",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "transactions",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait for rate limit to reset.",
+                  "key": "Retry-After",
+                  "value": "5149"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "You've exceeded your API limit of 10 per second",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.anrok.com",
+      "key": "baseUrl"
+    },
+    {
+      "disabled": false,
+      "description": {
+        "content": "(Required) ID of the transaction you want to void.",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "<string>",
+      "key": "transactionId"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "132d1743-27a1-4369-9a45-f95d1dff8235",
+    "name": "Anrok Customer certificates Transactions API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "# API reference\n\nThe Anrok API server is accessible at `https://api.anrok.com`.\n\nAll requests are HTTP POSTs with JSON in the body.\n\nAuthentication is via an HTTP header `Authorization: Bearer {apiKey}`.\n\nThe default rate limit for a seller account is 10 API requests per second.\n\n\nContact Support:\n Email: support@anrok.com",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,1204 @@
+{
+  "item": [
+    {
+      "id": "0e721998-9da9-462e-88c4-bfdc4eeceb62",
+      "name": "Customer certificates",
+      "description": {
+        "content": "A sales tax exemption certificate documents the exemption claimed by a purchaser\nto legally make a tax-free purchase.\nCertificates can be uploaded to Anrok via the Anrok UI as well as via the API.\nSee our\n<a href=\"https://help-center.anrok.com/hc/en-us/articles/24861687025299-Upload-an-exemption-certificate\">Help Center article</a>\nfor more information.\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "24e6b218-046f-4373-a67b-4735eaa4b33c",
+          "name": "Create customer certificate",
+          "request": {
+            "name": "Create customer certificate",
+            "description": {
+              "content": "This endpoint is used to create a new customer certificate in Anrok.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "seller",
+                "certificates",
+                "create"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"<string>\",\n  \"effectiveDateBegin\": \"<date>\",\n  \"certificateFile\": {\n    \"name\": \"<string>\",\n    \"contentsBase64\": \"<string>\"\n  },\n  \"jurises\": [\n    {\n      \"jurisId\": \"<string>\",\n      \"registrationId\": \"<string>\",\n      \"effectiveDateEndi\": \"<date>\",\n      \"notes\": \"<string>\"\n    },\n    {\n      \"jurisId\": \"<string>\",\n      \"registrationId\": \"<string>\",\n      \"effectiveDateEndi\": \"<date>\",\n      \"notes\": \"<string>\"\n    }\n  ],\n  \"customerName\": \"<string>\",\n  \"exemptionNumber\": \"<string>\",\n  \"notes\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8dc048c2-d79e-4a2d-aa25-b5733c948fdc",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "certificates",
+                    "create"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customerId\": \"cus_123\",\n  \"customerName\": \"Acme Inc\",\n  \"effectiveDateBegin\": \"2022-01-01\",\n  \"exemptionNumber\": \"cert-100\",\n  \"certificateFile\": {\n    \"name\": \"cert.png\",\n    \"contentsBase64\": \"Y2VydC5wbmc=\"\n  },\n  \"jurises\": [\n    {\n      \"jurisId\": \"us-MA\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "da563a03-5519-4e08-b65a-abd256f1989a",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "certificates",
+                    "create"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customerId\": \"cus_123\",\n  \"customerName\": \"Acme Inc\",\n  \"effectiveDateBegin\": \"2022-01-01\",\n  \"exemptionNumber\": \"cert-100\",\n  \"certificateFile\": {\n    \"name\": \"cert.png\",\n    \"contentsBase64\": \"Y2VydC5wbmc=\"\n  },\n  \"jurises\": [\n    {\n      \"jurisId\": \"us-MA\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "\"Request body: \\\"customerId\\\": Required.\"",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "53369a8e-3581-48ce-9727-4a55f9001d4e",
+              "name": "Conflict",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "certificates",
+                    "create"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customerId\": \"cus_123\",\n  \"customerName\": \"Acme Inc\",\n  \"effectiveDateBegin\": \"2022-01-01\",\n  \"exemptionNumber\": \"cert-100\",\n  \"certificateFile\": {\n    \"name\": \"cert.png\",\n    \"contentsBase64\": \"Y2VydC5wbmc=\"\n  },\n  \"jurises\": [\n    {\n      \"jurisId\": \"us-MA\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"duplicateJurisIds\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b4ebba2a-b9e9-4955-8b52-47c1a5b00e67",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "certificates",
+                    "create"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customerId\": \"cus_123\",\n  \"customerName\": \"Acme Inc\",\n  \"effectiveDateBegin\": \"2022-01-01\",\n  \"exemptionNumber\": \"cert-100\",\n  \"certificateFile\": {\n    \"name\": \"cert.png\",\n    \"contentsBase64\": \"Y2VydC5wbmc=\"\n  },\n  \"jurises\": [\n    {\n      \"jurisId\": \"us-MA\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait for rate limit to reset.",
+                  "key": "Retry-After",
+                  "value": "5253"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "You've exceeded your API limit of 10 per second",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "4d183c42-9ca8-4ce5-b8e1-8c0bcf9848b8",
+          "name": "Archive customer certificate",
+          "request": {
+            "name": "Archive customer certificate",
+            "description": {
+              "content": "This endpoint is used to archive/invalidate a customer certificate.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "seller",
+                "certificates",
+                "id:{{certificateId}}",
+                "archive"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "<object>",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "e5ef34ba-5436-48a0-b250-0a0baaa74c41",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "certificates",
+                    "id:{{certificateId}}",
+                    "archive"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3d3b13b5-c584-4553-aa73-ee18860e4d0b",
+              "name": "Conflict",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "certificates",
+                    "id:{{certificateId}}",
+                    "archive"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"certificateIdNotFound\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "625b0396-d524-4f09-a526-e8ce1270376f",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "certificates",
+                    "id:{{certificateId}}",
+                    "archive"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait for rate limit to reset.",
+                  "key": "Retry-After",
+                  "value": "5253"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "You've exceeded your API limit of 10 per second",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "01507cae-f2f7-4f43-afe2-42b2d63a6edc",
+          "name": "Get customer certificate",
+          "request": {
+            "name": "Get customer certificate",
+            "description": {
+              "content": "Retrieves a customer certificate by its Anrok-assigned ID.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "seller",
+                "certificates",
+                "id:{{certificateId}}",
+                "get"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "<object>",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "29ce8f85-da52-45bb-a8b4-7765b8de9b57",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "certificates",
+                    "id:{{certificateId}}",
+                    "get"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"string\",\n  \"status\": \"expired\",\n  \"customerId\": \"string\",\n  \"customerName\": \"string\",\n  \"createdTime\": \"2014-09-13T07:26:16.372Z\",\n  \"effectiveDateBegin\": \"2021-06-04\",\n  \"expiryDate\": \"2000-06-29\",\n  \"exemptionNumber\": \"string\",\n  \"notes\": \"string\",\n  \"jurises\": [\n    {\n      \"jurisId\": \"string\",\n      \"registrationId\": \"string\",\n      \"effectiveDateEndi\": \"2000-04-01\",\n      \"notes\": \"string\"\n    },\n    {\n      \"jurisId\": \"string\",\n      \"registrationId\": \"string\",\n      \"effectiveDateEndi\": \"1969-08-09\",\n      \"notes\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "347e7a20-80db-4de0-834f-51fa019f1f13",
+              "name": "Conflict",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "certificates",
+                    "id:{{certificateId}}",
+                    "get"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"certificateIdNotFound\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "53153eea-db98-4c24-9e9d-25a6e4a8a1a2",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "certificates",
+                    "id:{{certificateId}}",
+                    "get"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait for rate limit to reset.",
+                  "key": "Retry-After",
+                  "value": "5253"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "You've exceeded your API limit of 10 per second",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "33d9219c-163d-44e6-b779-b02e68a86e46",
+          "name": "List customer certificates",
+          "request": {
+            "name": "List customer certificates",
+            "description": {
+              "content": "Lists customer certificates in Anrok. Results can be filtered by customer ID or status, and are returned in pages using cursor-based pagination.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "seller",
+                "certificates",
+                "list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filter\": {\n    \"customerId\": \"<string>\",\n    \"status\": \"<string>\"\n  },\n  \"limit\": 25,\n  \"cursor\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "7a20ae2e-7bbc-45f7-8199-b7aadce031aa",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "certificates",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"certificates\": [\n    {\n      \"id\": \"string\",\n      \"status\": \"active\",\n      \"customerId\": \"string\",\n      \"customerName\": \"string\",\n      \"createdTime\": \"1962-11-22T04:23:15.354Z\",\n      \"effectiveDateBegin\": \"2022-01-14\",\n      \"expiryDate\": \"2025-08-07\",\n      \"exemptionNumber\": \"string\",\n      \"notes\": \"string\",\n      \"jurises\": [\n        {\n          \"jurisId\": \"string\",\n          \"registrationId\": \"string\",\n          \"effectiveDateEndi\": \"1973-05-03\",\n          \"notes\": \"string\"\n        },\n        {\n          \"jurisId\": \"string\",\n          \"registrationId\": \"string\",\n          \"effectiveDateEndi\": \"1995-03-21\",\n          \"notes\": \"string\"\n        }\n      ]\n    },\n    {\n      \"id\": \"string\",\n      \"status\": \"expired\",\n      \"customerId\": \"string\",\n      \"customerName\": \"string\",\n      \"createdTime\": \"1997-04-12T19:20:09.245Z\",\n      \"effectiveDateBegin\": \"1978-11-14\",\n      \"expiryDate\": \"2000-08-20\",\n      \"exemptionNumber\": \"string\",\n      \"notes\": \"string\",\n      \"jurises\": [\n        {\n          \"jurisId\": \"string\",\n          \"registrationId\": \"string\",\n          \"effectiveDateEndi\": \"1956-07-30\",\n          \"notes\": \"string\"\n        },\n        {\n          \"jurisId\": \"string\",\n          \"registrationId\": \"string\",\n          \"effectiveDateEndi\": \"2010-08-31\",\n          \"notes\": \"string\"\n        }\n      ]\n    }\n  ],\n  \"nextCursor\": \"string\",\n  \"hasMore\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9bead68c-309c-480e-be77-81ee74e49941",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "certificates",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "Request body: \"filter\": \"status\": Invalid enum value.",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "14a0474f-2417-4d9b-8da2-4fa47d3cc592",
+              "name": "Conflict",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "certificates",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"invalidCursor\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c686ef2f-64c9-4625-919c-62e6825465b9",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "certificates",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait for rate limit to reset.",
+                  "key": "Retry-After",
+                  "value": "5253"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "You've exceeded your API limit of 10 per second",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d9340061-c72b-4811-9368-109fcf27373f",
+          "name": "Create customer certificate request",
+          "request": {
+            "name": "Create customer certificate request",
+            "description": {
+              "content": "Creates a customer certificate request and (by default) emails it to the customer contact. The recipient can upload their certificate via the returned `requestLink`.\n\nThis endpoint is a premium feature. Please contact hello@anrok.com to enable the exemption certificate portal on your seller account.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "seller",
+                "certificateRequests",
+                "create"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerId\": \"<string>\",\n  \"emailAddress\": \"<email>\",\n  \"customerName\": \"<string>\",\n  \"sendEmail\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "55f1cce6-c86b-4f2b-a9b9-5630b09962eb",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "certificateRequests",
+                    "create"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"requestId\": \"string\",\n  \"requestLink\": \"https://eGmvrrpAdCArzf.vbic44oja03wqv6tef\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3cb21489-4f4f-4c44-9a45-9d35121d57ac",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "certificateRequests",
+                    "create"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "Request body: \"customerId\": Required.",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "c255c551-1408-4248-b435-f2a3ec261c3b",
+              "name": "Conflict",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "certificateRequests",
+                    "create"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"customerIdNotFound\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "afc3df4b-7141-428e-bdbe-38c7f55f3e90",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "certificateRequests",
+                    "create"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait for rate limit to reset.",
+                  "key": "Retry-After",
+                  "value": "5253"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "You've exceeded your API limit of 10 per second",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.anrok.com",
+      "key": "baseUrl"
+    },
+    {
+      "disabled": false,
+      "description": {
+        "content": "(Required) ID of the certificate.",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "<string>",
+      "key": "certificateId"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "f68cc9dc-8068-4bf8-97a3-1ad7ced029f3",
+    "name": "Anrok Customer certificates API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "# API reference\n\nThe Anrok API server is accessible at `https://api.anrok.com`.\n\nAll requests are HTTP POSTs with JSON in the body.\n\nAuthentication is via an HTTP header `Authorization: Bearer {apiKey}`.\n\nThe default rate limit for a seller account is 10 API requests per second.\n\n\nContact Support:\n Email: support@anrok.com",
+      "type": "text/plain"
+    }
+  }
+}

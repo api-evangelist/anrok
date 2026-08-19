@@ -1,0 +1,282 @@
+{
+  "item": [
+    {
+      "id": "31d78872-94a0-453d-9e60-c20b75ac260d",
+      "name": "Filings",
+      "description": {
+        "content": "**The Filings endpoint is a premium feature. Please contact hello@anrok.com for more information to enable this on your seller account.**\n\nThis endpoint can be used to fetch filings from Anrok.\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "558c96bc-b55c-42cb-8af5-d748301f4eb7",
+          "name": "List filings",
+          "request": {
+            "name": "List filings",
+            "description": {
+              "content": "Lists filings in Anrok. These can be filtered by the jurisdiction ID and the filing period end date.\nThis endpoint is a premium feature. Please contact hello@anrok.com for more information to enable this on your seller account.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "seller",
+                "filings",
+                "list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filter\": {\n    \"jurisId\": \"<string>\",\n    \"periodEndDateRangeInclusive\": \"<string>\"\n  },\n  \"limit\": 10,\n  \"cursor\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "b0e5a218-5972-4e36-a0ac-ec6f1b52c82f",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "filings",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"filings\": [\n    {\n      \"jurisId\": \"string\",\n      \"jurisFilingId\": \"string\",\n      \"name\": \"string\",\n      \"isAutomaticallyUpdatedForTransactionChanges\": true,\n      \"isFiled\": true,\n      \"period\": {\n        \"begin\": \"1947-04-10\",\n        \"endInclusive\": \"2002-10-16\"\n      }\n    },\n    {\n      \"jurisId\": \"string\",\n      \"jurisFilingId\": \"string\",\n      \"name\": \"string\",\n      \"isAutomaticallyUpdatedForTransactionChanges\": false,\n      \"isFiled\": false,\n      \"period\": {\n        \"begin\": \"1982-06-05\",\n        \"endInclusive\": \"2024-06-27\"\n      }\n    }\n  ],\n  \"nextCursor\": \"string\",\n  \"hasMore\": true\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0329221b-4a73-4ece-aa3d-d92cd0fe94e6",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "filings",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "Request body: \"filter\": \"jurisId\": Invalid juris ID: \"fake-juris-id\"",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "c8a65189-07cc-4fa6-96b5-39521cf6103f",
+              "name": "Conflict",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "filings",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"invalidCursor\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "07107c3b-d7c6-4e6c-b5c3-0e17cf78d50c",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "filings",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait for rate limit to reset.",
+                  "key": "Retry-After",
+                  "value": "9502"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "You've exceeded your API limit of 10 per second",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.anrok.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "2735cbba-e66e-4cf0-ba3c-ae02a0b03b30",
+    "name": "Anrok Customer certificates Filings API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "# API reference\n\nThe Anrok API server is accessible at `https://api.anrok.com`.\n\nAll requests are HTTP POSTs with JSON in the body.\n\nAuthentication is via an HTTP header `Authorization: Bearer {apiKey}`.\n\nThe default rate limit for a seller account is 10 API requests per second.\n\n\nContact Support:\n Email: support@anrok.com",
+      "type": "text/plain"
+    }
+  }
+}

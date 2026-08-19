@@ -1,0 +1,109 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anrok Customer certificates API",
+    "version": "1.1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Customer certificates",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create customer certificate",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anrok.com/v1/seller/certificates/create",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint is used to create a new customer certificate in Anrok."
+        },
+        {
+          "info": {
+            "name": "Archive customer certificate",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anrok.com/v1/seller/certificates/id::certificateId/archive",
+            "params": [
+              {
+                "name": "certificateId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the certificate."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint is used to archive/invalidate a customer certificate."
+        },
+        {
+          "info": {
+            "name": "Get customer certificate",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anrok.com/v1/seller/certificates/id::certificateId/get",
+            "params": [
+              {
+                "name": "certificateId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the certificate."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves a customer certificate by its Anrok-assigned ID."
+        },
+        {
+          "info": {
+            "name": "List customer certificates",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anrok.com/v1/seller/certificates/list",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Lists customer certificates in Anrok. Results can be filtered by customer ID or status, and are returned in pages using cursor-based pagination.\n"
+        },
+        {
+          "info": {
+            "name": "Create customer certificate request",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anrok.com/v1/seller/certificateRequests/create",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a customer certificate request and (by default) emails it to the customer contact. The recipient can upload their certificate via the returned `requestLink`.\n\nThis endpoint is a premium feature. Please contact hello@anrok.com to enable the exemption certificate portal on your seller account.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

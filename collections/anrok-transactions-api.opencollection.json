@@ -1,0 +1,101 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anrok Customer certificates Transactions API",
+    "version": "1.1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Transactions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create or update transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anrok.com/v1/seller/transactions/createOrUpdate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Given the details of an invoice, calculate sales tax and save it as a transaction in Anrok. Saved transactions are used by Anrok to file sales tax returns and monitor sales thresholds."
+        },
+        {
+          "info": {
+            "name": "Create ephemeral transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anrok.com/v1/seller/transactions/createEphemeral",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Given the details of an invoice, calculate sales tax without saving the transaction in Anrok. Ephemeral transactions are not used by Anrok to file sales tax returns or monitor sales thresholds."
+        },
+        {
+          "info": {
+            "name": "Create negation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anrok.com/v1/seller/transactions/createNegation",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new transaction that is the exact inverse of the given transaction. The sale prices and tax amounts will add up to zero."
+        },
+        {
+          "info": {
+            "name": "Void transaction",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anrok.com/v1/seller/transactions/id::transactionId/void",
+            "params": [
+              {
+                "name": "transactionId",
+                "value": "",
+                "type": "path",
+                "description": "ID of the transaction you want to void."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Mark a previously-created transaction as void. It will no longer be included in returns or sales totals."
+        },
+        {
+          "info": {
+            "name": "List transactions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anrok.com/v1/seller/transactions/list",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Lists transactions in Anrok. These can be filtered by the time they were last modified or by the filing they are associated with.\nThis endpoint is a premium feature. Please contact hello@anrok.com for more information to enable this on your seller account.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

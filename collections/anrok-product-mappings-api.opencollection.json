@@ -1,0 +1,64 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Anrok Customer certificates Product mappings API",
+    "version": "1.1"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Product mappings",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List product mappings",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anrok.com/v1/seller/integrations/id::integrationId/productIdMapping/list",
+            "params": [
+              {
+                "name": "integrationId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique integration ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Lists all Product ID mappings for this integration."
+        },
+        {
+          "info": {
+            "name": "Add product mapping",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.anrok.com/v1/seller/integrations/id::integrationId/productIdMapping/add",
+            "params": [
+              {
+                "name": "integrationId",
+                "value": "",
+                "type": "path",
+                "description": "Your unique integration ID."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds a product ID mapping for this integration."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

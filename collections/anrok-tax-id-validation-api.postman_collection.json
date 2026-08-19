@@ -1,0 +1,314 @@
+{
+  "item": [
+    {
+      "id": "1de0e224-03ce-402e-a2b2-c3da7765c56f",
+      "name": "Tax ID validation",
+      "description": {
+        "content": "**The Anrok Tax ID Validation endpoint is a premium feature. Please contact hello@anrok.com for more information to enable this on your Anrok seller account.**\n\n\n1. Pass a customer address and an empty array of customerTaxIds:\n\t- Anrok verifies the customer address is valid for tax calculation.\n\t- Anrok responds with the list of customer tax IDs to collect.\n1. Collect the customer tax IDs and call the API endpoint again to validate them:\n\t- Anrok provides a list of valid tax IDs for each applicable jurisdiction.\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "e44d70fc-4b65-40b8-8ae8-30af3afc96c3",
+          "name": "Validate tax IDs",
+          "request": {
+            "name": "Validate tax IDs",
+            "description": {
+              "content": "This endpoint is used to assist in the collection and validation of customer tax IDs.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "v1",
+                "seller",
+                "taxId",
+                "validate"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerAddress\": {\n    \"country\": \"<string>\",\n    \"line1\": \"<string>\",\n    \"city\": \"<string>\",\n    \"region\": \"<string>\",\n    \"postalCode\": \"<string>\"\n  },\n  \"customerTaxIds\": [\n    {\n      \"value\": \"<string>\"\n    },\n    {\n      \"value\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "1b53f476-cbf0-4640-8428-3346b36498bf",
+              "name": "OK",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "taxId",
+                    "validate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customerAddress\": {\n    \"country\": \"CA\",\n    \"line1\": \"123 Main St\",\n    \"city\": \"Quebec City\",\n    \"region\": \"Quebec\",\n    \"postalCode\": \"G1P 2J6\"\n  },\n  \"customerTaxIds\": [\n    {\n      \"value\": \"123456789\"\n    },\n    {\n      \"value\": \"987654321\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"jurises\": [\n    {\n      \"name\": \"Canada (federal)\",\n      \"taxIdNames\": {\n        \"name\": \"GST/HST account number\",\n        \"abbreviation\": null\n      },\n      \"validTaxIds\": [\n        {\n          \"value\": \"123456789\"\n        }\n      ]\n    },\n    {\n      \"name\": \"Quebec\",\n      \"taxIdNames\": {\n        \"name\": \"QST registration number\",\n        \"abbreviation\": null\n      },\n      \"validTaxIds\": [\n        {\n          \"value\": \"987654321\"\n        }\n      ]\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9c0182b8-9d6e-44a8-b1af-0d798d744c79",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "taxId",
+                    "validate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customerAddress\": {\n    \"country\": \"CA\",\n    \"line1\": \"123 Main St\",\n    \"city\": \"Quebec City\",\n    \"region\": \"Quebec\",\n    \"postalCode\": \"G1P 2J6\"\n  },\n  \"customerTaxIds\": [\n    {\n      \"value\": \"123456789\"\n    },\n    {\n      \"value\": \"987654321\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "\"Request body: \\\"customerAddress\\\": Required.\"",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c026854f-3a8f-4502-b46c-29005a954ac4",
+              "name": "Conflict",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "taxId",
+                    "validate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customerAddress\": {\n    \"country\": \"CA\",\n    \"line1\": \"123 Main St\",\n    \"city\": \"Quebec City\",\n    \"region\": \"Quebec\",\n    \"postalCode\": \"G1P 2J6\"\n  },\n  \"customerTaxIds\": [\n    {\n      \"value\": \"123456789\"\n    },\n    {\n      \"value\": \"987654321\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"type\": \"customerAddressCouldNotResolve\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c7cfc509-afea-4280-a54b-40be1000cb6e",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "seller",
+                    "taxId",
+                    "validate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/plain"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"customerAddress\": {\n    \"country\": \"CA\",\n    \"line1\": \"123 Main St\",\n    \"city\": \"Quebec City\",\n    \"region\": \"Quebec\",\n    \"postalCode\": \"G1P 2J6\"\n  },\n  \"customerTaxIds\": [\n    {\n      \"value\": \"123456789\"\n    },\n    {\n      \"value\": \"987654321\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "description": "Number of seconds to wait for rate limit to reset.",
+                  "key": "Retry-After",
+                  "value": "4958"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "You've exceeded your API limit of 10 per second",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.anrok.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "d8bcfaed-e057-451b-868a-cd4131526b58",
+    "name": "Anrok Customer certificates Tax ID validation API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "# API reference\n\nThe Anrok API server is accessible at `https://api.anrok.com`.\n\nAll requests are HTTP POSTs with JSON in the body.\n\nAuthentication is via an HTTP header `Authorization: Bearer {apiKey}`.\n\nThe default rate limit for a seller account is 10 API requests per second.\n\n\nContact Support:\n Email: support@anrok.com",
+      "type": "text/plain"
+    }
+  }
+}
