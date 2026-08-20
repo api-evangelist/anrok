@@ -26,6 +26,15 @@ tags:
   - Sales Tax
   - VAT
   - Tax Compliance
+  - Software-as-a-Service
+  - Fintech
+  - Tax Automation
+  - Nexus
+  - E-Invoicing
+tags_raw:
+  - Sales Tax
+  - VAT
+  - Tax Compliance
   - SaaS
   - Fintech
   - Tax Automation
@@ -116,6 +125,8 @@ apis:
   humanURL: https://apidocs.anrok.com/
   baseURL: https://api.anrok.com
   tags:
+  - Product Mappings
+  tags_raw:
   - Product mappings
   properties:
   - type: OpenAPI
@@ -145,6 +156,8 @@ apis:
   humanURL: https://apidocs.anrok.com/
   baseURL: https://api.anrok.com
   tags:
+  - Product
+  tags_raw:
   - Products
   properties:
   - type: OpenAPI
@@ -172,6 +185,8 @@ apis:
   humanURL: https://apidocs.anrok.com/
   baseURL: https://api.anrok.com
   tags:
+  - Tax ID Validation
+  tags_raw:
   - Tax ID validation
   properties:
   - type: OpenAPI
@@ -218,6 +233,8 @@ apis:
   humanURL: https://apidocs.anrok.com/
   baseURL: https://api.anrok.com
   tags:
+  - Transaction
+  tags_raw:
   - Transactions
   properties:
   - type: OpenAPI
