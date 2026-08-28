@@ -8,6 +8,18 @@ description: >
   Chargebee, and Recurly, and automates tax filing and remittance across 100+ countries.
   Anrok also offers Anrok Atlas, an AI-native agentic tax partner for proactive compliance monitoring.
 type: Index
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: paid
   onboarding: self-serve
