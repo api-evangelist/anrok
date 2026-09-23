@@ -1,12 +1,7 @@
 {
   "provider": "anrok",
   "sources": [
-    "anrok-customer-certificates-api-openapi.yml",
-    "anrok-filings-api-openapi.yml",
-    "anrok-product-mappings-api-openapi.yml",
-    "anrok-products-api-openapi.yml",
-    "anrok-tax-id-validation-api-openapi.yml",
-    "anrok-transactions-api-openapi.yml"
+    "_original/anrok-api-openapi.yml"
   ],
   "outputs": [
     "anrok-customer-certificates-api-openapi.yml",
@@ -19,6 +14,17 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "anrok-api-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "anrok-customer-certificates-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anrok-filings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anrok-product-mappings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anrok-products-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anrok-tax-id-validation-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "anrok-transactions-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

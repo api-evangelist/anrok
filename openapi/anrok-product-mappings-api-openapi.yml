@@ -1,6 +1,6 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Anrok Customer certificates Product mappings API
+  title: Anrok Product mappings API
   version: '1.1'
   termsOfService: https://www.anrok.com/privacy-terms
   contact:
@@ -22,18 +22,16 @@ info:
     Authentication is via an HTTP header `Authorization: Bearer {apiKey}`.
 
 
-    The default rate limit for a seller account is 10 API requests per second.
-
-    '
+    The default rate limit for a seller account is 10 API requests per second.'
 servers:
 - url: https://api.anrok.com
 security:
 - http: []
 tags:
-- name: Product mappings
+- name: Product Mappings
   description: 'The Anrok Product Mappings API endpoint allows you to dynamically map product IDs
 
-    for [Anrok-built billing system integrations](https://help-center.anrok.com/hc/en-us/articles/41966628275219-Anrok-integration-types#:~:text=Anrok%20API%20integration-,Anrok%2Dbuilt%20integrations,-These%20integrations%20are).
+    for Anrok-built billing system integrations.
 
     Note that this API endpoint is only used alongside an existing Anrok-built integration
 
@@ -43,16 +41,14 @@ tags:
 
     associate various products in your billing system with equivalent products that have
 
-    already been created in Anrok.
-
-    '
+    already been created in Anrok.'
 paths:
   /v1/seller/integrations/id:{integrationId}/productIdMapping/list:
     parameters:
     - $ref: '#/components/parameters/IntegrationId'
     post:
       tags:
-      - Product mappings
+      - Product Mappings
       summary: List product mappings
       description: Lists all Product ID mappings for this integration.
       operationId: productIdMappingsList
@@ -92,7 +88,7 @@ paths:
     - $ref: '#/components/parameters/IntegrationId'
     post:
       tags:
-      - Product mappings
+      - Product Mappings
       summary: Add product mapping
       description: Adds a product ID mapping for this integration.
       operationId: productIdMappingsAdd
@@ -156,14 +152,6 @@ components:
               value: {}
               summary: Empty request body
       required: true
-  parameters:
-    IntegrationId:
-      name: integrationId
-      in: path
-      description: Your unique integration ID.
-      required: true
-      schema:
-        type: string
   responses:
     RateLimit:
       description: Too Many Requests
@@ -177,6 +165,14 @@ components:
           schema:
             type: string
           example: You've exceeded your API limit of 10 per second
+  parameters:
+    IntegrationId:
+      name: integrationId
+      in: path
+      description: Your unique integration ID.
+      required: true
+      schema:
+        type: string
   securitySchemes:
     http:
       type: http

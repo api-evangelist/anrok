@@ -1,0 +1,1 @@
+{"resource":"https://mcp.anrok.com/mcp","authorization_servers":["https://mcp.anrok.com/"],"scopes_supported":["certificates","customers","products","registrations","transactionsRead","transactionsWrite"],"resource_name":"Anrok"}

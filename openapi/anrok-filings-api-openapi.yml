@@ -1,6 +1,6 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Anrok Customer certificates Filings API
+  title: Anrok Filings API
   version: '1.1'
   termsOfService: https://www.anrok.com/privacy-terms
   contact:
@@ -22,9 +22,7 @@ info:
     Authentication is via an HTTP header `Authorization: Bearer {apiKey}`.
 
 
-    The default rate limit for a seller account is 10 API requests per second.
-
-    '
+    The default rate limit for a seller account is 10 API requests per second.'
 servers:
 - url: https://api.anrok.com
 security:
@@ -34,9 +32,7 @@ tags:
   description: '**The Filings endpoint is a premium feature. Please contact hello@anrok.com for more information to enable this on your seller account.**
 
 
-    This endpoint can be used to fetch filings from Anrok.
-
-    '
+    This endpoint can be used to fetch filings from Anrok.'
 paths:
   /v1/seller/filings/list:
     post:
@@ -45,9 +41,7 @@ paths:
       summary: List filings
       description: 'Lists filings in Anrok. These can be filtered by the jurisdiction ID and the filing period end date.
 
-        This endpoint is a premium feature. Please contact hello@anrok.com for more information to enable this on your seller account.
-
-        '
+        This endpoint is a premium feature. Please contact hello@anrok.com for more information to enable this on your seller account.'
       operationId: filingsList
       requestBody:
         $ref: '#/components/requestBodies/ListFilings'
@@ -64,74 +58,26 @@ paths:
       - lang: cURL
         source: "apiToken='sxxx/saxxx/secret.xxx'\n\ncurl -X POST https://api.anrok.com/v1/seller/filings/list \\\n  -H 'Content-Type: application/json' \\\n  -H \"Authorization: Bearer $apiToken\" \\\n  -d '{\n    \"filter\": {\n        \"jurisId\": \"us-MA\",\n        \"periodEndDateRangeInclusive\": \"2025-01..2025-03\"\n    }\n  }'\n"
 components:
-  requestBodies:
-    ListFilings:
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              filter:
-                description: The filter to apply to the returned filings.
-                type: object
-                properties:
-                  jurisId:
-                    description: The jurisdiction to filter by.
-                    type: string
-                    examples:
-                    - eu-oss
-                    - us-MA
-                  periodEndDateRangeInclusive:
-                    description: The filing period end date range to filter by.
-                    type: string
-                    examples:
-                    - '2025'
-                    - 2025-01
-                    - 2025-01..2025-03
-                    - 2025-01-01..2025-03-31
-              limit:
-                description: The maximum number of filings to return.
-                type: integer
-                format: int32
-                minimum: 1
-                maximum: 100
-                default: 10
-              cursor:
-                description: The cursor to use for pagination. This is the value of the `nextCursor` field returned from the previous page.
-                type: string
-          examples:
-            jurisIdFilter:
-              summary: Filter filings by juris
-              value:
-                jurisId: us-MA
-            periodEndDateRangeInclusiveFilter:
-              summary: Filter filings by filing period end date range
-              value:
-                periodEndDateRangeInclusive: 2025-01..2025-03
-            jurisIdAndPeriodEndDateRangeInclusiveFilter:
-              summary: Filter filings by jurisdiction ID and filing period end date range
-              value:
-                jurisId: us-MA
-                periodEndDateRangeInclusive: 2025-01..2025-03
-            cursor:
-              summary: Cursor-based pagination
-              value:
-                cursor: eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
-                limit: 5
-      required: true
   responses:
-    RateLimit:
-      description: Too Many Requests
-      headers:
-        Retry-After:
-          description: Number of seconds to wait for rate limit to reset.
-          schema:
-            type: integer
+    ListFilingsBadRequest:
+      description: Bad Request
       content:
         text/plain:
           schema:
             type: string
-          example: You've exceeded your API limit of 10 per second
+          examples:
+            invalidJurisIdProvided:
+              value: 'Request body: "filter": "jurisId": Invalid juris ID: "fake-juris-id"'
+              summary: Invalid juris ID
+            invalidPeriodEndDateRangeInclusiveProvided:
+              value: 'Request body: "filter": "periodEndDateRangeInclusive": Invalid period end date range: begin date comes after end date.'
+              summary: Invalid period end date range
+            invalidLimitProvided:
+              value: 'Request body: "limit": Number must be less than or equal to 100.'
+              summary: Invalid limit
+            cursorAndFilterBothProvided:
+              value: 'Request body: cursor and filter cannot both be provided.'
+              summary: Cursor and filter cannot both be provided
     ListFilingsSuccess:
       description: OK
       content:
@@ -195,25 +141,18 @@ components:
               hasMore:
                 description: Whether there are more filings to fetch.
                 type: boolean
-    ListFilingsBadRequest:
-      description: Bad Request
+    RateLimit:
+      description: Too Many Requests
+      headers:
+        Retry-After:
+          description: Number of seconds to wait for rate limit to reset.
+          schema:
+            type: integer
       content:
         text/plain:
           schema:
             type: string
-          examples:
-            invalidJurisIdProvided:
-              value: 'Request body: "filter": "jurisId": Invalid juris ID: "fake-juris-id"'
-              summary: Invalid juris ID
-            invalidPeriodEndDateRangeInclusiveProvided:
-              value: 'Request body: "filter": "periodEndDateRangeInclusive": Invalid period end date range: begin date comes after end date.'
-              summary: Invalid period end date range
-            invalidLimitProvided:
-              value: 'Request body: "limit": Number must be less than or equal to 100.'
-              summary: Invalid limit
-            cursorAndFilterBothProvided:
-              value: 'Request body: cursor and filter cannot both be provided.'
-              summary: Cursor and filter cannot both be provided
+          example: You've exceeded your API limit of 10 per second
     ListFilingsConflict:
       description: Conflict
       content:
@@ -235,6 +174,61 @@ components:
               value:
                 type: listFilingsApiNotEnabled
               summary: List filings API not enabled
+  requestBodies:
+    ListFilings:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              filter:
+                description: The filter to apply to the returned filings.
+                type: object
+                properties:
+                  jurisId:
+                    description: The jurisdiction to filter by.
+                    type: string
+                    examples:
+                    - eu-oss
+                    - us-MA
+                  periodEndDateRangeInclusive:
+                    description: The filing period end date range to filter by.
+                    type: string
+                    examples:
+                    - '2025'
+                    - 2025-01
+                    - 2025-01..2025-03
+                    - 2025-01-01..2025-03-31
+              limit:
+                description: The maximum number of filings to return.
+                type: integer
+                format: int32
+                minimum: 1
+                maximum: 100
+                default: 10
+              cursor:
+                description: The cursor to use for pagination. This is the value of the `nextCursor` field returned from the previous page.
+                type: string
+          examples:
+            jurisIdFilter:
+              summary: Filter filings by juris
+              value:
+                jurisId: us-MA
+            periodEndDateRangeInclusiveFilter:
+              summary: Filter filings by filing period end date range
+              value:
+                periodEndDateRangeInclusive: 2025-01..2025-03
+            jurisIdAndPeriodEndDateRangeInclusiveFilter:
+              summary: Filter filings by jurisdiction ID and filing period end date range
+              value:
+                jurisId: us-MA
+                periodEndDateRangeInclusive: 2025-01..2025-03
+            cursor:
+              summary: Cursor-based pagination
+              value:
+                cursor: eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
+                limit: 5
+      required: true
   securitySchemes:
     http:
       type: http
