@@ -59,25 +59,6 @@ paths:
         source: "apiToken='sxxx/saxxx/secret.xxx'\n\ncurl -X POST https://api.anrok.com/v1/seller/filings/list \\\n  -H 'Content-Type: application/json' \\\n  -H \"Authorization: Bearer $apiToken\" \\\n  -d '{\n    \"filter\": {\n        \"jurisId\": \"us-MA\",\n        \"periodEndDateRangeInclusive\": \"2025-01..2025-03\"\n    }\n  }'\n"
 components:
   responses:
-    ListFilingsBadRequest:
-      description: Bad Request
-      content:
-        text/plain:
-          schema:
-            type: string
-          examples:
-            invalidJurisIdProvided:
-              value: 'Request body: "filter": "jurisId": Invalid juris ID: "fake-juris-id"'
-              summary: Invalid juris ID
-            invalidPeriodEndDateRangeInclusiveProvided:
-              value: 'Request body: "filter": "periodEndDateRangeInclusive": Invalid period end date range: begin date comes after end date.'
-              summary: Invalid period end date range
-            invalidLimitProvided:
-              value: 'Request body: "limit": Number must be less than or equal to 100.'
-              summary: Invalid limit
-            cursorAndFilterBothProvided:
-              value: 'Request body: cursor and filter cannot both be provided.'
-              summary: Cursor and filter cannot both be provided
     ListFilingsSuccess:
       description: OK
       content:
@@ -141,18 +122,25 @@ components:
               hasMore:
                 description: Whether there are more filings to fetch.
                 type: boolean
-    RateLimit:
-      description: Too Many Requests
-      headers:
-        Retry-After:
-          description: Number of seconds to wait for rate limit to reset.
-          schema:
-            type: integer
+    ListFilingsBadRequest:
+      description: Bad Request
       content:
         text/plain:
           schema:
             type: string
-          example: You've exceeded your API limit of 10 per second
+          examples:
+            invalidJurisIdProvided:
+              value: 'Request body: "filter": "jurisId": Invalid juris ID: "fake-juris-id"'
+              summary: Invalid juris ID
+            invalidPeriodEndDateRangeInclusiveProvided:
+              value: 'Request body: "filter": "periodEndDateRangeInclusive": Invalid period end date range: begin date comes after end date.'
+              summary: Invalid period end date range
+            invalidLimitProvided:
+              value: 'Request body: "limit": Number must be less than or equal to 100.'
+              summary: Invalid limit
+            cursorAndFilterBothProvided:
+              value: 'Request body: cursor and filter cannot both be provided.'
+              summary: Cursor and filter cannot both be provided
     ListFilingsConflict:
       description: Conflict
       content:
@@ -174,6 +162,18 @@ components:
               value:
                 type: listFilingsApiNotEnabled
               summary: List filings API not enabled
+    RateLimit:
+      description: Too Many Requests
+      headers:
+        Retry-After:
+          description: Number of seconds to wait for rate limit to reset.
+          schema:
+            type: integer
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: You've exceeded your API limit of 10 per second
   requestBodies:
     ListFilings:
       content:

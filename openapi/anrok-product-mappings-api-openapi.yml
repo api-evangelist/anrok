@@ -152,6 +152,14 @@ components:
               value: {}
               summary: Empty request body
       required: true
+  parameters:
+    IntegrationId:
+      name: integrationId
+      in: path
+      description: Your unique integration ID.
+      required: true
+      schema:
+        type: string
   responses:
     RateLimit:
       description: Too Many Requests
@@ -165,14 +173,6 @@ components:
           schema:
             type: string
           example: You've exceeded your API limit of 10 per second
-  parameters:
-    IntegrationId:
-      name: integrationId
-      in: path
-      description: Your unique integration ID.
-      required: true
-      schema:
-        type: string
   securitySchemes:
     http:
       type: http

@@ -108,39 +108,6 @@ paths:
         source: "apiToken='sxxx/saxxx/secret.xxx'\n\ncurl -X POST https://api.anrok.com/v1/seller/taxId/validate \\\n  -H 'Content-Type: application/json' \\\n  -H \"Authorization: Bearer $apiToken\" \\\n  -d '{\n    \"customerAddress\": {\n      \"country\": \"CA\",\n      \"line1\": \"123 Main St\",\n      \"city\": \"Quebec City\",\n      \"region\": \"Quebec\",\n      \"postalCode\": \"G1P 2J6\"\n    },\n    \"customerTaxIds\": [{\n      \"value\": \"123456789\"\n    }]\n  }'"
 components:
   schemas:
-    ValidateTaxIdSuccess:
-      type: object
-      properties:
-        jurises:
-          description: List of applicable taxable jurisdictions that require tax ID collection/validation based on the customer address.
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                description: A user-friendly name for the jurisdiction.
-                type: string
-              taxIdNames:
-                description: List of applicable tax IDs to collect/validate for the jurisdiction.
-                type: object
-                properties:
-                  name:
-                    description: A user-friendly tax ID name.
-                    type: string
-                  abbreviation:
-                    description: The tax ID abbreviation (if any).
-                    type:
-                    - string
-                    - 'null'
-              validTaxIds:
-                description: A list of tax IDs from the API request that are valid in the jurisdiction.
-                type: array
-                items:
-                  type: object
-                  properties:
-                    value:
-                      description: The valid tax ID(s) from the request.
-                      type: string
     CustomerAddress:
       type: object
       title: Address
@@ -184,6 +151,39 @@ components:
         city: Heddon Greta
         region: New South Wales
         postalCode: '2321'
+    ValidateTaxIdSuccess:
+      type: object
+      properties:
+        jurises:
+          description: List of applicable taxable jurisdictions that require tax ID collection/validation based on the customer address.
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                description: A user-friendly name for the jurisdiction.
+                type: string
+              taxIdNames:
+                description: List of applicable tax IDs to collect/validate for the jurisdiction.
+                type: object
+                properties:
+                  name:
+                    description: A user-friendly tax ID name.
+                    type: string
+                  abbreviation:
+                    description: The tax ID abbreviation (if any).
+                    type:
+                    - string
+                    - 'null'
+              validTaxIds:
+                description: A list of tax IDs from the API request that are valid in the jurisdiction.
+                type: array
+                items:
+                  type: object
+                  properties:
+                    value:
+                      description: The valid tax ID(s) from the request.
+                      type: string
     ValidateTaxId:
       type: object
       properties:

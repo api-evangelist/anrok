@@ -197,45 +197,6 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimit'
 components:
-  responses:
-    RateLimit:
-      description: Too Many Requests
-      headers:
-        Retry-After:
-          description: Number of seconds to wait for rate limit to reset.
-          schema:
-            type: integer
-      content:
-        text/plain:
-          schema:
-            type: string
-          example: You've exceeded your API limit of 10 per second
-    EmptyResponse:
-      description: OK
-      content:
-        application/json:
-          schema:
-            type: object
-          example: {}
-  requestBodies:
-    Empty:
-      content:
-        application/json:
-          schema:
-            type: object
-          examples:
-            emptyExample:
-              value: {}
-              summary: Empty request body
-      required: true
-  parameters:
-    ProductExternalId:
-      name: externalId
-      in: path
-      description: The external ID of the product.
-      required: true
-      schema:
-        type: string
   schemas:
     CreateProduct:
       type: object
@@ -283,6 +244,45 @@ components:
       required:
       - type
       - id
+  responses:
+    EmptyResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+          example: {}
+    RateLimit:
+      description: Too Many Requests
+      headers:
+        Retry-After:
+          description: Number of seconds to wait for rate limit to reset.
+          schema:
+            type: integer
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: You've exceeded your API limit of 10 per second
+  requestBodies:
+    Empty:
+      content:
+        application/json:
+          schema:
+            type: object
+          examples:
+            emptyExample:
+              value: {}
+              summary: Empty request body
+      required: true
+  parameters:
+    ProductExternalId:
+      name: externalId
+      in: path
+      description: The external ID of the product.
+      required: true
+      schema:
+        type: string
   securitySchemes:
     http:
       type: http
