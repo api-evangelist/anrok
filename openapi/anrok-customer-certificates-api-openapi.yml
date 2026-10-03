@@ -286,13 +286,177 @@ paths:
       - lang: cURL
         source: "apiToken='sxxx/saxxx/secret.xxx'\n\ncurl -X POST https://api.anrok.com/v1/seller/certificateRequests/create \\\n  -H 'Content-Type: application/json' \\\n  -H \"Authorization: Bearer $apiToken\" \\\n  -d '{\n    \"customerId\": \"v1:1292\",\n    \"customerName\": \"Acme Inc\",\n    \"emailAddress\": \"contact@acme.com\"\n  }'\n"
 components:
+  requestBodies:
+    ListCertificates:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              filter:
+                description: The filter to apply to the returned certificates. Cannot be provided together with `cursor`.
+                type: object
+                properties:
+                  customerId:
+                    description: Only return certificates belonging to this customer.
+                    type: string
+                    examples:
+                    - v1:1292
+                  status:
+                    description: 'Only return certificates with this status. If omitted, certificates of all statuses are returned.
+
+                      '
+                    type: string
+                    enum:
+                    - active
+                    - expiringSoon
+                    - expired
+                    - archived
+                    examples:
+                    - active
+              limit:
+                description: The maximum number of certificates to return.
+                type: integer
+                format: int32
+                minimum: 1
+                maximum: 100
+                default: 25
+              cursor:
+                description: The cursor to use for pagination. This is the value of the `nextCursor` field returned from the previous page. Cannot be provided together with `filter`.
+                type: string
+                example: eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
+          examples:
+            noFilter:
+              summary: List all certificates
+              value: {}
+            customerIdFilter:
+              summary: Filter certificates by customer ID
+              value:
+                filter:
+                  customerId: v1:1292
+            statusFilter:
+              summary: Filter certificates by status
+              value:
+                filter:
+                  status: expiringSoon
+            cursor:
+              summary: Cursor-based pagination
+              value:
+                cursor: eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
+                limit: 5
+      required: true
+    CreateCertificateRequest:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              customerId:
+                $ref: '#/components/schemas/CustomerId'
+              customerName:
+                $ref: '#/components/schemas/CustomerName'
+              emailAddress:
+                description: The email address of the customer contact to send the certificate request to.
+                type: string
+                format: email
+                examples:
+                - contact@acme.com
+              sendEmail:
+                description: Whether to email the certificate request to the recipient. If `false`, the request is created but no email is sent — you can share the resulting `requestLink` directly.
+                type: boolean
+                default: true
+            required:
+            - customerId
+            - emailAddress
+          example:
+            customerId: v1:1292
+            customerName: Acme Inc
+            emailAddress: contact@acme.com
+      required: true
+    Empty:
+      content:
+        application/json:
+          schema:
+            type: object
+          examples:
+            emptyExample:
+              value: {}
+              summary: Empty request body
+      required: true
+  responses:
+    EmptyResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+          example: {}
+    ListCertificatesBadRequest:
+      description: Bad Request
+      content:
+        text/plain:
+          schema:
+            type: string
+          examples:
+            invalidStatusProvided:
+              value: 'Request body: "filter": "status": Invalid enum value.'
+              summary: Invalid status filter value
+            invalidLimitProvided:
+              value: 'Request body: "limit": Number must be less than or equal to 100.'
+              summary: Invalid limit
+            cursorAndFilterBothProvided:
+              value: 'Request body: cursor and filter cannot both be provided.'
+              summary: Cursor and filter cannot both be provided
+    GetCertificateSuccess:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CustomerCertificateResponse'
+    ListCertificatesSuccess:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              certificates:
+                description: The list of certificates.
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerCertificateResponse'
+              nextCursor:
+                description: The cursor to use to fetch the next page of results. Null if there are no more pages.
+                type:
+                - string
+                - 'null'
+                examples:
+                - eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
+              hasMore:
+                description: Whether there are more certificates available beyond this page.
+                type: boolean
+            required:
+            - certificates
+            - nextCursor
+            - hasMore
+    RateLimit:
+      description: Too Many Requests
+      headers:
+        Retry-After:
+          description: Number of seconds to wait for rate limit to reset.
+          schema:
+            type: integer
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: You've exceeded your API limit of 10 per second
   schemas:
-    CustomerId:
-      description: "The Anrok customer ID used to link transactions for the same customer and to look up tax exemption certificates for a customer. This is typically the billing system's customer ID with a prefix to disambiguate.\n- If customerId is provided without customerName, that customer object must\n  already exist in Anrok.\n- If both customerId and customerName are provided, the customer object will\n  be created if it is not already present.\n- Customer IDs are unique across the entire seller account.\n"
+    CustomerName:
+      description: The name of the customer. This is used for display purposes only.
       type: string
       examples:
-      - v1:1292
-      - stripe:cus_K39sWBu92Lo
+      - Acme Inc
     CustomerCertificateFile:
       type: object
       properties:
@@ -309,6 +473,41 @@ components:
       required:
       - name
       - contentsBase64
+    CustomerCertificate:
+      type: object
+      properties:
+        customerId:
+          $ref: '#/components/schemas/CustomerId'
+        customerName:
+          $ref: '#/components/schemas/CustomerName'
+        effectiveDateBegin:
+          description: Effective date of certificate
+          type: string
+          format: date
+          examples:
+          - '2022-01-01'
+        exemptionNumber:
+          description: Certificate exemption number. This is used for display purposes only.
+          type: string
+          examples:
+          - cert-105
+        notes:
+          description: Optional internal notes.
+          type: string
+          examples:
+          - customer notes
+        certificateFile:
+          $ref: '#/components/schemas/CustomerCertificateFile'
+        jurises:
+          description: Jurisdictions for which certificate applies
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerCertificateJuris'
+      required:
+      - customerId
+      - effectiveDateBegin
+      - certificateFile
+      - jurises
     CustomerCertificateJuris:
       type: object
       properties:
@@ -392,6 +591,12 @@ components:
           - Optional internal notes
       required:
       - jurisId
+    CustomerId:
+      description: "The Anrok customer ID used to link transactions for the same customer and to look up tax exemption certificates for a customer. This is typically the billing system's customer ID with a prefix to disambiguate.\n- If customerId is provided without customerName, that customer object must\n  already exist in Anrok.\n- If both customerId and customerName are provided, the customer object will\n  be created if it is not already present.\n- Customer IDs are unique across the entire seller account.\n"
+      type: string
+      examples:
+      - v1:1292
+      - stripe:cus_K39sWBu92Lo
     CustomerCertificateJurisResponse:
       type: object
       properties:
@@ -509,211 +714,6 @@ components:
       - exemptionNumber
       - notes
       - jurises
-    CustomerName:
-      description: The name of the customer. This is used for display purposes only.
-      type: string
-      examples:
-      - Acme Inc
-    CustomerCertificate:
-      type: object
-      properties:
-        customerId:
-          $ref: '#/components/schemas/CustomerId'
-        customerName:
-          $ref: '#/components/schemas/CustomerName'
-        effectiveDateBegin:
-          description: Effective date of certificate
-          type: string
-          format: date
-          examples:
-          - '2022-01-01'
-        exemptionNumber:
-          description: Certificate exemption number. This is used for display purposes only.
-          type: string
-          examples:
-          - cert-105
-        notes:
-          description: Optional internal notes.
-          type: string
-          examples:
-          - customer notes
-        certificateFile:
-          $ref: '#/components/schemas/CustomerCertificateFile'
-        jurises:
-          description: Jurisdictions for which certificate applies
-          type: array
-          items:
-            $ref: '#/components/schemas/CustomerCertificateJuris'
-      required:
-      - customerId
-      - effectiveDateBegin
-      - certificateFile
-      - jurises
-  requestBodies:
-    ListCertificates:
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              filter:
-                description: The filter to apply to the returned certificates. Cannot be provided together with `cursor`.
-                type: object
-                properties:
-                  customerId:
-                    description: Only return certificates belonging to this customer.
-                    type: string
-                    examples:
-                    - v1:1292
-                  status:
-                    description: 'Only return certificates with this status. If omitted, certificates of all statuses are returned.
-
-                      '
-                    type: string
-                    enum:
-                    - active
-                    - expiringSoon
-                    - expired
-                    - archived
-                    examples:
-                    - active
-              limit:
-                description: The maximum number of certificates to return.
-                type: integer
-                format: int32
-                minimum: 1
-                maximum: 100
-                default: 25
-              cursor:
-                description: The cursor to use for pagination. This is the value of the `nextCursor` field returned from the previous page. Cannot be provided together with `filter`.
-                type: string
-                example: eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
-          examples:
-            noFilter:
-              summary: List all certificates
-              value: {}
-            customerIdFilter:
-              summary: Filter certificates by customer ID
-              value:
-                filter:
-                  customerId: v1:1292
-            statusFilter:
-              summary: Filter certificates by status
-              value:
-                filter:
-                  status: expiringSoon
-            cursor:
-              summary: Cursor-based pagination
-              value:
-                cursor: eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
-                limit: 5
-      required: true
-    CreateCertificateRequest:
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              customerId:
-                $ref: '#/components/schemas/CustomerId'
-              customerName:
-                $ref: '#/components/schemas/CustomerName'
-              emailAddress:
-                description: The email address of the customer contact to send the certificate request to.
-                type: string
-                format: email
-                examples:
-                - contact@acme.com
-              sendEmail:
-                description: Whether to email the certificate request to the recipient. If `false`, the request is created but no email is sent — you can share the resulting `requestLink` directly.
-                type: boolean
-                default: true
-            required:
-            - customerId
-            - emailAddress
-          example:
-            customerId: v1:1292
-            customerName: Acme Inc
-            emailAddress: contact@acme.com
-      required: true
-    Empty:
-      content:
-        application/json:
-          schema:
-            type: object
-          examples:
-            emptyExample:
-              value: {}
-              summary: Empty request body
-      required: true
-  responses:
-    GetCertificateSuccess:
-      description: OK
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CustomerCertificateResponse'
-    EmptyResponse:
-      description: OK
-      content:
-        application/json:
-          schema:
-            type: object
-          example: {}
-    ListCertificatesSuccess:
-      description: OK
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              certificates:
-                description: The list of certificates.
-                type: array
-                items:
-                  $ref: '#/components/schemas/CustomerCertificateResponse'
-              nextCursor:
-                description: The cursor to use to fetch the next page of results. Null if there are no more pages.
-                type:
-                - string
-                - 'null'
-                examples:
-                - eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
-              hasMore:
-                description: Whether there are more certificates available beyond this page.
-                type: boolean
-            required:
-            - certificates
-            - nextCursor
-            - hasMore
-    RateLimit:
-      description: Too Many Requests
-      headers:
-        Retry-After:
-          description: Number of seconds to wait for rate limit to reset.
-          schema:
-            type: integer
-      content:
-        text/plain:
-          schema:
-            type: string
-          example: You've exceeded your API limit of 10 per second
-    ListCertificatesBadRequest:
-      description: Bad Request
-      content:
-        text/plain:
-          schema:
-            type: string
-          examples:
-            invalidStatusProvided:
-              value: 'Request body: "filter": "status": Invalid enum value.'
-              summary: Invalid status filter value
-            invalidLimitProvided:
-              value: 'Request body: "limit": Number must be less than or equal to 100.'
-              summary: Invalid limit
-            cursorAndFilterBothProvided:
-              value: 'Request body: cursor and filter cannot both be provided.'
-              summary: Cursor and filter cannot both be provided
   parameters:
     CertificateId:
       name: certificateId

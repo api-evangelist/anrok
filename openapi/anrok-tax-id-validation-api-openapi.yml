@@ -108,49 +108,6 @@ paths:
         source: "apiToken='sxxx/saxxx/secret.xxx'\n\ncurl -X POST https://api.anrok.com/v1/seller/taxId/validate \\\n  -H 'Content-Type: application/json' \\\n  -H \"Authorization: Bearer $apiToken\" \\\n  -d '{\n    \"customerAddress\": {\n      \"country\": \"CA\",\n      \"line1\": \"123 Main St\",\n      \"city\": \"Quebec City\",\n      \"region\": \"Quebec\",\n      \"postalCode\": \"G1P 2J6\"\n    },\n    \"customerTaxIds\": [{\n      \"value\": \"123456789\"\n    }]\n  }'"
 components:
   schemas:
-    CustomerAddress:
-      type: object
-      title: Address
-      properties:
-        country:
-          description: The country's full name or 2-letter ISO code
-          type:
-          - string
-          - 'null'
-          examples:
-          - UK
-          - United Kingdom
-        line1:
-          description: The "delivery line" of the address
-          type:
-          - string
-          - 'null'
-        city:
-          description: City or town name
-          type:
-          - string
-          - 'null'
-        region:
-          description: Other principal subdivision (i.e. province, state, county)
-          type:
-          - string
-          - 'null'
-        postalCode:
-          description: Postal code
-          type:
-          - string
-          - 'null'
-      required: []
-      examples:
-      - country: ENGLAND
-        line1: 2045 ROYAL ROAD
-        city: LONDON
-        postalCode: WIP 6HQ
-      - country: AU
-        line1: 71 Gaggin Street
-        city: Heddon Greta
-        region: New South Wales
-        postalCode: '2321'
     ValidateTaxIdSuccess:
       type: object
       properties:
@@ -204,6 +161,49 @@ components:
       required:
       - customerAddress
       - customerTaxIds
+    CustomerAddress:
+      type: object
+      title: Address
+      properties:
+        country:
+          description: The country's full name or 2-letter ISO code
+          type:
+          - string
+          - 'null'
+          examples:
+          - UK
+          - United Kingdom
+        line1:
+          description: The "delivery line" of the address
+          type:
+          - string
+          - 'null'
+        city:
+          description: City or town name
+          type:
+          - string
+          - 'null'
+        region:
+          description: Other principal subdivision (i.e. province, state, county)
+          type:
+          - string
+          - 'null'
+        postalCode:
+          description: Postal code
+          type:
+          - string
+          - 'null'
+      required: []
+      examples:
+      - country: ENGLAND
+        line1: 2045 ROYAL ROAD
+        city: LONDON
+        postalCode: WIP 6HQ
+      - country: AU
+        line1: 71 Gaggin Street
+        city: Heddon Greta
+        region: New South Wales
+        postalCode: '2321'
   responses:
     RateLimit:
       description: Too Many Requests

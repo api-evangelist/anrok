@@ -141,17 +141,6 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimit'
 components:
-  requestBodies:
-    Empty:
-      content:
-        application/json:
-          schema:
-            type: object
-          examples:
-            emptyExample:
-              value: {}
-              summary: Empty request body
-      required: true
   parameters:
     IntegrationId:
       name: integrationId
@@ -173,6 +162,17 @@ components:
           schema:
             type: string
           example: You've exceeded your API limit of 10 per second
+  requestBodies:
+    Empty:
+      content:
+        application/json:
+          schema:
+            type: object
+          examples:
+            emptyExample:
+              value: {}
+              summary: Empty request body
+      required: true
   securitySchemes:
     http:
       type: http

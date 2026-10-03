@@ -122,25 +122,6 @@ components:
               hasMore:
                 description: Whether there are more filings to fetch.
                 type: boolean
-    ListFilingsBadRequest:
-      description: Bad Request
-      content:
-        text/plain:
-          schema:
-            type: string
-          examples:
-            invalidJurisIdProvided:
-              value: 'Request body: "filter": "jurisId": Invalid juris ID: "fake-juris-id"'
-              summary: Invalid juris ID
-            invalidPeriodEndDateRangeInclusiveProvided:
-              value: 'Request body: "filter": "periodEndDateRangeInclusive": Invalid period end date range: begin date comes after end date.'
-              summary: Invalid period end date range
-            invalidLimitProvided:
-              value: 'Request body: "limit": Number must be less than or equal to 100.'
-              summary: Invalid limit
-            cursorAndFilterBothProvided:
-              value: 'Request body: cursor and filter cannot both be provided.'
-              summary: Cursor and filter cannot both be provided
     ListFilingsConflict:
       description: Conflict
       content:
@@ -174,6 +155,25 @@ components:
           schema:
             type: string
           example: You've exceeded your API limit of 10 per second
+    ListFilingsBadRequest:
+      description: Bad Request
+      content:
+        text/plain:
+          schema:
+            type: string
+          examples:
+            invalidJurisIdProvided:
+              value: 'Request body: "filter": "jurisId": Invalid juris ID: "fake-juris-id"'
+              summary: Invalid juris ID
+            invalidPeriodEndDateRangeInclusiveProvided:
+              value: 'Request body: "filter": "periodEndDateRangeInclusive": Invalid period end date range: begin date comes after end date.'
+              summary: Invalid period end date range
+            invalidLimitProvided:
+              value: 'Request body: "limit": Number must be less than or equal to 100.'
+              summary: Invalid limit
+            cursorAndFilterBothProvided:
+              value: 'Request body: cursor and filter cannot both be provided.'
+              summary: Cursor and filter cannot both be provided
   requestBodies:
     ListFilings:
       content:
