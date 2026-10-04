@@ -48,6 +48,7 @@ tags:
   - Tax Automation
   - Nexus
   - E-Invoicing
+  - Tax
 tags_raw:
   - Sales Tax
   - VAT
@@ -57,6 +58,7 @@ tags_raw:
   - Tax Automation
   - Nexus
   - E-Invoicing
+  - Tax
 url: https://raw.githubusercontent.com/api-evangelist/anrok/refs/heads/main/apis.yml
 created: '2026-06-12'
 modified: '2026-06-12'
@@ -269,6 +271,9 @@ apis:
     url: >-
       https://raw.githubusercontent.com/api-evangelist/anrok/refs/heads/main/json-ld/anrok-context.jsonld
 common:
+  - type: CapabilityMap
+    url: capabilities/anrok-capability-edges.yml
+    name: Anrok Business Capability Map
   - type: AgenticAccess
     url: agentic-access/anrok-agentic-access.yml
   - type: TrustCenter
