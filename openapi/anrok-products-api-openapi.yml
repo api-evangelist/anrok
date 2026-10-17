@@ -197,46 +197,26 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimit'
 components:
-  responses:
-    EmptyResponse:
-      description: OK
-      content:
-        application/json:
-          schema:
-            type: object
-          example: {}
-    RateLimit:
-      description: Too Many Requests
-      headers:
-        Retry-After:
-          description: Number of seconds to wait for rate limit to reset.
-          schema:
-            type: integer
-      content:
-        text/plain:
-          schema:
-            type: string
-          example: You've exceeded your API limit of 10 per second
-  requestBodies:
-    Empty:
-      content:
-        application/json:
-          schema:
-            type: object
-          examples:
-            emptyExample:
-              value: {}
-              summary: Empty request body
-      required: true
-  parameters:
-    ProductExternalId:
-      name: externalId
-      in: path
-      description: The external ID of the product.
-      required: true
-      schema:
-        type: string
   schemas:
+    ProductTaxCategoryId:
+      description: Identifier for a product tax category (PTC), consisting of a `type` and `id`. A PTC may be one of the standard PTCs that Anrok provides or a custom PTC that has been created on your seller account.
+      type: object
+      properties:
+        type:
+          description: Whether this PTC is one of Anrok's standard PTCs or a custom PTC defined on your seller account.
+          type: string
+          enum:
+          - standard
+          - custom
+        id:
+          description: The ID of the PTC. For a standard PTC, this is an Anrok internal identifier (for example, `saasBusiness`). For a custom PTC, this is the ID assigned when the PTC was created on the seller account.
+          type: string
+          examples:
+          - saasBusiness
+          - sptc95hf85bdcd
+      required:
+      - type
+      - id
     CreateProduct:
       type: object
       properties:
@@ -264,25 +244,45 @@ components:
       - externalId
       - taxCategoryId
       - name
-    ProductTaxCategoryId:
-      description: Identifier for a product tax category (PTC), consisting of a `type` and `id`. A PTC may be one of the standard PTCs that Anrok provides or a custom PTC that has been created on your seller account.
-      type: object
-      properties:
-        type:
-          description: Whether this PTC is one of Anrok's standard PTCs or a custom PTC defined on your seller account.
-          type: string
-          enum:
-          - standard
-          - custom
-        id:
-          description: The ID of the PTC. For a standard PTC, this is an Anrok internal identifier (for example, `saasBusiness`). For a custom PTC, this is the ID assigned when the PTC was created on the seller account.
-          type: string
+  responses:
+    RateLimit:
+      description: Too Many Requests
+      headers:
+        Retry-After:
+          description: Number of seconds to wait for rate limit to reset.
+          schema:
+            type: integer
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: You've exceeded your API limit of 10 per second
+    EmptyResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+          example: {}
+  parameters:
+    ProductExternalId:
+      name: externalId
+      in: path
+      description: The external ID of the product.
+      required: true
+      schema:
+        type: string
+  requestBodies:
+    Empty:
+      content:
+        application/json:
+          schema:
+            type: object
           examples:
-          - saasBusiness
-          - sptc95hf85bdcd
-      required:
-      - type
-      - id
+            emptyExample:
+              value: {}
+              summary: Empty request body
+      required: true
   securitySchemes:
     http:
       type: http

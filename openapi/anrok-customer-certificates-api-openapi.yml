@@ -286,91 +286,7 @@ paths:
       - lang: cURL
         source: "apiToken='sxxx/saxxx/secret.xxx'\n\ncurl -X POST https://api.anrok.com/v1/seller/certificateRequests/create \\\n  -H 'Content-Type: application/json' \\\n  -H \"Authorization: Bearer $apiToken\" \\\n  -d '{\n    \"customerId\": \"v1:1292\",\n    \"customerName\": \"Acme Inc\",\n    \"emailAddress\": \"contact@acme.com\"\n  }'\n"
 components:
-  responses:
-    EmptyResponse:
-      description: OK
-      content:
-        application/json:
-          schema:
-            type: object
-          example: {}
-    RateLimit:
-      description: Too Many Requests
-      headers:
-        Retry-After:
-          description: Number of seconds to wait for rate limit to reset.
-          schema:
-            type: integer
-      content:
-        text/plain:
-          schema:
-            type: string
-          example: You've exceeded your API limit of 10 per second
-    ListCertificatesBadRequest:
-      description: Bad Request
-      content:
-        text/plain:
-          schema:
-            type: string
-          examples:
-            invalidStatusProvided:
-              value: 'Request body: "filter": "status": Invalid enum value.'
-              summary: Invalid status filter value
-            invalidLimitProvided:
-              value: 'Request body: "limit": Number must be less than or equal to 100.'
-              summary: Invalid limit
-            cursorAndFilterBothProvided:
-              value: 'Request body: cursor and filter cannot both be provided.'
-              summary: Cursor and filter cannot both be provided
-    GetCertificateSuccess:
-      description: OK
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CustomerCertificateResponse'
-    ListCertificatesSuccess:
-      description: OK
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              certificates:
-                description: The list of certificates.
-                type: array
-                items:
-                  $ref: '#/components/schemas/CustomerCertificateResponse'
-              nextCursor:
-                description: The cursor to use to fetch the next page of results. Null if there are no more pages.
-                type:
-                - string
-                - 'null'
-                examples:
-                - eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
-              hasMore:
-                description: Whether there are more certificates available beyond this page.
-                type: boolean
-            required:
-            - certificates
-            - nextCursor
-            - hasMore
   schemas:
-    CustomerCertificateFile:
-      type: object
-      properties:
-        name:
-          description: File name
-          type: string
-          examples:
-          - cert.png
-        contentsBase64:
-          description: Base64 encoded certificate image contents
-          type: string
-          examples:
-          - Y2VydC5wbmc=
-      required:
-      - name
-      - contentsBase64
     CustomerCertificate:
       type: object
       properties:
@@ -406,6 +322,43 @@ components:
       - effectiveDateBegin
       - certificateFile
       - jurises
+    CustomerCertificateJurisResponse:
+      type: object
+      properties:
+        jurisId:
+          description: Jurisdiction ID for which this exemption applies.
+          type: string
+          examples:
+          - us-MA
+        registrationId:
+          description: Registration ID for the jurisdiction. This is used for display purposes only.
+          type: string
+          examples:
+          - reg-1234
+        effectiveDateEndi:
+          description: Expiration date of the certificate in this jurisdiction. Null if the certificate has no expiration date in this jurisdiction.
+          type:
+          - string
+          - 'null'
+          format: date
+          examples:
+          - '2023-01-01'
+        notes:
+          description: Optional internal notes. This is used for display purposes only.
+          type: string
+          examples:
+          - Optional internal notes
+      required:
+      - jurisId
+      - registrationId
+      - effectiveDateEndi
+      - notes
+    CustomerId:
+      description: "The Anrok customer ID used to link transactions for the same customer and to look up tax exemption certificates for a customer. This is typically the billing system's customer ID with a prefix to disambiguate.\n- If customerId is provided without customerName, that customer object must\n  already exist in Anrok.\n- If both customerId and customerName are provided, the customer object will\n  be created if it is not already present.\n- Customer IDs are unique across the entire seller account.\n"
+      type: string
+      examples:
+      - v1:1292
+      - stripe:cus_K39sWBu92Lo
     CustomerCertificateJuris:
       type: object
       properties:
@@ -489,42 +442,27 @@ components:
           - Optional internal notes
       required:
       - jurisId
+    CustomerCertificateFile:
+      type: object
+      properties:
+        name:
+          description: File name
+          type: string
+          examples:
+          - cert.png
+        contentsBase64:
+          description: Base64 encoded certificate image contents
+          type: string
+          examples:
+          - Y2VydC5wbmc=
+      required:
+      - name
+      - contentsBase64
     CustomerName:
       description: The name of the customer. This is used for display purposes only.
       type: string
       examples:
       - Acme Inc
-    CustomerCertificateJurisResponse:
-      type: object
-      properties:
-        jurisId:
-          description: Jurisdiction ID for which this exemption applies.
-          type: string
-          examples:
-          - us-MA
-        registrationId:
-          description: Registration ID for the jurisdiction. This is used for display purposes only.
-          type: string
-          examples:
-          - reg-1234
-        effectiveDateEndi:
-          description: Expiration date of the certificate in this jurisdiction. Null if the certificate has no expiration date in this jurisdiction.
-          type:
-          - string
-          - 'null'
-          format: date
-          examples:
-          - '2023-01-01'
-        notes:
-          description: Optional internal notes. This is used for display purposes only.
-          type: string
-          examples:
-          - Optional internal notes
-      required:
-      - jurisId
-      - registrationId
-      - effectiveDateEndi
-      - notes
     CustomerCertificateResponse:
       type: object
       properties:
@@ -611,23 +549,7 @@ components:
       - exemptionNumber
       - notes
       - jurises
-    CustomerId:
-      description: "The Anrok customer ID used to link transactions for the same customer and to look up tax exemption certificates for a customer. This is typically the billing system's customer ID with a prefix to disambiguate.\n- If customerId is provided without customerName, that customer object must\n  already exist in Anrok.\n- If both customerId and customerName are provided, the customer object will\n  be created if it is not already present.\n- Customer IDs are unique across the entire seller account.\n"
-      type: string
-      examples:
-      - v1:1292
-      - stripe:cus_K39sWBu92Lo
   requestBodies:
-    Empty:
-      content:
-        application/json:
-          schema:
-            type: object
-          examples:
-            emptyExample:
-              value: {}
-              summary: Empty request body
-      required: true
     CreateCertificateRequest:
       content:
         application/json:
@@ -714,6 +636,16 @@ components:
                 cursor: eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
                 limit: 5
       required: true
+    Empty:
+      content:
+        application/json:
+          schema:
+            type: object
+          examples:
+            emptyExample:
+              value: {}
+              summary: Empty request body
+      required: true
   parameters:
     CertificateId:
       name: certificateId
@@ -722,6 +654,74 @@ components:
       required: true
       schema:
         type: string
+  responses:
+    RateLimit:
+      description: Too Many Requests
+      headers:
+        Retry-After:
+          description: Number of seconds to wait for rate limit to reset.
+          schema:
+            type: integer
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: You've exceeded your API limit of 10 per second
+    ListCertificatesSuccess:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              certificates:
+                description: The list of certificates.
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerCertificateResponse'
+              nextCursor:
+                description: The cursor to use to fetch the next page of results. Null if there are no more pages.
+                type:
+                - string
+                - 'null'
+                examples:
+                - eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
+              hasMore:
+                description: Whether there are more certificates available beyond this page.
+                type: boolean
+            required:
+            - certificates
+            - nextCursor
+            - hasMore
+    EmptyResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+          example: {}
+    ListCertificatesBadRequest:
+      description: Bad Request
+      content:
+        text/plain:
+          schema:
+            type: string
+          examples:
+            invalidStatusProvided:
+              value: 'Request body: "filter": "status": Invalid enum value.'
+              summary: Invalid status filter value
+            invalidLimitProvided:
+              value: 'Request body: "limit": Number must be less than or equal to 100.'
+              summary: Invalid limit
+            cursorAndFilterBothProvided:
+              value: 'Request body: cursor and filter cannot both be provided.'
+              summary: Cursor and filter cannot both be provided
+    GetCertificateSuccess:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CustomerCertificateResponse'
   securitySchemes:
     http:
       type: http

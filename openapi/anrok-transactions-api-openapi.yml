@@ -371,163 +371,26 @@ paths:
       - lang: cURL
         source: "apiToken='sxxx/saxxx/secret.xxx'\n\ncurl -X POST https://api.anrok.com/v1/seller/transactions/list \\\n  -H 'Content-Type: application/json' \\\n  -H \"Authorization: Bearer $apiToken\" \\\n  -d '{\n    \"filter\": {\n        \"type\": \"lastModifiedAfter\",\n        \"value\": \"2025-08-08T16:00:00.000Z\"\n    }\n  }'\n"
 components:
-  requestBodies:
-    CreateNegation:
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              originalTransactionId:
-                description: The ID of the transaction you want to negate.
-                type: string
-              newTransactionId:
-                description: The ID for the new negated transaction.
-                type: string
-              originalTransactionExpectedVersion:
-                description: The expected transaction version. The refund will fail if this is not the latest version of the transaction.
-                type: integer
-                format: int32
-            required:
-            - originalTransactionId
-            - newTransactionId
-          example:
-            originalTransactionId: stripe:in_1JSW342eZvKYlo2C
-            newTransactionId: stripe:in_1JSW342eZvKYlo2C_refund
-      required: true
-    ListTransactions:
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              filter:
-                description: The filter to apply to the returned transactions.
-                oneOf:
-                - $ref: '#/components/schemas/LastModifiedAfterFilter'
-                - $ref: '#/components/schemas/FilingInfoFilter'
-              limit:
-                description: The maximum number of transactions to return.
-                type: integer
-                format: int32
-                minimum: 1
-                maximum: 20
-                default: 10
-              cursor:
-                description: The cursor to use for pagination. This is the value of the `nextCursor` field returned from the previous page.
-                type: string
-                example: eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
-          examples:
-            lastModifiedAfter:
-              summary: Filter transactions by last modified after
-              value:
-                type: lastModifiedAfter
-                value: '2025-01-01T00:00:00Z'
-            filingInfo:
-              summary: Filter transactions by filing info
-              value:
-                type: filingInfo
-                value:
-                  filingAssociationStatus: associated
-                  jurisId: us-MA
-                  jurisFilingId: 2025-01
-            cursor:
-              summary: Cursor-based pagination
-              value:
-                cursor: eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
-                limit: 5
-      required: true
   schemas:
-    JurisSummary:
-      description: Summary of the tax amount due and tax ID validation for a jurisdiction.
+    TaxAmountDue:
+      description: The tax amount due in the smallest denomination of the currency (e.g. cents or pennies).
       type: object
       properties:
-        id:
-          description: The ID of the jurisdiction.
-          type: string
-          example: us-TX
-        name:
-          description: The name of the jurisdiction.
-          type: string
-          example: Texas
-        preTaxAmount:
-          description: The pre-tax amount in the smallest denomination of the currency (e.g. cents or pennies).
+        inclusive:
+          description: The inclusive tax amount in the smallest denomination of the currency (e.g. cents or pennies).
           type: string
           format: Decimal
           example: '100.00'
-        taxAmountDue:
-          $ref: '#/components/schemas/TaxAmountDue'
-        taxIdValidation:
-          type: object
-          properties:
-            processedTaxIds:
-              description: The tax IDs that were processed.
-              type: array
-              items:
-                type: object
-                properties:
-                  taxId:
-                    description: The tax ID.
-                    type: string
-                    example: '1234567890'
-                  isValid:
-                    description: Whether the tax ID is valid.
-                    type: boolean
-    CommonTransactionProperties:
-      type: object
-      properties:
-        id:
-          description: The ID of the transaction.
+        exclusive:
+          description: The exclusive tax amount in the smallest denomination of the currency (e.g. cents or pennies).
           type: string
-          example: stripe:in_1JSW342eZvKYlo2C
-        anrokCreatedTime:
-          description: The timestamp when the transaction was created in Anrok.
+          format: Decimal
+          example: '10.00'
+        total:
+          description: The total tax amount in the smallest denomination of the currency (e.g. cents or pennies).
           type: string
-          format: date-time
-          example: '2025-01-01T00:00:00Z'
-        anrokModifiedTime:
-          description: The timesstamp when the transaction was last modified in Anrok.
-          type: string
-          format: date-time
-          example: '2025-01-02T18:00:00Z'
-        sourceBillingSystem:
-          description: The billing system that the transaction originated from, if any.
-          type:
-          - object
-          - 'null'
-          properties:
-            name:
-              type: string
-              examples:
-              - stripe
-              - netsuite
-              - quickbooks
-            integrationId:
-              type: string
-              example: si5kec86tpyt
-            invoiceId:
-              type: string
-              example: in_1JSW342eZvKYlo2C
-    CreateOrUpdateTransactionSuccess:
-      allOf:
-      - type: object
-        properties:
-          version:
-            description: The transaction version
-            type: integer
-            format: int32
-      - $ref: '#/components/schemas/CreateEphemeralTransactionSuccess'
-    VoidedTransactionResponse:
-      description: Voided transaction
-      type: object
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - void
-      - $ref: '#/components/schemas/CommonTransactionProperties'
+          format: Decimal
+          example: '110.00'
     NormalTransactionBody:
       type: object
       properties:
@@ -687,21 +550,6 @@ components:
                       taxAmount:
                         inclusive: '0'
                         exclusive: '318.4'
-    NormalTransactionResponse:
-      description: Normal transaction
-      type: object
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - normal
-      - $ref: '#/components/schemas/CommonTransactionProperties'
-      - type: object
-        properties:
-          body:
-            $ref: '#/components/schemas/NormalTransactionBody'
     CreateEphemeralTransaction:
       allOf:
       - $ref: '#/components/schemas/Transaction'
@@ -713,11 +561,66 @@ components:
             examples:
             - v1:1292
             - stripe:cus_K39sWBu92Lo
-    CustomerName:
-      description: The name of the customer. This is used for display purposes only.
-      type: string
-      examples:
-      - Acme Inc
+    LineItemJurisTax:
+      description: Taxes for a line item for a jurisdiction or region.
+      type: object
+      properties:
+        id:
+          description: The ID of the jurisdiction or region.
+          type: string
+          example: '4109000'
+        name:
+          description: The name of the jurisdiction or region.
+          type: string
+          example: Hill County
+        nonTaxableAmount:
+          description: The non-taxable amount of the line item in the smallest denomination of the currency (e.g. cents or pennies).
+          type: string
+          format: Decimal
+          example: '100.00'
+        exemptions:
+          type: array
+          items:
+            type: object
+            properties:
+              reason:
+                description: The reason for the exemption.
+                type: string
+                enum:
+                - reverseCharge
+                - customerExempt
+                - transactionExempt
+              amount:
+                description: The amount of the exemption in the smallest denomination of the currency (e.g. cents or pennies).
+                type: string
+                format: Decimal
+                example: '100.00'
+        taxableAmount:
+          description: The taxable amount of the line item in the smallest denomination of the currency (e.g. cents or pennies).
+          type: string
+          format: Decimal
+          example: '100.00'
+        rate:
+          description: The tax rate.
+          type:
+          - string
+          - 'null'
+          format: Decimal
+          example: '0.05'
+        taxAmount:
+          description: The tax amount of the line item in the smallest denomination of the currency (e.g. cents or pennies).
+          type: object
+          properties:
+            inclusive:
+              description: The inclusive tax amount in the smallest denomination of the currency (e.g. cents or pennies).
+              type: string
+              format: Decimal
+              example: '100.00'
+            exclusive:
+              description: The exclusive tax amount in the smallest denomination of the currency (e.g. cents or pennies).
+              type: string
+              format: Decimal
+              example: '10.00'
     CreateTransactionCannotComputeTaxAmount:
       type: object
       description: Error computing tax amount to be collected
@@ -739,29 +642,23 @@ components:
         productExternalId:
           description: The product external ID that was not configured in Anrok. Only set if type is 'productExternalIdUnknown'.
           type: string
-    TransactionLineItem:
+    CreateTransactionCannotUpdate:
       type: object
+      description: Error updating transaction
       properties:
-        id:
-          description: Optional identifier for the line item. This is saved by Anrok and returned in the response, but not used for anything by Anrok.
+        type:
           type: string
-        productExternalId:
-          description: A product ID that has already been defined in the Anrok UI (under "Product IDs"). This is used to determine whether the line item is taxable.
-          type: string
-        amount:
-          description: The sale price in the smallest denomination of the currency (e.g. cents or pennies).
-          type: integer
-          minimum: -100000000000
-          maximum: 100000000000
-        isTaxIncludedInAmount:
-          description: Whether the line item already includes tax in the amount.
-          type: boolean
-        quantity:
-          description: The quantity of the line item, as a string (e.g. `3` or `0.5`).
-          type: string
-      required:
-      - productExternalId
-      - amount
+          enum:
+          - transactionFrozenForFiling
+    CreateOrUpdateTransactionSuccess:
+      allOf:
+      - type: object
+        properties:
+          version:
+            description: The transaction version
+            type: integer
+            format: int32
+      - $ref: '#/components/schemas/CreateEphemeralTransactionSuccess'
     CustomerTaxId:
       type: object
       description: The customer VAT registration number for a non-US country
@@ -778,126 +675,6 @@ components:
       required:
       - type
       - value
-    CreateOrUpdateTransaction:
-      allOf:
-      - $ref: '#/components/schemas/Transaction'
-      - type: object
-        properties:
-          customerId:
-            $ref: '#/components/schemas/CustomerId'
-          id:
-            description: The ID of the new transaction. This must be unique across the entire seller account. This is typically the billing system's invoice ID with some prefix to disambiguate different systems.
-            type: string
-            examples:
-            - v1:2706174
-            - stripe:in_1JSW342eZvKYlo2C
-        required:
-        - id
-    NotTaxedReason:
-      type: object
-      properties:
-        type:
-          description: The reason a line item is not taxed.
-          type: string
-          enum:
-          - exempt
-          - jurisHasNoTax
-          - notCollecting
-          - productNotTaxed
-        reason:
-          description: The detailed reason for an exemption. Only set when the type is 'exempt'.
-          type: object
-          properties:
-            type:
-              enum:
-              - reverseCharge
-              - customerExempt
-              - transactionExempt
-    Transaction:
-      type: object
-      properties:
-        lineItems:
-          description: The line items in the transaction.
-          type: array
-          items:
-            $ref: '#/components/schemas/TransactionLineItem'
-        currencyCode:
-          description: Three letter ISO currency code (case insensitive).
-          type: string
-          minLength: 3
-          maxLength: 3
-          examples:
-          - USD
-          - GBP
-          - EUR
-        customerAddress:
-          description: 'The address where the product will be delivered or used. This address determines the taxing jurisdictions and rates for destination-based sourcing. For SaaS companies, this is typically the billing address. All address fields are optional: fields can be omitted or have null value, but empty strings are not allowed. Anrok will return an error if the address does not have enough information to determine the top-level taxing jurisdiction with high confidence.'
-          anyOf:
-          - $ref: '#/components/schemas/CustomerAddress'
-          - $ref: '#/components/schemas/CustomerLegacyUsOnlyAddress'
-        customerName:
-          $ref: '#/components/schemas/CustomerName'
-        customerTaxIds:
-          description: Tax IDs for the customer receiving the product
-          type: array
-          items:
-            $ref: '#/components/schemas/CustomerTaxId'
-        shipFromAddress:
-          description: Optional. The address where the product will be shipped from. Some jurisdictions calculate taxes based on the ship-from address. Defaults to your Anrok business address if omitted.
-          anyOf:
-          - $ref: '#/components/schemas/CustomerAddress'
-          - $ref: '#/components/schemas/CustomerLegacyUsOnlyAddress'
-        accountingDate:
-          description: The date that this transaction occurred, for accounting purposes. Accounting date will typically correspond to the invoice date. This is used to determine which tax return the transaction belongs to.
-          type: string
-          format: date
-          example: '2017-07-21'
-        accountingTime:
-          description: The time that this transaction occurred, for accounting purposes. If `accountingDate` is not provided, `accountingTime` is required to compute an accounting date for the transaction.
-          type: string
-          format: date-time
-          example: '2017-07-21T17:32:28Z'
-        accountingTimeZone:
-          description: A “tz database” string used to compute an accounting date from the request's `accountingTime`. The request cannot provide both an `accountingDate` and an `accountingTimeZone`. If `accountingTime` is provided without specifying an `accountingTimeZone`, the time zone configured on the seller account will be used.
-          type: string
-          enum:
-          - UTC
-          - America/New_York
-          - America/Chicago
-          - America/Denver
-          - America/Los_Angeles
-          - America/Anchorage
-          - Pacific/Honolulu
-          - Australia/Perth
-          - Australia/Adelaide
-          - Australia/Darwin
-          - Australia/Brisbane
-          - Australia/Sydney
-          - America/Halifax
-          - America/Toronto
-          - America/Winnipeg
-          - America/Regina
-          - America/Edmonton
-          - America/Vancouver
-          - Europe/Berlin
-          - Europe/Brussels
-          - Europe/Dublin
-          - Europe/Helsinki
-          - Europe/London
-          - Europe/Paris
-          - Europe/Rome
-          - Europe/Stockholm
-          - Asia/Tokyo
-          - Asia/Singapore
-        taxDate:
-          description: The date to use for tax calculations. If omitted, Anrok will use the accounting date.
-          type: string
-          format: date
-          example: '2017-07-21'
-      required:
-      - lineItems
-      - currencyCode
-      - customerAddress
     LineItem:
       description: Line item details
       type: object
@@ -1020,6 +797,47 @@ components:
           format: date-time
           description: Only return transactions that were last modified after this time in Anrok. Must be an ISO 8601 date-time in UTC.
           example: '2025-01-01T00:00:00Z'
+    CommonTransactionProperties:
+      type: object
+      properties:
+        id:
+          description: The ID of the transaction.
+          type: string
+          example: stripe:in_1JSW342eZvKYlo2C
+        anrokCreatedTime:
+          description: The timestamp when the transaction was created in Anrok.
+          type: string
+          format: date-time
+          example: '2025-01-01T00:00:00Z'
+        anrokModifiedTime:
+          description: The timesstamp when the transaction was last modified in Anrok.
+          type: string
+          format: date-time
+          example: '2025-01-02T18:00:00Z'
+        sourceBillingSystem:
+          description: The billing system that the transaction originated from, if any.
+          type:
+          - object
+          - 'null'
+          properties:
+            name:
+              type: string
+              examples:
+              - stripe
+              - netsuite
+              - quickbooks
+            integrationId:
+              type: string
+              example: si5kec86tpyt
+            invoiceId:
+              type: string
+              example: in_1JSW342eZvKYlo2C
+    CustomerId:
+      description: "The Anrok customer ID used to link transactions for the same customer and to look up tax exemption certificates for a customer. This is typically the billing system's customer ID with a prefix to disambiguate.\n- If customerId is provided without customerName, that customer object must\n  already exist in Anrok.\n- If both customerId and customerName are provided, the customer object will\n  be created if it is not already present.\n- Customer IDs are unique across the entire seller account.\n"
+      type: string
+      examples:
+      - v1:1292
+      - stripe:cus_K39sWBu92Lo
     CreateEphemeralTransactionSuccess:
       type: object
       properties:
@@ -1103,6 +921,49 @@ components:
                   items:
                     $ref: '#/components/schemas/NotTaxedReason'
                 - type: 'null'
+    TransactionLineItem:
+      type: object
+      properties:
+        id:
+          description: Optional identifier for the line item. This is saved by Anrok and returned in the response, but not used for anything by Anrok.
+          type: string
+        productExternalId:
+          description: A product ID that has already been defined in the Anrok UI (under "Product IDs"). This is used to determine whether the line item is taxable.
+          type: string
+        amount:
+          description: The sale price in the smallest denomination of the currency (e.g. cents or pennies).
+          type: integer
+          minimum: -100000000000
+          maximum: 100000000000
+        isTaxIncludedInAmount:
+          description: Whether the line item already includes tax in the amount.
+          type: boolean
+        quantity:
+          description: The quantity of the line item, as a string (e.g. `3` or `0.5`).
+          type: string
+      required:
+      - productExternalId
+      - amount
+    NotTaxedReason:
+      type: object
+      properties:
+        type:
+          description: The reason a line item is not taxed.
+          type: string
+          enum:
+          - exempt
+          - jurisHasNoTax
+          - notCollecting
+          - productNotTaxed
+        reason:
+          description: The detailed reason for an exemption. Only set when the type is 'exempt'.
+          type: object
+          properties:
+            type:
+              enum:
+              - reverseCharge
+              - customerExempt
+              - transactionExempt
     CustomerLegacyUsOnlyAddress:
       type: object
       title: Legacy US only address
@@ -1140,25 +1001,195 @@ components:
         city: White Plains
         state: NY
         zipCode: '10601'
-    TaxAmountDue:
-      description: The tax amount due in the smallest denomination of the currency (e.g. cents or pennies).
+    VoidedTransactionResponse:
+      description: Voided transaction
+      type: object
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - void
+      - $ref: '#/components/schemas/CommonTransactionProperties'
+    JurisSummary:
+      description: Summary of the tax amount due and tax ID validation for a jurisdiction.
       type: object
       properties:
-        inclusive:
-          description: The inclusive tax amount in the smallest denomination of the currency (e.g. cents or pennies).
+        id:
+          description: The ID of the jurisdiction.
+          type: string
+          example: us-TX
+        name:
+          description: The name of the jurisdiction.
+          type: string
+          example: Texas
+        preTaxAmount:
+          description: The pre-tax amount in the smallest denomination of the currency (e.g. cents or pennies).
           type: string
           format: Decimal
           example: '100.00'
-        exclusive:
-          description: The exclusive tax amount in the smallest denomination of the currency (e.g. cents or pennies).
+        taxAmountDue:
+          $ref: '#/components/schemas/TaxAmountDue'
+        taxIdValidation:
+          type: object
+          properties:
+            processedTaxIds:
+              description: The tax IDs that were processed.
+              type: array
+              items:
+                type: object
+                properties:
+                  taxId:
+                    description: The tax ID.
+                    type: string
+                    example: '1234567890'
+                  isValid:
+                    description: Whether the tax ID is valid.
+                    type: boolean
+    CustomerName:
+      description: The name of the customer. This is used for display purposes only.
+      type: string
+      examples:
+      - Acme Inc
+    Transaction:
+      type: object
+      properties:
+        lineItems:
+          description: The line items in the transaction.
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionLineItem'
+        currencyCode:
+          description: Three letter ISO currency code (case insensitive).
           type: string
-          format: Decimal
-          example: '10.00'
-        total:
-          description: The total tax amount in the smallest denomination of the currency (e.g. cents or pennies).
+          minLength: 3
+          maxLength: 3
+          examples:
+          - USD
+          - GBP
+          - EUR
+        customerAddress:
+          description: 'The address where the product will be delivered or used. This address determines the taxing jurisdictions and rates for destination-based sourcing. For SaaS companies, this is typically the billing address. All address fields are optional: fields can be omitted or have null value, but empty strings are not allowed. Anrok will return an error if the address does not have enough information to determine the top-level taxing jurisdiction with high confidence.'
+          anyOf:
+          - $ref: '#/components/schemas/CustomerAddress'
+          - $ref: '#/components/schemas/CustomerLegacyUsOnlyAddress'
+        customerName:
+          $ref: '#/components/schemas/CustomerName'
+        customerTaxIds:
+          description: Tax IDs for the customer receiving the product
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerTaxId'
+        shipFromAddress:
+          description: Optional. The address where the product will be shipped from. Some jurisdictions calculate taxes based on the ship-from address. Defaults to your Anrok business address if omitted.
+          anyOf:
+          - $ref: '#/components/schemas/CustomerAddress'
+          - $ref: '#/components/schemas/CustomerLegacyUsOnlyAddress'
+        accountingDate:
+          description: The date that this transaction occurred, for accounting purposes. Accounting date will typically correspond to the invoice date. This is used to determine which tax return the transaction belongs to.
           type: string
-          format: Decimal
-          example: '110.00'
+          format: date
+          example: '2017-07-21'
+        accountingTime:
+          description: The time that this transaction occurred, for accounting purposes. If `accountingDate` is not provided, `accountingTime` is required to compute an accounting date for the transaction.
+          type: string
+          format: date-time
+          example: '2017-07-21T17:32:28Z'
+        accountingTimeZone:
+          description: A “tz database” string used to compute an accounting date from the request's `accountingTime`. The request cannot provide both an `accountingDate` and an `accountingTimeZone`. If `accountingTime` is provided without specifying an `accountingTimeZone`, the time zone configured on the seller account will be used.
+          type: string
+          enum:
+          - UTC
+          - America/New_York
+          - America/Chicago
+          - America/Denver
+          - America/Los_Angeles
+          - America/Anchorage
+          - Pacific/Honolulu
+          - Australia/Perth
+          - Australia/Adelaide
+          - Australia/Darwin
+          - Australia/Brisbane
+          - Australia/Sydney
+          - America/Halifax
+          - America/Toronto
+          - America/Winnipeg
+          - America/Regina
+          - America/Edmonton
+          - America/Vancouver
+          - Europe/Berlin
+          - Europe/Brussels
+          - Europe/Dublin
+          - Europe/Helsinki
+          - Europe/London
+          - Europe/Paris
+          - Europe/Rome
+          - Europe/Stockholm
+          - Asia/Tokyo
+          - Asia/Singapore
+        taxDate:
+          description: The date to use for tax calculations. If omitted, Anrok will use the accounting date.
+          type: string
+          format: date
+          example: '2017-07-21'
+      required:
+      - lineItems
+      - currencyCode
+      - customerAddress
+    NormalTransactionResponse:
+      description: Normal transaction
+      type: object
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - normal
+      - $ref: '#/components/schemas/CommonTransactionProperties'
+      - type: object
+        properties:
+          body:
+            $ref: '#/components/schemas/NormalTransactionBody'
+    CreateOrUpdateTransaction:
+      allOf:
+      - $ref: '#/components/schemas/Transaction'
+      - type: object
+        properties:
+          customerId:
+            $ref: '#/components/schemas/CustomerId'
+          id:
+            description: The ID of the new transaction. This must be unique across the entire seller account. This is typically the billing system's invoice ID with some prefix to disambiguate different systems.
+            type: string
+            examples:
+            - v1:2706174
+            - stripe:in_1JSW342eZvKYlo2C
+        required:
+        - id
+    FilingInfoFilter:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+          - filingInfo
+        value:
+          type: object
+          description: Only return transactions that are associated with the specified filing.
+          properties:
+            filingAssociationStatus:
+              type: string
+              enum:
+              - associated
+            jurisId:
+              type: string
+              examples:
+              - us-MA
+            jurisFilingId:
+              type: string
+              examples:
+              - 2025-01
     CustomerAddress:
       type: object
       title: Address
@@ -1202,153 +1233,25 @@ components:
         city: Heddon Greta
         region: New South Wales
         postalCode: '2321'
-    CreateTransactionCannotUpdate:
-      type: object
-      description: Error updating transaction
-      properties:
-        type:
-          type: string
-          enum:
-          - transactionFrozenForFiling
-    LineItemJurisTax:
-      description: Taxes for a line item for a jurisdiction or region.
-      type: object
-      properties:
-        id:
-          description: The ID of the jurisdiction or region.
-          type: string
-          example: '4109000'
-        name:
-          description: The name of the jurisdiction or region.
-          type: string
-          example: Hill County
-        nonTaxableAmount:
-          description: The non-taxable amount of the line item in the smallest denomination of the currency (e.g. cents or pennies).
-          type: string
-          format: Decimal
-          example: '100.00'
-        exemptions:
-          type: array
-          items:
-            type: object
-            properties:
-              reason:
-                description: The reason for the exemption.
-                type: string
-                enum:
-                - reverseCharge
-                - customerExempt
-                - transactionExempt
-              amount:
-                description: The amount of the exemption in the smallest denomination of the currency (e.g. cents or pennies).
-                type: string
-                format: Decimal
-                example: '100.00'
-        taxableAmount:
-          description: The taxable amount of the line item in the smallest denomination of the currency (e.g. cents or pennies).
-          type: string
-          format: Decimal
-          example: '100.00'
-        rate:
-          description: The tax rate.
-          type:
-          - string
-          - 'null'
-          format: Decimal
-          example: '0.05'
-        taxAmount:
-          description: The tax amount of the line item in the smallest denomination of the currency (e.g. cents or pennies).
-          type: object
-          properties:
-            inclusive:
-              description: The inclusive tax amount in the smallest denomination of the currency (e.g. cents or pennies).
-              type: string
-              format: Decimal
-              example: '100.00'
-            exclusive:
-              description: The exclusive tax amount in the smallest denomination of the currency (e.g. cents or pennies).
-              type: string
-              format: Decimal
-              example: '10.00'
-    FilingInfoFilter:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - filingInfo
-        value:
-          type: object
-          description: Only return transactions that are associated with the specified filing.
-          properties:
-            filingAssociationStatus:
-              type: string
-              enum:
-              - associated
-            jurisId:
-              type: string
-              examples:
-              - us-MA
-            jurisFilingId:
-              type: string
-              examples:
-              - 2025-01
-    CustomerId:
-      description: "The Anrok customer ID used to link transactions for the same customer and to look up tax exemption certificates for a customer. This is typically the billing system's customer ID with a prefix to disambiguate.\n- If customerId is provided without customerName, that customer object must\n  already exist in Anrok.\n- If both customerId and customerName are provided, the customer object will\n  be created if it is not already present.\n- Customer IDs are unique across the entire seller account.\n"
-      type: string
-      examples:
-      - v1:1292
-      - stripe:cus_K39sWBu92Lo
+  examples:
+    ConflictProductExternalIdUnknown:
+      value:
+        type: productExternalIdUnknown
+        productExternalId: my-new-product-id
+      summary: Product IDs must have already been configured in Anrok
+    ConflictTaxDateTooFarInPast:
+      value:
+        type: taxDateTooFarInPast
+      summary: Anrok only accepts dates on or after Jan 1, 1999.
+    ConflictTaxDateTooFarInFuture:
+      value:
+        type: taxDateTooFarInFuture
+      summary: Anrok accepts dates up to 31 days in the future.
+    ConflictAccountingTimeZoneNotSetForSeller:
+      value:
+        type: accountingTimeZoneNotSetForSeller
+      summary: Cannot determine accounting date from accountingTime without time zone
   responses:
-    RateLimit:
-      description: Too Many Requests
-      headers:
-        Retry-After:
-          description: Number of seconds to wait for rate limit to reset.
-          schema:
-            type: integer
-      content:
-        text/plain:
-          schema:
-            type: string
-          example: You've exceeded your API limit of 10 per second
-    ListTransactionsConflict:
-      description: Conflict
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              type:
-                type: string
-                enum:
-                - invalidCursor
-                - listTransactionsApiNotEnabled
-          examples:
-            invalidCursor:
-              value:
-                type: invalidCursor
-              summary: Invalid cursor
-            listTransactionsApiNotEnabled:
-              value:
-                type: listTransactionsApiNotEnabled
-              summary: List transactions API not enabled
-    CreateNegationConflict:
-      description: Conflict
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              type:
-                type: string
-                enum:
-                - transactionIdNotFound
-                - transactionExpectedVersionMismatch
-                - transactionIsAlreadyANegation
-                - duplicateTransactionId
-          example:
-            type: transactionExpectedVersionMismatch
     ListTransactionsBadRequest:
       description: Bad Request
       content:
@@ -1371,6 +1274,62 @@ components:
             cursorAndFilterBothProvided:
               value: 'Request body: cursor and filter cannot both be provided.'
               summary: Cursor and filter cannot both be provided
+    ListTransactionsConflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                - invalidCursor
+                - listTransactionsApiNotEnabled
+          examples:
+            invalidCursor:
+              value:
+                type: invalidCursor
+              summary: Invalid cursor
+            listTransactionsApiNotEnabled:
+              value:
+                type: listTransactionsApiNotEnabled
+              summary: List transactions API not enabled
+    EmptyResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+          example: {}
+    RateLimit:
+      description: Too Many Requests
+      headers:
+        Retry-After:
+          description: Number of seconds to wait for rate limit to reset.
+          schema:
+            type: integer
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: You've exceeded your API limit of 10 per second
+    CreateNegationConflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                - transactionIdNotFound
+                - transactionExpectedVersionMismatch
+                - transactionIsAlreadyANegation
+                - duplicateTransactionId
+          example:
+            type: transactionExpectedVersionMismatch
     ListTransactionsSuccess:
       description: OK
       content:
@@ -1393,23 +1352,6 @@ components:
               hasMore:
                 description: Whether there are more transactions to fetch.
                 type: boolean
-    CreateNegationBadRequest:
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            type: string
-          examples:
-            missingRequestProperty:
-              summary: Required property missing
-              value: 'Request body: "newTransactionId": Required.'
-    EmptyResponse:
-      description: OK
-      content:
-        application/json:
-          schema:
-            type: object
-          example: {}
     CreateTransactionBadRequest:
       description: Bad Request
       content:
@@ -1432,6 +1374,82 @@ components:
             missingAccountingDate:
               value: 'Request body: Must specify either accountingDate or accountingTimeZone.'
               summary: Not enough info to determine accounting date
+    CreateNegationBadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: string
+          examples:
+            missingRequestProperty:
+              summary: Required property missing
+              value: 'Request body: "newTransactionId": Required.'
+  requestBodies:
+    ListTransactions:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              filter:
+                description: The filter to apply to the returned transactions.
+                oneOf:
+                - $ref: '#/components/schemas/LastModifiedAfterFilter'
+                - $ref: '#/components/schemas/FilingInfoFilter'
+              limit:
+                description: The maximum number of transactions to return.
+                type: integer
+                format: int32
+                minimum: 1
+                maximum: 20
+                default: 10
+              cursor:
+                description: The cursor to use for pagination. This is the value of the `nextCursor` field returned from the previous page.
+                type: string
+                example: eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
+          examples:
+            lastModifiedAfter:
+              summary: Filter transactions by last modified after
+              value:
+                type: lastModifiedAfter
+                value: '2025-01-01T00:00:00Z'
+            filingInfo:
+              summary: Filter transactions by filing info
+              value:
+                type: filingInfo
+                value:
+                  filingAssociationStatus: associated
+                  jurisId: us-MA
+                  jurisFilingId: 2025-01
+            cursor:
+              summary: Cursor-based pagination
+              value:
+                cursor: eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
+                limit: 5
+      required: true
+    CreateNegation:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              originalTransactionId:
+                description: The ID of the transaction you want to negate.
+                type: string
+              newTransactionId:
+                description: The ID for the new negated transaction.
+                type: string
+              originalTransactionExpectedVersion:
+                description: The expected transaction version. The refund will fail if this is not the latest version of the transaction.
+                type: integer
+                format: int32
+            required:
+            - originalTransactionId
+            - newTransactionId
+          example:
+            originalTransactionId: stripe:in_1JSW342eZvKYlo2C
+            newTransactionId: stripe:in_1JSW342eZvKYlo2C_refund
+      required: true
   parameters:
     TransactionId:
       name: transactionId
@@ -1440,24 +1458,6 @@ components:
       required: true
       schema:
         type: string
-  examples:
-    ConflictTaxDateTooFarInPast:
-      value:
-        type: taxDateTooFarInPast
-      summary: Anrok only accepts dates on or after Jan 1, 1999.
-    ConflictAccountingTimeZoneNotSetForSeller:
-      value:
-        type: accountingTimeZoneNotSetForSeller
-      summary: Cannot determine accounting date from accountingTime without time zone
-    ConflictProductExternalIdUnknown:
-      value:
-        type: productExternalIdUnknown
-        productExternalId: my-new-product-id
-      summary: Product IDs must have already been configured in Anrok
-    ConflictTaxDateTooFarInFuture:
-      value:
-        type: taxDateTooFarInFuture
-      summary: Anrok accepts dates up to 31 days in the future.
   securitySchemes:
     http:
       type: http
