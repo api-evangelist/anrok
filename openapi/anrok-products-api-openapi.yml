@@ -149,6 +149,43 @@ paths:
                 type: productExternalIdNotFound
         '429':
           $ref: '#/components/responses/RateLimit'
+  /v1/seller/products/list:
+    post:
+      tags:
+      - Products
+      summary: List products
+      description: Lists the products on your seller account, in descending order of creation time.
+      operationId: productsList
+      requestBody:
+        $ref: '#/components/requestBodies/ListProducts'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListProductsSuccess'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                type: string
+              examples:
+                invalidLimitProvided:
+                  value: 'Request body: "limit": Number must be less than or equal to 1000.'
+                  summary: Invalid limit
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                    - invalidCursor
+              example:
+                type: invalidCursor
+        '429':
+          $ref: '#/components/responses/RateLimit'
   /v1/seller/productTaxCategories/list:
     post:
       tags:
@@ -197,6 +234,83 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimit'
 components:
+  responses:
+    RateLimit:
+      description: Too Many Requests
+      headers:
+        Retry-After:
+          description: Number of seconds to wait for rate limit to reset.
+          schema:
+            type: integer
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: You've exceeded your API limit of 10 per second
+    ListProductsSuccess:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              products:
+                description: The list of products, in descending order of creation time (`createdTime`).
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductResponse'
+              nextCursor:
+                description: The cursor to use to fetch the next page of results. Null if there are no more pages.
+                type:
+                - string
+                - 'null'
+                examples:
+                - eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
+              hasMore:
+                description: Whether there are more products available beyond this page.
+                type: boolean
+            required:
+            - products
+            - nextCursor
+            - hasMore
+          example:
+            products:
+            - name: Default (Stripe)
+              description: ''
+              taxCategoryId:
+                type: standard
+                id: digitalGoodsPermanentBusiness
+              taxCategoryName: Digital goods, Permanent use, B2B
+              createdTime: '2026-06-24T23:36:07.122Z'
+              productType: default
+              defaultForSellerIntegrationId: si445fn945z5
+              defaultForLineItemType: product
+            - name: Acme Enterprise
+              description: Premium Acme offering for enterprise customers
+              taxCategoryId:
+                type: standard
+                id: saasBusiness
+              taxCategoryName: SaaS - General, B2B
+              createdTime: '2026-06-04T00:00:00.000Z'
+              productType: regular
+              externalId: ENT1
+            nextCursor: null
+            hasMore: false
+    EmptyResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+          example: {}
+  parameters:
+    ProductExternalId:
+      name: externalId
+      in: path
+      description: The external ID of the product.
+      required: true
+      schema:
+        type: string
   schemas:
     ProductTaxCategoryId:
       description: Identifier for a product tax category (PTC), consisting of a `type` and `id`. A PTC may be one of the standard PTCs that Anrok provides or a custom PTC that has been created on your seller account.
@@ -217,6 +331,97 @@ components:
       required:
       - type
       - id
+    RegularProduct:
+      description: A regular product, created in your Anrok account and identified by an external ID.
+      allOf:
+      - $ref: '#/components/schemas/ProductBase'
+      - type: object
+        properties:
+          productType:
+            type: string
+            const: regular
+          externalId:
+            description: Your unique external ID for the product.
+            type: string
+            examples:
+            - ENT1
+        required:
+        - externalId
+    ProductBase:
+      type: object
+      properties:
+        name:
+          description: The product's display name.
+          type: string
+          examples:
+          - Acme Enterprise
+        description:
+          description: The product's description. Empty string if no description has been set.
+          type: string
+          examples:
+          - Premium Acme offering for enterprise customers
+        taxCategoryId:
+          description: The identifier for the product's product tax category (PTC).
+          $ref: '#/components/schemas/ProductTaxCategoryId'
+        taxCategoryName:
+          description: The display name of the product's product tax category (PTC).
+          type: string
+          examples:
+          - SaaS - General, B2B
+        createdTime:
+          description: The time at which the product was created in Anrok.
+          type: string
+          format: date-time
+          examples:
+          - '2026-06-04T00:00:00.000Z'
+        productType:
+          description: The type of product. A `regular` product corresponds to a product from your billing system with an external ID. A `default` product is assigned to transactions from an integration with line items whose external ID is not configured in Anrok.
+          type: string
+          enum:
+          - regular
+          - default
+      required:
+      - name
+      - description
+      - taxCategoryId
+      - taxCategoryName
+      - createdTime
+      - productType
+    DefaultProduct:
+      description: A default product is assigned to transactions from an integration with line items whose external ID is not configured in Anrok. Default products are only returned when `includeDefaultProducts` is `true` in the request.
+      allOf:
+      - $ref: '#/components/schemas/ProductBase'
+      - type: object
+        properties:
+          productType:
+            type: string
+            const: default
+          defaultForSellerIntegrationId:
+            description: The ID of the integration that this default product belongs to.
+            type: string
+            examples:
+            - si445fn945z5
+          defaultForLineItemType:
+            description: The line item type that this default product applies to (either `product` or `shipping`).
+            type: string
+            enum:
+            - product
+            - shipping
+            examples:
+            - product
+        required:
+        - defaultForSellerIntegrationId
+        - defaultForLineItemType
+    ProductResponse:
+      description: A product in your Anrok account. The shape depends on `productType`. `regular` products include an `externalId`; `default` products include `defaultForSellerIntegrationId` and `defaultForLineItemType`.
+      oneOf:
+      - $ref: '#/components/schemas/RegularProduct'
+      - $ref: '#/components/schemas/DefaultProduct'
+      discriminator:
+        propertyName: productType
+        mapping:
+          regular: '#/components/schemas/RegularProduct'
+          default: '#/components/schemas/DefaultProduct'
     CreateProduct:
       type: object
       properties:
@@ -244,35 +449,42 @@ components:
       - externalId
       - taxCategoryId
       - name
-  responses:
-    RateLimit:
-      description: Too Many Requests
-      headers:
-        Retry-After:
-          description: Number of seconds to wait for rate limit to reset.
-          schema:
-            type: integer
-      content:
-        text/plain:
-          schema:
-            type: string
-          example: You've exceeded your API limit of 10 per second
-    EmptyResponse:
-      description: OK
+  requestBodies:
+    ListProducts:
       content:
         application/json:
           schema:
             type: object
-          example: {}
-  parameters:
-    ProductExternalId:
-      name: externalId
-      in: path
-      description: The external ID of the product.
+            properties:
+              limit:
+                description: The maximum number of products to return.
+                type: integer
+                format: int32
+                minimum: 1
+                maximum: 1000
+                default: 100
+              cursor:
+                description: The cursor to use for pagination. This is the value of the `nextCursor` field returned from the previous page.
+                type: string
+                example: eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
+              includeDefaultProducts:
+                description: Whether to include default products and default shipping products from any integrations in the response. When `false`, only regular products are returned.
+                type: boolean
+                default: false
+          examples:
+            firstPage:
+              summary: List products from the beginning
+              value: {}
+            cursor:
+              summary: Cursor-based pagination
+              value:
+                cursor: eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
+                limit: 5
+            includeDefaultProducts:
+              summary: Include default products from integrations
+              value:
+                includeDefaultProducts: true
       required: true
-      schema:
-        type: string
-  requestBodies:
     Empty:
       content:
         application/json:

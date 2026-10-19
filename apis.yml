@@ -270,6 +270,50 @@ apis:
   - type: JSONLD
     url: >-
       https://raw.githubusercontent.com/api-evangelist/anrok/refs/heads/main/json-ld/anrok-context.jsonld
+- aid: anrok:anrok-address-resolution-api
+  name: Anrok Address resolution API
+  description: >-
+    The Anrok Address Resolution endpoint resolves a customer address to its normalized form, suitable
+    for sales tax calculations, as well as taxable
+
+    jurisdiction(s). It uses the same address resolution that tax calculation relies on, so a
+
+    successful response means the address would process on an invoice.
+
+
+    For addresses in the United States and Canada, Anrok returns the full resolved address. For all other
+    countries, only the country is returned.
+
+
+    **Resolving international addresses to street-level is a premium feature. Please contact hello@anrok.com
+    for more information to enable this on your seller account.**
+  humanURL: https://apidocs.anrok.com/
+  baseURL: https://api.anrok.com
+  tags:
+  - Address resolution
+  properties:
+  - type: OpenAPI
+    url: openapi/anrok-address-resolution-api-openapi.yml
+- aid: anrok:anrok-customers-api
+  name: Anrok Customers API
+  description: >-
+    The Anrok Customers API endpoints allow you to register customers on your seller
+
+    account before their first transaction, and to retrieve the customers on your account. Normally a
+    customer is created automatically when its
+
+    first transaction is ingested; creating it ahead of time makes the customer searchable by name
+
+    in Anrok - for example, when uploading a tax exemption certificate before the customer's first
+
+    billing - without needing to push a placeholder transaction.
+  humanURL: https://apidocs.anrok.com/
+  baseURL: https://api.anrok.com
+  tags:
+  - Customers
+  properties:
+  - type: OpenAPI
+    url: openapi/anrok-customers-api-openapi.yml
 common:
   - type: CapabilityMap
     url: capabilities/anrok-capability-edges.yml

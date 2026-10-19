@@ -57,8 +57,263 @@ paths:
       x-codeSamples:
       - lang: cURL
         source: "apiToken='sxxx/saxxx/secret.xxx'\n\ncurl -X POST https://api.anrok.com/v1/seller/filings/list \\\n  -H 'Content-Type: application/json' \\\n  -H \"Authorization: Bearer $apiToken\" \\\n  -d '{\n    \"filter\": {\n        \"jurisId\": \"us-MA\",\n        \"periodEndDateRangeInclusive\": \"2025-01..2025-03\"\n    }\n  }'\n"
+  /v1/seller/filings/id:{jurisId}/id:{jurisFilingId}/listTransactionIds:
+    parameters:
+    - $ref: '#/components/parameters/JurisId'
+    - $ref: '#/components/parameters/JurisFilingId'
+    post:
+      tags:
+      - Filings
+      summary: List filing transaction IDs
+      description: 'Lists the IDs of the transactions included in a filing, ordered by the transaction''s accounting date.
+
+        This endpoint is a premium feature. Please contact hello@anrok.com for more information to enable this on your seller account.'
+      operationId: filingsListTransactionIds
+      requestBody:
+        $ref: '#/components/requestBodies/ListFilingTransactionIds'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListFilingTransactionIdsSuccess'
+        '400':
+          $ref: '#/components/responses/ListFilingTransactionIdsBadRequest'
+        '409':
+          $ref: '#/components/responses/ListFilingTransactionIdsConflict'
+        '429':
+          $ref: '#/components/responses/RateLimit'
+      x-codeSamples:
+      - lang: cURL
+        source: "apiToken=\"sxxx/saxxx/secret.xxx\"\njurisId=\"us-MA\"\njurisFilingId=\"2025-01\"\n\ncurl -X POST \"https://api.anrok.com/v1/seller/filings/id:$jurisId/id:$jurisFilingId/listTransactionIds\" \\\n  -H 'Content-Type: application/json' \\\n  -H \"Authorization: Bearer $apiToken\" \\\n  -d \"{}\"\n"
+  /v1/seller/filings/id:{jurisId}/id:{jurisFilingId}/listTransactionsWithConversionRates:
+    parameters:
+    - $ref: '#/components/parameters/JurisId'
+    - $ref: '#/components/parameters/JurisFilingId'
+    post:
+      tags:
+      - Filings
+      summary: List filing transactions with conversion rates
+      description: 'Lists the transactions included in a filing, each with the conversion rate from the transaction currency to the filing currency.
+
+        Rates may change until the filing has been finalized, so it''s recommended to only use this endpoint after finalization.
+
+        This endpoint is a premium feature. Please contact hello@anrok.com for more information to enable this on your seller account.'
+      operationId: filingsListTransactionsWithConversionRates
+      requestBody:
+        $ref: '#/components/requestBodies/ListFilingTransactionsWithConversionRates'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListFilingTransactionsWithConversionRatesSuccess'
+        '400':
+          $ref: '#/components/responses/ListFilingTransactionsWithConversionRatesBadRequest'
+        '409':
+          $ref: '#/components/responses/ListFilingTransactionsWithConversionRatesConflict'
+        '429':
+          $ref: '#/components/responses/RateLimit'
+      x-codeSamples:
+      - lang: cURL
+        source: "apiToken=\"sxxx/saxxx/secret.xxx\"\njurisId=\"us-MA\"\njurisFilingId=\"2025-01\"\n\ncurl -X POST \"https://api.anrok.com/v1/seller/filings/id:$jurisId/id:$jurisFilingId/listTransactionsWithConversionRates\" \\\n  -H 'Content-Type: application/json' \\\n  -H \"Authorization: Bearer $apiToken\" \\\n  -d \"{}\"\n"
+  /v1/seller/filings/id:{jurisId}/id:{jurisFilingId}/removeTransactions:
+    parameters:
+    - $ref: '#/components/parameters/JurisId'
+    - $ref: '#/components/parameters/JurisFilingId'
+    post:
+      tags:
+      - Filings
+      summary: Remove transactions from a filing
+      description: 'Removes the given transactions from a filing, identified by its jurisdiction ID and filing ID.
+
+
+        Idempotent: transaction IDs that aren''t currently associated with this filing (already removed,
+
+        unknown, or associated with a different filing) are reported with a `notFound` error rather than
+
+        failing the request, so retrying the same request is safe.
+
+
+        A maximum of 100 transaction IDs may be removed per request. To remove more, make multiple requests.'
+      operationId: filingsRemoveTransactions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                transactionIds:
+                  description: IDs of the transactions to remove from the filing. Must contain between 1 and 100 IDs.
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                  maxItems: 100
+              required:
+              - transactionIds
+            example:
+              transactionIds:
+              - txn_K39sWBu92Lo
+              - txn_L48tXCv03Mp
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactions:
+                    description: One entry per requested transaction ID, in request order.
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          description: The transaction ID.
+                          type: string
+                        status:
+                          description: '`removed` if the transaction was removed from the filing; `error` if it
+
+                            could not be removed.
+
+                            '
+                          type: string
+                          enum:
+                          - removed
+                          - error
+                        reason:
+                          description: 'Present only when `status` is `error`. `notFound` means the transaction was
+
+                            not in this filing (unknown, already removed, or in a different filing).
+
+                            '
+                          type: string
+                          enum:
+                          - notFound
+                      required:
+                      - id
+                      - status
+                required:
+                - transactions
+              example:
+                transactions:
+                - id: txn_K39sWBu92Lo
+                  status: removed
+                - id: txn_L48tXCv03Mp
+                  status: error
+                  reason: notFound
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                emptyTransactionIds:
+                  value: 'Request body: "transactionIds": Array must contain at least 1 element(s).'
+                  summary: Empty transactionIds list
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  type:
+                    type: string
+                    enum:
+                    - invalidJurisId
+                    - filingNotFound
+                    - filingNotEditable
+                    - filingIsBeingDeleted
+                    - filingHasBackgroundOperation
+                required:
+                - type
+              example:
+                type: filingNotEditable
+        '429':
+          $ref: '#/components/responses/RateLimit'
 components:
   responses:
+    ListFilingTransactionIdsConflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                - jurisIdNotFound
+                - filingListTransactionIdsApiNotEnabled
+          examples:
+            jurisIdNotFound:
+              value:
+                type: jurisIdNotFound
+              summary: Juris ID not found
+            filingListTransactionIdsApiNotEnabled:
+              value:
+                type: filingListTransactionIdsApiNotEnabled
+              summary: List filing transaction IDs API not enabled
+    RateLimit:
+      description: Too Many Requests
+      headers:
+        Retry-After:
+          description: Number of seconds to wait for rate limit to reset.
+          schema:
+            type: integer
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: You've exceeded your API limit of 10 per second
+    ListFilingTransactionsWithConversionRatesBadRequest:
+      description: Bad Request
+      content:
+        text/plain:
+          schema:
+            type: string
+          examples:
+            invalidLimitProvided:
+              value: 'Request body: "limit": Number must be less than or equal to 1000.'
+              summary: Invalid limit
+    ListFilingTransactionsWithConversionRatesConflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                enum:
+                - invalidCursor
+                - jurisIdNotFound
+                - filingListTransactionsWithConversionRatesApiNotEnabled
+          examples:
+            invalidCursor:
+              value:
+                type: invalidCursor
+              summary: Invalid cursor
+            jurisIdNotFound:
+              value:
+                type: jurisIdNotFound
+              summary: Juris ID not found
+            filingListTransactionsWithConversionRatesApiNotEnabled:
+              value:
+                type: filingListTransactionsWithConversionRatesApiNotEnabled
+              summary: List filing transactions with conversion rates API not enabled
+    ListFilingTransactionIdsBadRequest:
+      description: Bad Request
+      content:
+        text/plain:
+          schema:
+            type: string
+          examples:
+            invalidCursorProvided:
+              value: 'Request body: "cursor": Invalid cursor'
+              summary: Invalid cursor
+            invalidLimitProvided:
+              value: 'Request body: "limit": Number must be less than or equal to 2500.'
+              summary: Invalid limit
     ListFilingsBadRequest:
       description: Bad Request
       content:
@@ -78,6 +333,28 @@ components:
             cursorAndFilterBothProvided:
               value: 'Request body: cursor and filter cannot both be provided.'
               summary: Cursor and filter cannot both be provided
+    ListFilingTransactionIdsSuccess:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              transactionIds:
+                description: The IDs of the transactions included in the filing, ordered by the transaction's accounting date.
+                type: array
+                items:
+                  type: string
+                examples:
+                - - stripe:in_1JSW342eZvKYlo2C
+                  - stripe:in_1JSW342eZvKYlo2D
+              nextCursor:
+                description: The cursor to use to fetch the next page of transaction IDs. This is null when there are no more transaction IDs to fetch.
+                type:
+                - string
+                - 'null'
+                examples:
+                - eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
     ListFilingsSuccess:
       description: OK
       content:
@@ -141,18 +418,64 @@ components:
               hasMore:
                 description: Whether there are more filings to fetch.
                 type: boolean
-    RateLimit:
-      description: Too Many Requests
-      headers:
-        Retry-After:
-          description: Number of seconds to wait for rate limit to reset.
-          schema:
-            type: integer
+    ListFilingTransactionsWithConversionRatesSuccess:
+      description: OK
       content:
-        text/plain:
+        application/json:
           schema:
-            type: string
-          example: You've exceeded your API limit of 10 per second
+            type: object
+            properties:
+              transactionsWithConversionRates:
+                description: The transactions included in the filing, each with the currency conversion rate used, ordered by the transaction's accounting date.
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      description: The ID of the transaction.
+                      type: string
+                      example: stripe:in_1JSW342eZvKYlo2C
+                    fromCurrency:
+                      description: The three letter ISO currency code of the transaction.
+                      type: string
+                      minLength: 3
+                      maxLength: 3
+                      examples:
+                      - EUR
+                      - GBP
+                      - USD
+                    toCurrency:
+                      description: The three letter ISO currency code of the filing.
+                      type: string
+                      minLength: 3
+                      maxLength: 3
+                      examples:
+                      - USD
+                      - GBP
+                      - EUR
+                    rate:
+                      description: The conversion rate used to convert amounts from the transaction currency to the filing currency, as a decimal number formatted as a string. This is null when the transaction currency is the same as the filing currency and no conversion was applied.
+                      type:
+                      - string
+                      - 'null'
+                      examples:
+                      - '1.08423'
+                examples:
+                - - id: stripe:in_1JSW342eZvKYlo2C
+                    fromCurrency: EUR
+                    toCurrency: USD
+                    rate: '1.08423'
+                  - id: stripe:in_1JSW342eZvKYlo2D
+                    fromCurrency: USD
+                    toCurrency: USD
+                    rate: null
+              nextCursor:
+                description: The cursor to use to fetch the next page of transactions with conversion rates. This is null when there are no more transactions to fetch.
+                type:
+                - string
+                - 'null'
+                examples:
+                - eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
     ListFilingsConflict:
       description: Conflict
       content:
@@ -174,7 +497,79 @@ components:
               value:
                 type: listFilingsApiNotEnabled
               summary: List filings API not enabled
+  parameters:
+    JurisFilingId:
+      name: jurisFilingId
+      in: path
+      description: The ID of the filing. This is a unique identifier for the filing within the jurisdiction.
+      required: true
+      schema:
+        type: string
+        examples:
+        - 2025-01
+    JurisId:
+      name: jurisId
+      in: path
+      description: The ID of the jurisdiction of the filing.
+      required: true
+      schema:
+        type: string
+        examples:
+        - eu-oss
+        - us-MA
   requestBodies:
+    ListFilingTransactionsWithConversionRates:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              limit:
+                description: The maximum number of transactions with conversion rates to return.
+                type: integer
+                format: int32
+                minimum: 1
+                maximum: 1000
+                default: 100
+              cursor:
+                description: The cursor to use for pagination. This is the value of the `nextCursor` field returned from the previous page.
+                type: string
+          examples:
+            firstPage:
+              summary: Fetch the first page of transactions with conversion rates
+              value: {}
+            cursor:
+              summary: Cursor-based pagination
+              value:
+                cursor: eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
+                limit: 250
+      required: true
+    ListFilingTransactionIds:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              limit:
+                description: The maximum number of transaction IDs to return.
+                type: integer
+                format: int32
+                minimum: 1
+                maximum: 2500
+                default: 100
+              cursor:
+                description: The cursor to use for pagination. This is the value of the `nextCursor` field returned from the previous page.
+                type: string
+          examples:
+            firstPage:
+              summary: Fetch the first page of transaction IDs
+              value: {}
+            cursor:
+              summary: Cursor-based pagination
+              value:
+                cursor: eyJleGFtcGxlIjoidGhpcyBpcyBhbiBleGFtcGxlIGN1cnNvciJ9
+                limit: 500
+      required: true
     ListFilings:
       content:
         application/json:
