@@ -1,14 +1,42 @@
-generated: '2026-10-15'
+generated: '2026-10-20'
 method: searched
-checked:
-- shopify/integrations/shopify-integration-edges.yml
-- stripe/integrations/stripe-integration-edges.yml
-- woocommerce/integrations/woocommerce-integration-edges.yml
 source:
 - shopify/integrations/shopify-integration-edges.yml
 - stripe/integrations/stripe-integration-edges.yml
 - woocommerce/integrations/woocommerce-integration-edges.yml
+- https://zapier.com/apps/anrok/integrations
+- https://n8n.io/integrations/anrok/
+- https://composio.dev/toolkits/anrok
+- https://monid.ai/tools/anrok
+checked:
+- chargebee/integrations/chargebee-integration-edges.yml
+- shopify/integrations/shopify-integration-edges.yml
+- stripe/integrations/stripe-integration-edges.yml
+- woocommerce/integrations/woocommerce-integration-edges.yml
+- https://composio.dev/toolkits/anrok
+- https://monid.ai/tools/anrok
+- https://n8n.io/integrations/anrok/
+- https://zapier.com/apps/anrok/integrations
+summary: null
+marketplace_apps: []
 edges:
+- partner_name: Chargebee (own)
+  partner: chargebee
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://marketplace.chargebee.com/apps/['Anrok']
+  mirror_of: chargebee/integrations/chargebee-integration-edges.yml
+  apps:
+  - API Key
+  listing_count: 1
+  detected: '2026-10-19'
+  detected_by: mirror-platform-listings.py
+  category: Tax Management
 - partner_name: Shopify (own)
   partner: shopify
   partner_match: mirror
@@ -61,3 +89,4 @@ edges:
   detected: '2026-10-15'
   detected_by: mirror-platform-listings.py
   category: extension
+templates: []
