@@ -1,4 +1,4 @@
-# Anrok (anrok)
+# Anrok
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,60 +64,199 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Anrok is a SaaS-focused global sales tax and VAT compliance platform built for modern commerce. It provides a REST API enabling software companies to calculate sales tax in real time, manage nexus registrations across 11,000+ US jurisdictions, handle exemption certificates, and validate customer tax IDs. The platform integrates with billing systems such as Stripe, Chargebee, and Recurly and automates tax filing and remittance across 100+ countries. Anrok also offers Anrok Atlas, an AI-native agentic tax partner for proactive compliance monitoring.
+Anrok is a SaaS-focused global sales tax and VAT compliance platform built for modern commerce. It provides a REST API that enables software companies to calculate sales tax in real time, manage nexus registrations across 11,000+ US jurisdictions, handle exemption certificates, and validate customer tax IDs. The platform integrates with billing systems such as Stripe, Chargebee, and Recurly, and automates tax filing and remittance across 100+ countries. Anrok also offers Anrok Atlas, an AI-native agentic tax partner for proactive compliance monitoring.
 
-APIs.json: [https://raw.githubusercontent.com/api-evangelist/anrok/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/anrok/refs/heads/main/apis.yml)
+**Areas:** Sales Tax · VAT · Tax Compliance · Software-as-a-Service · Fintech · Tax Automation · Nexus · E-Invoicing · Tax
 
-Naftiko: [https://github.com/naftiko/fleet?utm_source=api-evangelist&utm_medium=readme&utm_campaign=anrok-api-evangelist&utm_content=repo](https://github.com/naftiko/fleet?utm_source=api-evangelist&utm_medium=readme&utm_campaign=anrok-api-evangelist&utm_content=repo)
+## Anrok on APIs.io
 
-## Tags
+Everything profiled for Anrok is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/anrok/](https://apis.io/providers/anrok/)** — or go straight to one of the APIs or properties below.
 
-- Sales Tax
-- VAT
-- Tax Compliance
-- SaaS
-- Fintech
-- Tax Automation
-- Nexus
-- E-Invoicing
+### APIs (6)
 
-## APIs
+- [Anrok Customer certificates API](https://apis.io/apis/anrok/anrok-customer-certificates-api/) — A sales tax exemption certificate documents the exemption claimed by a purchaser to legally make a tax-free purchase. Certificates can be uploaded to Anrok…
+- [Anrok Filings API](https://apis.io/apis/anrok/anrok-filings-api/) — **The Filings endpoint is a premium feature. Please contact hello@anrok.com for more information to enable this on your seller account.** This endpoint can…
+- [Anrok Product mappings API](https://apis.io/apis/anrok/anrok-product-mappings-api/) — The Anrok Product Mappings API endpoint allows you to dynamically map product IDs for [Anrok-built billing system…
+- [Anrok Products API](https://apis.io/apis/anrok/anrok-products-api/) — The Anrok Products API endpoints allow you to manage the products on your seller account. Each product is identified by an external ID and is assigned a…
+- [Anrok Tax ID validation API](https://apis.io/apis/anrok/anrok-tax-id-validation-api/) — **The Anrok Tax ID Validation endpoint is a premium feature. Please contact hello@anrok.com for more information to enable this on your Anrok seller…
+- [Anrok Transactions API](https://apis.io/apis/anrok/anrok-transactions-api/) — This documentation describes how to use Anrok's Transactions API to synchronize transactions between Anrok and your billing system, as well as calculate…
 
-### Anrok API
+### Published properties
 
-The Anrok REST API enables real-time sales tax calculation, transaction management, exemption certificate handling, product tax category mapping, customer tax ID validation, and retrieval of sales tax filing information. All requests are HTTP POST with JSON bodies authenticated via Bearer token. The API is versioned at 1.1 and exposes an OpenAPI specification.
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-- Documentation: [https://apidocs.anrok.com/](https://apidocs.anrok.com/)
-- Base URL: https://api.anrok.com
-- Tutorials: [https://apidocs.anrok.com/tutorials](https://apidocs.anrok.com/tutorials)
+#### MCP servers (1)
 
-## Plans / Rate Limits / FinOps
+Model Context Protocol servers that expose the API to agents.
 
-- Plans: [plans/anrok-plans-pricing.yml](plans/anrok-plans-pricing.yml)
-- Rate Limits: [rate-limits/anrok-rate-limits.yml](rate-limits/anrok-rate-limits.yml)
-- FinOps: [finops/anrok-finops.yml](finops/anrok-finops.yml)
+- [anrok](https://apis.io/servers/anrok/anrok/)
 
-**Pricing summary:** Starter at $100/market/month; Custom at $400/market/month + 0.25% per transaction. Add-on packages (Pro $500/mo, Enterprise $1,000/mo, Physical Nexus Monitoring $300/mo) billed annually.
+#### Agentic access (1)
 
-**Rate limits:** 10 API requests per second per seller account. HTTP 429 returned when exceeded.
+Which operations an agent can call, which act, and which need a human in the loop.
 
-## Timestamps
+- [Anrok Agentic Access](https://apis.io/agentic-access/anrok/anrok-agentic-access/)
 
-- Created: 2026-06-12
-- Modified: 2026-06-12
+#### JSON Schema (33)
 
-## Common Properties
+The data models the API reads and writes.
 
-| Type | URL |
-|------|-----|
-| Website | https://www.anrok.com/ |
-| Documentation | https://apidocs.anrok.com/ |
-| GitHub Organization | https://github.com/Anrok |
-| LinkedIn | https://www.linkedin.com/company/anrok |
-| X | https://x.com/Anrok |
-| Blog | https://anrok.com/resources/blog |
-| Pricing | https://www.anrok.com/pricing |
+- [CommonTransactionProperties](https://apis.io/schemas/anrok/common-transaction-properties/)
+- [CreateEphemeralTransaction](https://apis.io/schemas/anrok/create-ephemeral-transaction/)
+- [CreateEphemeralTransactionSuccess](https://apis.io/schemas/anrok/create-ephemeral-transaction-success/)
+- [CreateOrUpdateTransaction](https://apis.io/schemas/anrok/create-or-update-transaction/)
+- [CreateOrUpdateTransactionSuccess](https://apis.io/schemas/anrok/create-or-update-transaction-success/)
+- [CreateProduct](https://apis.io/schemas/anrok/create-product/)
+- [CreateTransactionCannotComputeTaxAmount](https://apis.io/schemas/anrok/create-transaction-cannot-compute-tax-amount/)
+- [CreateTransactionCannotUpdate](https://apis.io/schemas/anrok/create-transaction-cannot-update/)
+- [Address](https://apis.io/schemas/anrok/customer-address/)
+- [CustomerCertificate](https://apis.io/schemas/anrok/customer-certificate/)
+- [CustomerCertificateFile](https://apis.io/schemas/anrok/customer-certificate-file/)
+- [CustomerCertificateJuris](https://apis.io/schemas/anrok/customer-certificate-juris/)
+- [CustomerCertificateJurisResponse](https://apis.io/schemas/anrok/customer-certificate-juris-response/)
+- [CustomerCertificateResponse](https://apis.io/schemas/anrok/customer-certificate-response/)
+- [CustomerId](https://apis.io/schemas/anrok/customer-id/)
+- [Legacy US only address](https://apis.io/schemas/anrok/customer-legacy-us-only-address/)
+- [CustomerName](https://apis.io/schemas/anrok/customer-name/)
+- [CustomerTaxId](https://apis.io/schemas/anrok/customer-tax-id/)
+- [FilingInfoFilter](https://apis.io/schemas/anrok/filing-info-filter/)
+- [JurisSummary](https://apis.io/schemas/anrok/juris-summary/)
+- [LastModifiedAfterFilter](https://apis.io/schemas/anrok/last-modified-after-filter/)
+- [LineItem](https://apis.io/schemas/anrok/line-item/)
+- [LineItemJurisTax](https://apis.io/schemas/anrok/line-item-juris-tax/)
+- [NormalTransactionBody](https://apis.io/schemas/anrok/normal-transaction-body/)
+- [NormalTransactionResponse](https://apis.io/schemas/anrok/normal-transaction-response/)
+- …and 8 more published on APIs.io
 
-## Maintainers
+#### JSON-LD (1)
 
-- Kin Lane / kin@apievangelist.com
+Linked-data contexts for the provider's vocabulary.
+
+- [Anrok Context](https://apis.io/jsonld/anrok/anrok-context/)
+
+#### Vocabulary (1)
+
+The provider's domain terms, defined.
+
+- [Anrok Vocabulary](https://apis.io/vocabularies/anrok/anrok-vocabulary/)
+
+#### Examples (7)
+
+Example requests and responses.
+
+- [Conflict Accounting Time Zone Not Set For Seller](https://apis.io/examples/anrok/conflict-accounting-time-zone-not-set-for-seller/)
+- [Conflict Product External Id Unknown](https://apis.io/examples/anrok/conflict-product-external-id-unknown/)
+- [Conflict Tax Date Too Far In Future](https://apis.io/examples/anrok/conflict-tax-date-too-far-in-future/)
+- [Conflict Tax Date Too Far In Past](https://apis.io/examples/anrok/conflict-tax-date-too-far-in-past/)
+- [Create Certificate Request](https://apis.io/examples/anrok/create-certificate-request/)
+- [Create Or Update Transaction Request](https://apis.io/examples/anrok/create-or-update-transaction-request/)
+- [Validate Tax Id Request](https://apis.io/examples/anrok/validate-tax-id-request/)
+
+#### Collections (6)
+
+Postman and Open Collection request collections.
+
+- [Anrok Customer certificates API](https://apis.io/collections/anrok/open-anrok-customer-certificates-api/)
+- [Anrok Customer certificates Filings API](https://apis.io/collections/anrok/open-anrok-filings-api/)
+- [Anrok Customer certificates Product mappings API](https://apis.io/collections/anrok/open-anrok-product-mappings-api/)
+- [Anrok Customer certificates Products API](https://apis.io/collections/anrok/open-anrok-products-api/)
+- [Anrok Customer certificates Tax ID validation API](https://apis.io/collections/anrok/open-anrok-tax-id-validation-api/)
+- [Anrok Customer certificates Transactions API](https://apis.io/collections/anrok/open-anrok-transactions-api/)
+
+#### Governance rules (1)
+
+Spectral rulesets for the provider's contracts.
+
+- [Anrok — jsonschema rules](https://apis.io/rules/anrok/anrok-jsonschema-spectral-rules/)
+
+#### Security (4)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Anrok Authentication](https://apis.io/security/anrok/anrok-authentication/)
+- [Anrok Domain Security](https://apis.io/security/anrok/anrok-domain-security/)
+- [Anrok Trust Center](https://apis.io/security/anrok/anrok-trust-center/)
+- [Anrok Vulnerability Disclosure](https://apis.io/security/anrok/anrok-vulnerability-disclosure/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Anrok Plans Pricing](https://apis.io/plans/anrok/anrok-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Anrok Rate Limits](https://apis.io/rate-limits/anrok/anrok-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Anrok Finops](https://apis.io/finops/anrok/anrok-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.anrok.com/)
+- [Documentation](https://apidocs.anrok.com/)
+- [Pricing](https://www.anrok.com/pricing)
+- [Blog](https://anrok.com/resources/blog)
+- [GitHub](https://github.com/Anrok)
+
+## API Evangelist rating
+
+**Kin Score 43.5** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 68.3 |
+| Contract quality | 63.4 |
+| Contract governance | 23.5 |
+| Operational transparency | 18.4 |
+| Developer ergonomics | 23.8 |
+| Access clarity | 23.7 |
+
+**Agent readiness 57.4** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | verified |
+| MCP Server | verified |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | verified |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 27.5** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/anrok/](https://apis.io/providers/anrok/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Anrok: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/anrok/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
